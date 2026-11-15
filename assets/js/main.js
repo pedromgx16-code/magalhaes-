@@ -1,6 +1,38 @@
 // Magalhães | site
 document.documentElement.classList.add('js');
 
+// Promoção do Visual Creator: troque a data aqui. Quando o tempo acaba, a barra, o contador e o selo somem sozinhos.
+const PROMO_FIM = '2026-11-30T23:59:59-03:00';
+
+(function promo() {
+  const end = new Date(PROMO_FIM).getTime();
+  const pad = (n) => String(n).padStart(2, '0');
+  const boxes = document.querySelectorAll('[data-countdown]');
+  const inline = document.querySelectorAll('[data-countdown-inline]');
+  function tick() {
+    const left = end - Date.now();
+    if (left <= 0) {
+      document.documentElement.classList.add('promo-ended');
+      return false;
+    }
+    const d = Math.floor(left / 86400000);
+    const h = Math.floor((left % 86400000) / 3600000);
+    const m = Math.floor((left % 3600000) / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    boxes.forEach((box) => {
+      box.querySelector('[data-unit="d"]').textContent = pad(d);
+      box.querySelector('[data-unit="h"]').textContent = pad(h);
+      box.querySelector('[data-unit="m"]').textContent = pad(m);
+      box.querySelector('[data-unit="s"]').textContent = pad(s);
+    });
+    inline.forEach((el) => (el.textContent = (d ? d + 'd ' : '') + pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's'));
+    return true;
+  }
+  if (tick()) {
+    const timer = setInterval(() => { if (!tick()) clearInterval(timer); }, 1000);
+  }
+})();
+
 // Menu no celular
 const menuBtn = document.querySelector('.menu-btn');
 const menu = document.getElementById('menu');

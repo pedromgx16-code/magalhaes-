@@ -106,6 +106,54 @@ if (devices) {
   requestAnimationFrame(() => setTimeout(() => devices.classList.add('is-open'), 120));
 }
 
+// Projetos: rolar pro lado com botões, arrastando com o mouse ou deslizando no celular
+const works = document.querySelector('.works');
+if (works) {
+  const btns = document.querySelectorAll('.works-btn');
+  const step = () => {
+    const card = works.querySelector('.work');
+    const gap = parseFloat(getComputedStyle(works).columnGap) || 0;
+    return card ? card.getBoundingClientRect().width + gap : works.clientWidth * 0.8;
+  };
+  const update = () => {
+    const max = works.scrollWidth - works.clientWidth - 2;
+    btns.forEach((b) => {
+      const dir = Number(b.dataset.dir);
+      b.disabled = dir < 0 ? works.scrollLeft <= 2 : works.scrollLeft >= max;
+    });
+  };
+  btns.forEach((b) => b.addEventListener('click', () => works.scrollBy({ left: Number(b.dataset.dir) * step(), behavior: 'smooth' })));
+  works.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+
+  // Arrastar com o mouse (no celular o dedo já rola sozinho)
+  let down = false, startX = 0, startLeft = 0, moved = false;
+  works.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    down = true; moved = false; startX = e.clientX; startLeft = works.scrollLeft;
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - startX;
+    if (!moved && Math.abs(dx) > 5) { moved = true; works.classList.add('is-dragging'); }
+    if (moved) works.scrollLeft = startLeft - dx;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!down) return;
+    down = false;
+    if (moved) {
+      works.classList.remove('is-dragging');
+      const i = Math.round(works.scrollLeft / step());
+      works.scrollTo({ left: i * step(), behavior: 'smooth' });
+    }
+  });
+  works.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); works.scrollBy({ left: step(), behavior: 'smooth' }); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); works.scrollBy({ left: -step(), behavior: 'smooth' }); }
+  });
+}
+
 // Logo do Visual Creator: se a imagem faltar, mostra o "V" desenhado
 document.querySelectorAll('img[data-fallback]').forEach((img) => {
   const swap = () => {

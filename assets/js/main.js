@@ -53,45 +53,35 @@ if (menuBtn && menu) {
 // Ano no rodapé
 document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
-// Notebook e celular: usam as mesmas artes da seção Projetos
+// Notebook e celular: listas próprias, definidas no HTML (data-feed e data-phone)
 const devices = document.querySelector('.devices');
 if (devices) {
-  const all = [...document.querySelectorAll('.works img')].map((img) => ({
-    src: img.getAttribute('src'),
-    alt: img.getAttribute('alt') || '',
-    ratio: parseFloat(img.dataset.ratio) || 1,
-  }));
-  // Notebook: posts do feed (4:5 e quadrados). Celular: stories (9:16).
-  const posts = all.filter((a) => a.ratio >= 0.75 && a.ratio <= 1.05 && !/\.gif$/i.test(a.src));
-  const sources = (posts.length ? posts : all).filter((_, i) => i % 2 === 0).slice(0, 12);
-  const stories = all.filter((a) => a.ratio > 0.45 && a.ratio < 0.65);
+  const parse = (v) => { try { return JSON.parse(v || '[]'); } catch (e) { return []; } };
+  const feed = parse(devices.dataset.feed);
+  const stories = parse(devices.dataset.phone);
+  const make = (src) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.decoding = 'async';
+    if (/^https?:/.test(src)) img.referrerPolicy = 'no-referrer';
+    return img;
+  };
 
   const track = devices.querySelector('.feed-track');
-  if (track && sources.length) {
+  if (track && feed.length) {
     // Metade de cima e metade de baixo iguais: a rolagem volta ao início sem salto
-    let half = sources.slice();
-    while (half.length < 12) half = half.concat(sources);
-    half = half.slice(0, Math.floor(half.length / 3) * 3);
+    const half = feed.slice(0, Math.floor(feed.length / 3) * 3 || feed.length);
     track.innerHTML = '';
-    half.concat(half).forEach((item, i) => {
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.alt = i < sources.length ? item.alt : '';
-      img.referrerPolicy = 'no-referrer';
-      img.decoding = 'async';
-      track.appendChild(img);
-    });
+    half.concat(half).forEach((src) => track.appendChild(make(src)));
   }
 
   const phone = devices.querySelector('.phone-screen');
-  if (phone && sources.length) {
-    const order = stories.length >= 2 ? stories : sources.slice().reverse();
+  const list = stories.length ? stories : feed;
+  if (phone && list.length) {
     phone.innerHTML = '';
-    const imgs = order.map((item, i) => {
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.alt = '';
-      img.referrerPolicy = 'no-referrer';
+    const imgs = list.map((src, i) => {
+      const img = make(src);
       if (i === 0) img.classList.add('is-on');
       phone.appendChild(img);
       return img;
@@ -111,44 +101,129 @@ if (devices) {
   requestAnimationFrame(() => setTimeout(() => devices.classList.add('is-open'), 120));
 }
 
-// Projetos: rolar pro lado com botões, arrastando com o mouse ou deslizando no celular
-const works = document.querySelector('.works');
-if (works) {
+// Projetos: abas (posts, stories, banners), rolagem pro lado e tela cheia
+const panels = [...document.querySelectorAll('.works')];
+if (panels.length) {
   const btns = document.querySelectorAll('.works-btn');
-  const step = () => Math.max(240, works.clientWidth * 0.75);
+  const tabs = [...document.querySelectorAll('.works-tab')];
+  const active = () => panels.find((p) => !p.hidden) || panels[0];
+  const step = () => Math.max(240, active().clientWidth * 0.75);
   const update = () => {
-    const max = works.scrollWidth - works.clientWidth - 2;
+    const w = active();
+    const max = w.scrollWidth - w.clientWidth - 2;
     btns.forEach((b) => {
       const dir = Number(b.dataset.dir);
-      b.disabled = dir < 0 ? works.scrollLeft <= 2 : works.scrollLeft >= max;
+      b.disabled = dir < 0 ? w.scrollLeft <= 2 : w.scrollLeft >= max;
     });
   };
-  btns.forEach((b) => b.addEventListener('click', () => works.scrollBy({ left: Number(b.dataset.dir) * step(), behavior: 'smooth' })));
-  works.addEventListener('scroll', update, { passive: true });
+  btns.forEach((b) => b.addEventListener('click', () => active().scrollBy({ left: Number(b.dataset.dir) * step(), behavior: 'smooth' })));
   window.addEventListener('resize', update);
-  update();
+
+  const select = (tab, focus) => {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+    active().scrollLeft = 0;
+    update();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') select(tabs[(i + 1) % tabs.length], true);
+      if (e.key === 'ArrowLeft') select(tabs[(i - 1 + tabs.length) % tabs.length], true);
+    });
+  });
 
   // Arrastar com o mouse (no celular o dedo já rola sozinho)
-  let down = false, startX = 0, startLeft = 0, moved = false;
-  works.addEventListener('pointerdown', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    down = true; moved = false; startX = e.clientX; startLeft = works.scrollLeft;
+  let drag = null;
+  panels.forEach((w) => {
+    w.addEventListener('scroll', update, { passive: true });
+    w.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      drag = { w, x: e.clientX, left: w.scrollLeft, moved: false };
+    });
+    w.addEventListener('keydown', (e) => {
+      if (e.target !== w) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); w.scrollBy({ left: step(), behavior: 'smooth' }); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); w.scrollBy({ left: -step(), behavior: 'smooth' }); }
+    });
   });
+  let justDragged = false;
   window.addEventListener('pointermove', (e) => {
-    if (!down) return;
-    const dx = e.clientX - startX;
-    if (!moved && Math.abs(dx) > 5) { moved = true; works.classList.add('is-dragging'); }
-    if (moved) works.scrollLeft = startLeft - dx;
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; drag.w.classList.add('is-dragging'); }
+    if (drag.moved) drag.w.scrollLeft = drag.left - dx;
   });
   window.addEventListener('pointerup', () => {
-    if (!down) return;
-    down = false;
-    if (moved) works.classList.remove('is-dragging');
+    if (!drag) return;
+    if (drag.moved) {
+      drag.w.classList.remove('is-dragging');
+      justDragged = true;
+      setTimeout(() => (justDragged = false), 50);
+    }
+    drag = null;
   });
-  works.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); works.scrollBy({ left: step(), behavior: 'smooth' }); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); works.scrollBy({ left: -step(), behavior: 'smooth' }); }
-  });
+  update();
+
+  // Tela cheia
+  const lb = document.getElementById('lightbox');
+  if (lb) {
+    const img = lb.querySelector('.lb-img');
+    const count = lb.querySelector('.lb-count');
+    let items = [], index = 0, opener = null;
+    const show = (i) => {
+      index = (i + items.length) % items.length;
+      const card = items[index];
+      const thumb = card.querySelector('img');
+      img.src = card.dataset.full;
+      img.alt = thumb.alt;
+      if (/^https?:/.test(card.dataset.full)) img.referrerPolicy = 'no-referrer';
+      count.textContent = (index + 1) + ' de ' + items.length;
+    };
+    const open = (card) => {
+      items = [...card.parentElement.querySelectorAll('.work')];
+      opener = card;
+      show(items.indexOf(card));
+      lb.hidden = false;
+      document.documentElement.classList.add('lb-open');
+      lb.querySelector('.lb-close').focus();
+    };
+    const close = () => {
+      lb.hidden = true;
+      img.removeAttribute('src');
+      document.documentElement.classList.remove('lb-open');
+      if (opener) opener.focus({ preventScroll: true });
+    };
+    document.querySelectorAll('.work').forEach((card) =>
+      card.addEventListener('click', (e) => {
+        if (justDragged) { e.preventDefault(); return; }
+        open(card);
+      })
+    );
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', () => show(index - 1));
+    lb.querySelector('.lb-next').addEventListener('click', () => show(index + 1));
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') show(index + 1);
+      if (e.key === 'ArrowLeft') show(index - 1);
+    });
+    let tx = null;
+    lb.addEventListener('touchstart', (e) => (tx = e.touches[0].clientX), { passive: true });
+    lb.addEventListener('touchend', (e) => {
+      if (tx === null) return;
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+      tx = null;
+    });
+  }
 }
 
 // Logo do Visual Creator: se a imagem faltar, mostra o "V" desenhado

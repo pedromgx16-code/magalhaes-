@@ -172,18 +172,46 @@ h1, h2, h3 { margin: 0; font-weight: 800; font-stretch: 125%; font-variation-set
 .works-btn svg { width: 20px; height: 20px; }
 .works {
   --edge: max(var(--pad), calc((100vw - var(--max)) / 2 + var(--pad)));
-  display: flex; gap: clamp(0.9rem, 2vw, 1.5rem);
+  --art-h: clamp(300px, 36vw, 480px);
+  display: flex; align-items: flex-start; gap: clamp(0.75rem, 1.6vw, 1.25rem);
   overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
   padding: 0.25rem var(--edge) 0.5rem; scroll-padding-inline: var(--edge);
   scrollbar-width: none; cursor: grab; -webkit-overflow-scrolling: touch;
 }
+.works[hidden] { display: none; }
+.works-stories { --art-h: clamp(400px, 44vw, 600px); }
+.works-banners { --art-h: clamp(190px, 24vw, 340px); }
 .works::-webkit-scrollbar { display: none; }
 .works.is-dragging { cursor: grabbing; scroll-snap-type: none; }
 .works.is-dragging .work { pointer-events: none; }
-.works { --art-h: clamp(300px, 38vw, 500px); align-items: flex-start; }
-.work { flex: none; scroll-snap-align: start; display: block; height: var(--art-h); border-radius: var(--radius-s); overflow: hidden; background: var(--navy); outline: 1px solid var(--line-soft); outline-offset: -1px; }
-.work img { height: 100%; width: auto; max-width: none; user-select: none; -webkit-user-drag: none; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.work {
+  flex: none; scroll-snap-align: start; display: block; height: var(--art-h); padding: 0; border: 0;
+  border-radius: var(--radius-s); overflow: hidden; background: var(--navy); cursor: zoom-in;
+  outline: 1px solid var(--line-soft); outline-offset: -1px;
+}
+.work:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+.work img { display: block; height: 100%; width: auto; max-width: none; user-select: none; -webkit-user-drag: none; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .work:hover img { transform: scale(1.02); }
+
+.works-tabs { display: inline-flex; gap: 0.25rem; padding: 0.3rem; margin-bottom: clamp(1.25rem, 3vw, 1.75rem); border-radius: 999px; border: 1px solid var(--line); background: rgba(7, 18, 42, 0.6); }
+.works-tab { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 42px; padding: 0 1.1rem; border: 0; border-radius: 999px; background: transparent; color: var(--mute); font: 700 var(--step--1)/1 var(--font); cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; }
+.works-tab span { padding: 0.15rem 0.45rem; border-radius: 999px; background: rgba(255,255,255,.08); font-size: 0.75rem; font-weight: 700; }
+.works-tab:hover { color: var(--white); }
+.works-tab[aria-selected="true"] { background: var(--blue); color: var(--white); }
+.works-tab[aria-selected="true"] span { background: rgba(255,255,255,.2); }
+
+/* Tela cheia */
+.lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 4.5rem 4.5rem 3.5rem; background: rgba(0, 0, 0, 0.94); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.lightbox[hidden] { display: none; }
+.lb-img { max-width: calc(100vw - 9rem); max-height: calc(100vh - 8rem); max-height: calc(100dvh - 8rem); width: auto; height: auto; object-fit: contain; border-radius: 6px; box-shadow: 0 30px 80px -20px rgba(31,107,255,.45); }
+.lb-close, .lb-prev, .lb-next { position: absolute; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(7,18,42,.7); color: var(--white); cursor: pointer; }
+.lb-close:hover, .lb-prev:hover, .lb-next:hover { border-color: var(--white); }
+.lb-close svg, .lb-prev svg, .lb-next svg { width: 22px; height: 22px; }
+.lb-close { top: 1rem; right: 1rem; }
+.lb-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 1rem; top: 50%; transform: translateY(-50%); }
+.lb-count { position: absolute; bottom: 1.1rem; left: 0; right: 0; text-align: center; color: var(--mute); font-size: var(--step--1); }
+.lb-open, .lb-open body { overflow: hidden; }
 .works-more { display: flex; justify-content: center; margin-top: clamp(2rem, 4vw, 3rem); }
 
 /* Serviços */
@@ -343,7 +371,15 @@ h1, h2, h3 { margin: 0; font-weight: 800; font-stretch: 125%; font-variation-set
 }
 
 @media (max-width: 640px) {
-  .works { --art-h: min(62vh, 420px); }
+  .works-posts { --art-h: min(58vh, 400px); }
+  .works-stories { --art-h: min(68vh, 520px); }
+  .works-banners { --art-h: 190px; }
+  .works-tabs { display: flex; width: 100%; }
+  .works-tab { flex: 1; justify-content: center; padding: 0 0.6rem; }
+  .lightbox { padding: 4rem 0.75rem 3.5rem; }
+  .lb-img { max-width: calc(100vw - 1.5rem); max-height: calc(100vh - 8.5rem); max-height: calc(100dvh - 8.5rem); }
+  .lb-prev, .lb-next { top: auto; bottom: 0.6rem; transform: none; width: 44px; height: 44px; }
+  .lb-count { bottom: 1.3rem; }
   .footer-links { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
   .footer-links a { width: 100%; }
   .devices { --feed-gap: 5px; }

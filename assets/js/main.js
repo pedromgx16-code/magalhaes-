@@ -56,17 +56,22 @@ document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new D
 // Notebook e celular: usam as mesmas artes da seção Projetos
 const devices = document.querySelector('.devices');
 if (devices) {
-  const sources = [...document.querySelectorAll('.works img')].map((img) => ({
+  const all = [...document.querySelectorAll('.works img')].map((img) => ({
     src: img.getAttribute('src'),
     alt: img.getAttribute('alt') || '',
+    ratio: parseFloat(img.dataset.ratio) || 1,
   }));
+  // Notebook: posts do feed (4:5 e quadrados). Celular: stories (9:16).
+  const posts = all.filter((a) => a.ratio >= 0.75 && a.ratio <= 1.05 && !/\.gif$/i.test(a.src));
+  const sources = (posts.length ? posts : all).filter((_, i) => i % 2 === 0).slice(0, 12);
+  const stories = all.filter((a) => a.ratio > 0.45 && a.ratio < 0.65);
 
   const track = devices.querySelector('.feed-track');
   if (track && sources.length) {
     // Metade de cima e metade de baixo iguais: a rolagem volta ao início sem salto
     let half = sources.slice();
-    while (half.length < 8) half = half.concat(sources);
-    if (half.length % 2) half = half.concat(sources[0]);
+    while (half.length < 12) half = half.concat(sources);
+    half = half.slice(0, Math.floor(half.length / 3) * 3);
     track.innerHTML = '';
     half.concat(half).forEach((item, i) => {
       const img = document.createElement('img');
@@ -80,7 +85,7 @@ if (devices) {
 
   const phone = devices.querySelector('.phone-screen');
   if (phone && sources.length) {
-    const order = sources.slice().reverse();
+    const order = stories.length >= 2 ? stories : sources.slice().reverse();
     phone.innerHTML = '';
     const imgs = order.map((item, i) => {
       const img = document.createElement('img');
@@ -110,11 +115,7 @@ if (devices) {
 const works = document.querySelector('.works');
 if (works) {
   const btns = document.querySelectorAll('.works-btn');
-  const step = () => {
-    const card = works.querySelector('.work');
-    const gap = parseFloat(getComputedStyle(works).columnGap) || 0;
-    return card ? card.getBoundingClientRect().width + gap : works.clientWidth * 0.8;
-  };
+  const step = () => Math.max(240, works.clientWidth * 0.75);
   const update = () => {
     const max = works.scrollWidth - works.clientWidth - 2;
     btns.forEach((b) => {
@@ -142,11 +143,7 @@ if (works) {
   window.addEventListener('pointerup', () => {
     if (!down) return;
     down = false;
-    if (moved) {
-      works.classList.remove('is-dragging');
-      const i = Math.round(works.scrollLeft / step());
-      works.scrollTo({ left: i * step(), behavior: 'smooth' });
-    }
+    if (moved) works.classList.remove('is-dragging');
   });
   works.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); works.scrollBy({ left: step(), behavior: 'smooth' }); }

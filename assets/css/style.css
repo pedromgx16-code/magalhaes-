@@ -395,7 +395,7 @@ h1, h2, h3 { margin: 0; font-weight: 800; font-stretch: 125%; font-variation-set
   .motion-tall { display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory; margin-left: calc(var(--pad) * -1); margin-right: calc(var(--pad) * -1); padding: 0 var(--pad) 0.5rem; scroll-padding-inline: var(--pad); scrollbar-width: none; }
   .motion-tall::-webkit-scrollbar { display: none; }
   .motion-tall .motion { flex: 0 0 72vw; scroll-snap-align: start; }
-  .works-posts { --art-h: min(58vh, 400px); }
+  .works { --art-h: min(58vh, 400px); }
   .works-stories { --art-h: min(68vh, 520px); }
   .works-banners { --art-h: 190px; }
   .works-tabs { display: flex; width: 100%; }

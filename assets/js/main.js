@@ -188,7 +188,7 @@ if (panels.length) {
       img.src = card.dataset.full;
       img.alt = thumb.alt;
       if (/^https?:/.test(card.dataset.full)) img.referrerPolicy = 'no-referrer';
-      count.textContent = (index + 1) + ' de ' + items.length;
+      if (count) count.textContent = (index + 1) + ' de ' + items.length;
     };
     const open = (card) => {
       items = [...card.parentElement.querySelectorAll('.work')];

@@ -170,6 +170,11 @@ if (panels.length) {
   });
   update();
 
+  // Pré-carrega as abas escondidas depois que a página termina de abrir
+  window.addEventListener('load', () => setTimeout(() => {
+    panels.forEach((p) => p.querySelectorAll('img[loading="lazy"]').forEach((i) => (i.loading = 'eager')));
+  }, 2500));
+
   // Tela cheia
   const lb = document.getElementById('lightbox');
   if (lb) {

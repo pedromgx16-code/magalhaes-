@@ -231,6 +231,39 @@ if (panels.length) {
   }
 }
 
+// Motion: toca sem som quando aparece na tela; o botão liga o som (só de um vídeo por vez)
+const motions = [...document.querySelectorAll('.motion')];
+if (motions.length) {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = motions.map((m) => ({ video: m.querySelector('video'), btn: m.querySelector('.motion-sound') }));
+  const setSound = (item, on) => {
+    item.video.muted = !on;
+    item.btn.setAttribute('aria-pressed', String(on));
+    const title = item.video.getAttribute('aria-label');
+    item.btn.setAttribute('aria-label', (on ? 'Desativar som de ' : 'Ativar som de ') + title);
+  };
+  const play = (v) => { v.preload = 'auto'; const p = v.play(); if (p) p.catch(() => {}); };
+  items.forEach((item) => {
+    item.btn.addEventListener('click', () => {
+      const on = item.video.muted;
+      items.forEach((other) => { if (other !== item) setSound(other, false); });
+      setSound(item, on);
+      if (on) play(item.video);
+    });
+    item.video.addEventListener('click', () => (item.video.paused ? play(item.video) : item.video.pause()));
+  });
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        const v = e.target;
+        if (e.isIntersecting) play(v);
+        else if (!v.paused) v.pause();
+      });
+    }, { threshold: 0.45 });
+    items.forEach((item) => io.observe(item.video));
+  }
+}
+
 // Logo do Visual Creator: se a imagem faltar, mostra o "V" desenhado
 document.querySelectorAll('img[data-fallback]').forEach((img) => {
   const swap = () => {

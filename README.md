@@ -21,4 +21,8 @@ Todas as páginas usam a Paleta Magalhães, com o azul como cor dominante:
 
 Os outros tons do CSS são misturas dessas cinco (por exemplo, o Azul Magalhães escurecido com Preto Tinta). As variáveis ficam no topo de `assets/css/home.css`.
 
+## Marca
+
+O "M" do ícone da aba (`assets/img/favicon.svg`) é desenhado com a fonte Greek Freak. No site, a mesma letra vem de `assets/fonts/greek-freak-m.woff2`, um arquivo da fonte só com o "M".
+
 Publicado pelo GitHub Pages.

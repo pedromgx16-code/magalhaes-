@@ -1,6 +1,16 @@
 /* Magalhães | página inicial
    Paleta Magalhães: Azul Magalhães, Azul Céu, Preto Tinta, Gelo e branco. O azul é a cor dominante.
-   Tipografia: Instrument Sans (texto e títulos) e Instrument Serif itálica (palavras de destaque). */
+   Tipografia: Instrument Sans (texto e títulos) e Instrument Serif itálica (palavras de destaque).
+   O "M" da marca usa a Greek Freak (arquivo só com a letra M, pra ficar leve). */
+
+@font-face {
+  font-family: "Greek Freak";
+  src: url("../fonts/greek-freak-m.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+004D;
+}
 
 :root {
   /* Paleta Magalhães */
@@ -152,11 +162,11 @@ html:not(.js) .intro, .no-intro .intro { display: none; }
   display: grid; place-items: center;
   width: 112px; height: 112px; border-radius: 32px;
   background: linear-gradient(150deg, var(--ceu), var(--azul) 60%, var(--azul-80)); color: var(--branco);
-  font-size: 4.4rem; font-weight: 700; letter-spacing: -0.06em; line-height: 1;
+  font-family: "Greek Freak", var(--sans); font-size: 4.6rem; font-weight: 400; line-height: 1;
   box-shadow: 0 0 90px rgba(var(--azul-rgb), 0.55);
   animation: mark-in 0.8s var(--ease-back) both;
 }
-.intro-mark span { display: block; transform: translateY(-0.02em); }
+.intro-mark span { display: block; transform: translateY(0.075em); }
 @keyframes mark-in { from { opacity: 0; transform: scale(0.35) rotate(-14deg); } }
 @keyframes intro-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
 
@@ -378,7 +388,7 @@ html:not(.js) .intro, .no-intro .intro { display: none; }
 .proof-faces { display: flex; flex: none; }
 .proof-faces > * { width: 40px; height: 40px; margin-left: -10px; border-radius: 50%; border: 2px solid var(--branco); object-fit: cover; }
 .proof-faces > :first-child { margin-left: 0; }
-.proof-m { display: grid; place-items: center; background: var(--azul); color: var(--branco); font-weight: 700; font-size: 1rem; letter-spacing: -0.04em; position: relative; z-index: 1; transform: scale(1.12); }
+.proof-m { display: grid; place-items: center; padding-top: 0.12em; background: var(--azul); color: var(--branco); font-family: "Greek Freak", var(--sans); font-weight: 400; font-size: 1.15rem; line-height: 1; position: relative; z-index: 1; transform: scale(1.12); }
 .text-link { display: inline-flex; align-items: center; gap: 0.45rem; padding-bottom: 2px; border-bottom: 1.5px solid currentColor; font-weight: 600; text-decoration: none; transition: gap 0.3s var(--ease); }
 .text-link svg { width: 18px; height: 18px; }
 .text-link:hover { gap: 0.75rem; }

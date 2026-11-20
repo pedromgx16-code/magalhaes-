@@ -4,9 +4,21 @@ Site de Pedro Magalhães, designer gráfico, com a página do Visual Creator.
 
 - `index.html`: início (projetos, sobre, motion, serviços, como funciona, Visual Creator, dúvidas, contato)
 - `visual-creator/index.html`: Visual Creator Texture e Visual Creator Library
-- `assets/css/home.css` e `assets/js/home.js`: visual e efeitos da página inicial (preto, azul-marinho, azul elétrico e azul-céu)
+- `assets/css/home.css` e `assets/js/home.js`: visual e efeitos da página inicial
 - `assets/css/style.css`: visual da página do Visual Creator
 - `assets/js/main.js`: promoção (data de fim em `PROMO_FIM`), menu, carrossel, tela cheia e vídeos, usado nas duas páginas
 - `assets/img/trabalhos/thumb/`: versões leves das artes, usadas nas miniaturas
+
+## Cores
+
+Todas as páginas usam a Paleta Magalhães, com o azul como cor dominante:
+
+- Azul Magalhães `#087CFF`
+- Azul Céu `#57A6FF`
+- Preto Tinta `#060B14`
+- Gelo `#F1F8FF`
+- Branco `#FFFFFF`
+
+Os outros tons do CSS são misturas dessas cinco (por exemplo, o Azul Magalhães escurecido com Preto Tinta). As variáveis ficam no topo de `assets/css/home.css`.
 
 Publicado pelo GitHub Pages.

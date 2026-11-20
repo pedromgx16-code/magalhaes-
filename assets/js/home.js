@@ -21,6 +21,15 @@
     root.classList.add('io-on', 'no-io');
   }
 
+  // Animações decorativas (brilhos, faixa, cartões flutuando) param quando a seção sai da tela
+  if (hasIO) {
+    const zones = document.querySelectorAll('.hero, .marquee-wrap, .section, .cta-section');
+    const offscreen = new IntersectionObserver((entries) => {
+      entries.forEach((e) => e.target.classList.toggle('is-off', !e.isIntersecting));
+    }, { rootMargin: '150px 0px' });
+    zones.forEach((z) => offscreen.observe(z));
+  }
+
   // Menu: fundo mais forte depois de rolar e destaque da seção atual
   const nav = document.querySelector('.nav');
   if (nav) {
@@ -133,23 +142,32 @@
     const pad = (n) => String(n).padStart(2, '0');
     const centerOf = (c) => c.offsetLeft + c.offsetWidth / 2;
     let current = -1, ticking = false;
+    // Guarda o centro de cada arte e o último valor aplicado: só mexe no que mudou
+    let centers = cards.map(centerOf);
+    const lastT = cards.map(() => NaN);
+    const lastZ = cards.map(() => NaN);
+    const measure = () => { centers = cards.map(centerOf); };
 
     const layout = () => {
       ticking = false;
       const mid = cf.scrollLeft + cf.clientWidth / 2;
       const unit = Math.max(240, cf.clientWidth * 0.26);
       let best = 0, bestD = Infinity;
-      cards.forEach((c, i) => {
-        const d = (centerOf(c) - mid) / unit;
+      for (let i = 0; i < total; i++) {
+        const c = cards[i];
+        const d = (centers[i] - mid) / unit;
         const ad = Math.abs(d);
         if (ad < bestD) { bestD = ad; best = i; }
-        if (!reduce) {
-          const t = Math.max(-1.2, Math.min(1.2, d));
-          c.style.setProperty('--t', t.toFixed(3));
-          c.style.setProperty('--a', Math.abs(t).toFixed(3));
-          c.style.zIndex = String(100 - Math.min(99, Math.round(ad * 10)));
+        if (reduce) continue;
+        const t = Math.round(Math.max(-1.2, Math.min(1.2, d)) * 500) / 500;
+        if (t !== lastT[i]) {
+          lastT[i] = t;
+          c.style.setProperty('--t', String(t));
+          c.style.setProperty('--a', String(Math.abs(t)));
         }
-      });
+        const z = 100 - Math.min(99, Math.round(ad * 10));
+        if (z !== lastZ[i]) { lastZ[i] = z; c.style.zIndex = String(z); }
+      }
       if (best !== current) {
         current = best;
         cards.forEach((c, i) => c.classList.toggle('is-center', i === best));
@@ -164,7 +182,8 @@
     };
 
     cf.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', request);
+    window.addEventListener('resize', () => { measure(); request(); });
+    cards.forEach((c) => { const img = c.querySelector('img'); if (img && !img.complete) img.addEventListener('load', () => { measure(); request(); }, { once: true }); });
     document.querySelectorAll('.cf-btn').forEach((b) => b.addEventListener('click', () => go(current + Number(b.dataset.dir))));
 
     // Clicar numa arte do lado traz ela pro meio; clicar na do meio abre em tela cheia (main.js)
@@ -183,6 +202,7 @@
       if (touched) return;
       const prev = cf.style.scrollSnapType;
       cf.style.scrollSnapType = 'none';
+      measure();
       cf.scrollLeft = centerOf(cards[Math.min(2, total - 1)]) - cf.clientWidth / 2;
       cf.style.scrollSnapType = prev;
       layout();

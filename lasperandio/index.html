@@ -185,6 +185,11 @@ em{font-style:italic;color:var(--gold);font-weight:400}
 .moments button.act{color:var(--gold2)}
 .moments button:hover{color:var(--gold2)}
 .free{margin-top:20px;font-size:15px;color:var(--muted)}
+.sitecard{display:grid;gap:6px;margin-top:22px;padding:20px 22px;border-radius:22px;border:1px solid rgba(226,178,92,.4);background:linear-gradient(160deg,rgba(90,20,20,.55),rgba(36,17,16,.6));text-decoration:none;transition:transform .4s var(--ease),border-color .3s}
+.sitecard:hover{transform:translateY(-3px);border-color:var(--gold)}
+.sitecard .k{font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.sitecard b{font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.1}
+.sitecard span:last-child{color:var(--muted);font-size:15px}
 .free b{color:var(--ink)}
 
 /* ---------- 05 entregas ---------- */
@@ -453,6 +458,11 @@ footer{padding:28px 0 110px;border-top:1px solid var(--line);font-size:13px;colo
         <li><button data-t="17.5"><span>00:17</span>Peça pelo link da bio</button></li>
       </ul>
       <p class="free" data-reveal><b>O vídeo é de vocês:</b> podem postar, com ou sem fechar comigo.</p>
+      <a class="sitecard" href="site/" data-reveal>
+        <span class="k">Bônus</span>
+        <b>Uma amostra de site pra La Sperandio</b>
+        <span>Esfihas que giram na tábua, pizzas da casa, Centro e Itambi com pedido em um toque. Toque pra abrir.</span>
+      </a>
     </div>
   </div>
 </section>

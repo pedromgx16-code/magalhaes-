@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>La Sperandio · Pizza e Esfiha · Amostra de site</title>
+<meta name="description" content="Amostra de site criada por Magalhães para a La Sperandio Pizzaria e Esfiharia, Itaboraí.">
+<meta name="theme-color" content="#1A0909">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1A0909;
+  --night2:#240D0C;
+  --wine:#6E1418;
+  --wine2:#8E1B1B;
+  --cream:#F5ECDF;
+  --paper:#EFE3D1;
+  --ink:#2A0E0D;
+  --muted:#7A5E52;
+  --gold:#C99A45;
+  --gold2:#E7C27A;
+  --line:rgba(42,14,13,.14);
+  --lined:rgba(245,236,223,.14);
+  --f-serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --f-sans:"DM Sans","Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --check:repeating-conic-gradient(var(--wine) 0 25%,var(--cream) 0 50%) 0 0/26px 26px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--f-sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{margin:0;font-family:var(--f-serif);font-weight:600;line-height:1;letter-spacing:-.01em;text-wrap:balance}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+.caps{font-family:var(--f-sans);font-size:12.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase}
+.tracked{font-family:var(--f-serif);font-weight:600;text-transform:uppercase;letter-spacing:.28em}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+.pre{opacity:0;transform:translateY(24px);filter:blur(8px)}
+[data-r]{transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease);transition-delay:var(--d,0s)}
+
+/* selo de amostra */
+.demo{background:var(--gold);color:var(--ink);font-size:13px;font-weight:600;text-align:center;padding:9px 16px;position:relative;z-index:70}
+.demo a{font-weight:700}
+
+/* cabeçalho */
+.hd{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s}
+.hd .wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
+.hd .logo{width:118px}
+.hd nav{display:none;gap:30px;font-size:14px;font-weight:600;letter-spacing:.06em}
+.hd nav a{text-decoration:none;color:var(--cream);opacity:.85}
+.hd nav a:hover{opacity:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 24px;border-radius:999px;font:700 15px var(--f-sans);letter-spacing:.04em;text-decoration:none;border:0;cursor:pointer;transition:transform .35s var(--ease),background .3s,color .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.wine{background:var(--wine2);color:var(--cream)}
+.btn.cream{background:var(--cream);color:var(--ink)}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.ghost{border:1px solid rgba(245,236,223,.4);color:var(--cream)}
+.btn.ghostd{border:1px solid rgba(42,14,13,.3);color:var(--ink)}
+.hd .btn{min-height:42px;padding:0 18px;font-size:13.5px}
+.hd.solid{background:rgba(26,9,9,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--lined)}
+
+/* hero */
+.hero{background:radial-gradient(80% 55% at 50% 0%,#4A1512 0%,rgba(74,21,18,0) 70%),var(--night);color:var(--cream);margin-top:-74px;padding-top:150px;text-align:center;overflow:hidden;position:relative}
+.hero .caps{color:var(--gold2)}
+.hero h1{font-size:clamp(52px,13.5vw,124px);font-weight:500;line-height:.95;margin:22px auto 0;max-width:11ch}
+.hero h1 i{font-style:italic;color:var(--gold2)}
+.hero .sub{max-width:44ch;margin:24px auto 0;color:rgba(245,236,223,.75);font-size:17.5px}
+.hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.hero .hours{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font-size:13.5px;color:rgba(245,236,223,.7)}
+.hero .hours i{width:8px;height:8px;border-radius:50%;background:#59C27A;box-shadow:0 0 12px #59C27A}
+.plate{position:relative;width:min(132vw,1000px);aspect-ratio:1;margin:60px auto calc(min(132vw,1000px) * -0.52);}
+.plate img{width:100%;animation:turn 120s linear infinite;filter:drop-shadow(0 -30px 80px rgba(0,0,0,.6))}
+.plate::before{content:"";position:absolute;inset:-12%;background:radial-gradient(closest-side,rgba(226,140,70,.30),rgba(226,140,70,0));z-index:-1}
+@keyframes turn{to{transform:rotate(360deg)}}
+
+/* faixa xadrez */
+.check{height:26px;background:var(--check)}
+
+/* a casa */
+.casa{padding:96px 0;position:relative}
+.casa .grid{display:grid;gap:44px}
+.casa .caps{color:var(--wine2)}
+.casa h2{font-size:clamp(46px,11vw,92px);font-weight:500;margin-top:16px}
+.casa h2 i{color:var(--wine2)}
+.casa .txt{margin-top:22px;max-width:46ch;color:var(--muted);font-size:18px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.facts div{padding:18px 0}
+.facts div+div{border-left:1px solid var(--line);padding-left:16px}
+.facts b{display:block;font-family:var(--f-serif);font-size:44px;line-height:1;color:var(--wine)}
+.facts small{font-size:13px;color:var(--muted)}
+.frames{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:end}
+.fr{position:relative;padding:12px;background:var(--check);border-radius:4px}
+.fr img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:2px}
+.fr.b img{aspect-ratio:3/4}
+.fr .lb{position:absolute;left:24px;bottom:24px;background:var(--cream);padding:7px 12px;font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+
+/* esfihas: gire a tabua */
+.giro{background:var(--night);color:var(--cream);padding:96px 0 110px;position:relative;overflow:hidden}
+.giro .head{text-align:center}
+.giro .caps{color:var(--gold2)}
+.giro h2{font-size:clamp(46px,11vw,92px);font-weight:500;margin-top:16px}
+.giro h2 i{color:var(--gold2)}
+.giro .lead{max-width:44ch;margin:18px auto 0;color:rgba(245,236,223,.72)}
+.wheel{position:relative;width:min(92vw,560px);aspect-ratio:1;margin:56px auto 0;touch-action:none;cursor:grab;user-select:none}
+.wheel.drag{cursor:grabbing}
+.wheel img{width:100%;pointer-events:none;filter:drop-shadow(0 40px 70px rgba(0,0,0,.6));will-change:transform}
+.wheel .pin{position:absolute;left:50%;top:-34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2}
+.wheel .pin span{font-size:10.5px;font-weight:700;letter-spacing:.3em;color:var(--gold2)}
+.wheel .pin i{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid var(--gold)}
+.wheel .ring{position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(201,154,69,.35);pointer-events:none}
+.info{text-align:center;margin-top:34px;min-height:170px}
+.info .tag{display:inline-block;padding:6px 12px;border:1px solid rgba(201,154,69,.5);border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.24em;color:var(--gold2)}
+.info h3{font-size:clamp(40px,9vw,58px);font-weight:600;margin-top:14px}
+.info p{color:rgba(245,236,223,.72);margin-top:8px}
+.info .ctrl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:20px;font-size:13px;letter-spacing:.2em;color:rgba(245,236,223,.6)}
+.info .ctrl button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;border:1px solid var(--lined);display:grid;place-items:center;color:var(--cream)}
+.info .ctrl button:hover{border-color:var(--gold)}
+.hint{text-align:center;margin-top:14px;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,236,223,.45)}
+.center-note{text-align:center;margin-top:26px;font-size:15px;color:rgba(245,236,223,.6)}
+.center-note b{color:var(--cream);font-weight:600}
+
+/* doce na hora */
+.doce{background:var(--paper);padding:96px 0}
+.doce .grid{display:grid;gap:40px;align-items:center}
+.doce .caps{color:var(--wine2)}
+.doce h2{font-size:clamp(46px,11vw,88px);font-weight:500;margin-top:16px}
+.doce h2 i{color:var(--wine2)}
+.doce .txt{margin-top:20px;color:var(--muted);font-size:18px;max-width:44ch}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:220px 220px 6px 6px}
+.duo img+img{margin-top:60px;border-radius:6px 6px 220px 220px}
+.item{display:grid;gap:2px;padding:16px 0;border-bottom:1px solid var(--line)}
+.item:first-of-type{border-top:1px solid var(--line);margin-top:28px}
+.item b{font-family:var(--f-serif);font-size:28px;font-weight:600}
+.item span{color:var(--muted);font-size:16px}
+
+/* pizzas */
+.pizzas{padding:96px 0;background:var(--cream)}
+.pizzas .head{display:grid;gap:18px}
+.pizzas .caps{color:var(--wine2)}
+.pizzas h2{font-size:clamp(46px,11vw,92px);font-weight:500}
+.pizzas h2 i{color:var(--wine2)}
+.menu{margin-top:40px;display:grid;gap:0}
+.dish{display:grid;grid-template-columns:1fr auto;gap:4px 18px;padding:24px 0;border-bottom:1px solid var(--line)}
+.dish:first-child{border-top:1px solid var(--line)}
+.dish h3{font-size:clamp(30px,6.5vw,40px);font-weight:600}
+.dish .tagp{align-self:center;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--wine2);border:1px solid rgba(110,20,24,.35);border-radius:999px;padding:6px 11px;white-space:nowrap}
+.dish p{grid-column:1/-1;color:var(--muted);font-size:16px;max-width:60ch}
+.menu-cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.menu-cta small{color:var(--muted);font-size:14px;width:100%}
+.feat{margin-top:44px;display:grid;gap:14px}
+.feat .ph{position:relative;border-radius:6px;overflow:hidden}
+.feat .ph img{width:100%;aspect-ratio:16/11;object-fit:cover}
+.feat .ph span{position:absolute;left:16px;bottom:16px;background:var(--night);color:var(--cream);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:8px 12px}
+
+/* unidades */
+.units{background:var(--night2);color:var(--cream);padding:96px 0}
+.units .caps{color:var(--gold2)}
+.units h2{font-size:clamp(46px,11vw,92px);font-weight:500;margin-top:16px}
+.units h2 i{color:var(--gold2)}
+.tabs{display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:rgba(245,236,223,.08);margin-top:30px}
+.tabs button{all:unset;cursor:pointer;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.2em;color:rgba(245,236,223,.7)}
+.tabs button[aria-selected="true"]{background:var(--cream);color:var(--ink)}
+.unit{display:none;margin-top:30px;grid-template-columns:1fr;gap:24px}
+.unit.on{display:grid}
+.ucard{border:1px solid var(--lined);border-radius:8px;padding:28px;background:rgba(245,236,223,.03)}
+.ucard h3{font-size:44px;font-weight:600}
+.ucard .addr{margin-top:10px;color:rgba(245,236,223,.8)}
+.ucard .ref{color:rgba(245,236,223,.55);font-size:15px}
+.ucard .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.ucard ul{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:10px;font-size:15px;color:rgba(245,236,223,.75)}
+.ucard li{display:flex;gap:10px;align-items:center}
+.ucard li svg{flex:none;color:var(--gold)}
+.uimg{border-radius:8px;overflow:hidden}
+.uimg img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3}
+
+/* final */
+.final{background:var(--wine);color:var(--cream);text-align:center;padding:110px 0;position:relative;overflow:hidden}
+.final h2{font-size:clamp(54px,14vw,128px);font-weight:500;line-height:.92}
+.final h2 i{color:var(--gold2)}
+.final p{margin:20px auto 0;max-width:40ch;color:rgba(245,236,223,.8)}
+.final .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.final .slogan{font-family:var(--f-serif);font-style:italic;font-size:24px;color:var(--gold2);margin-top:44px}
+footer{background:var(--night);color:rgba(245,236,223,.6);padding:50px 0 120px;font-size:14px}
+footer .grid{display:grid;gap:26px}
+footer img{width:140px}
+footer b{color:var(--cream);font-weight:600}
+footer a{text-decoration:none}
+.made{margin-top:30px;padding-top:20px;border-top:1px solid var(--lined);font-size:13px}
+.sticky{position:fixed;left:16px;right:16px;bottom:14px;z-index:65;display:flex;gap:8px;transform:translateY(140%);transition:transform .5s var(--ease)}
+.sticky.show{transform:none}
+.sticky .btn{flex:1;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+
+@media (min-width:880px){
+  .hd nav{display:flex}
+  .hero{padding-top:130px}
+  .hero h1{font-size:clamp(64px,7.4vw,104px);max-width:15ch}
+  .plate{width:820px;margin:44px auto -440px}
+  .casa .grid{grid-template-columns:1fr 1fr;align-items:center;gap:70px}
+  .doce .grid{grid-template-columns:1fr 1fr;gap:70px}
+  .pizzas .head{grid-template-columns:1fr 1fr;align-items:end}
+  .pizzas .body{display:grid;grid-template-columns:1.2fr .8fr;gap:60px;align-items:start}
+  .feat{margin-top:40px;position:sticky;top:110px}
+  .unit{grid-template-columns:1fr 1fr}
+  footer .grid{grid-template-columns:1.2fr 1fr 1fr 1fr}
+  .sticky{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .pre{opacity:1;transform:none;filter:none}
+}
+</style>
+</head>
+<body>
+
+<div class="demo">Amostra de site criada por Magalhães para a La Sperandio. <a href="../">Ver a proposta</a></div>
+
+<header class="hd" id="hd">
+  <div class="wrap">
+    <a href="#topo" aria-label="La Sperandio, início"><img class="logo" src="../logo.webp" alt="La Sperandio Pizzaria e Esfiharia" width="680" height="390"></a>
+    <nav aria-label="Seções"><a href="#casa">A casa</a><a href="#esfihas">Esfihas</a><a href="#pizzas">Pizzas</a><a href="#unidades">Unidades</a></nav>
+    <a class="btn wine" href="#unidades">Peça agora</a>
+  </div>
+</header>
+
+<main id="topo">
+<section class="hero">
+  <div class="wrap">
+    <p class="caps" data-r>Pizzaria &amp; Esfiharia · Itaboraí</p>
+    <h1 data-r style="--d:.08s">Massa aberta na mão. <i>Assada na hora.</i></h1>
+    <p class="sub" data-r style="--d:.16s">26 sabores de pizza, 26 de esfiha e duas casas pra você: no Centro de Itaboraí e em Itambi.</p>
+    <div class="ctas" data-r style="--d:.22s"><a class="btn gold" href="#unidades">Peça agora</a><a class="btn ghost" href="#esfihas">Gire a tábua</a></div>
+    <p class="hours" data-r style="--d:.28s"><i></i>Terça a domingo, das 18h às 00h</p>
+  </div>
+  <div class="plate" aria-hidden="true"><img src="tabua-giro.webp" alt="" width="1100" height="1100"></div>
+</section>
+<div class="check" aria-hidden="true"></div>
+
+<section class="casa" id="casa">
+  <div class="wrap grid">
+    <div>
+      <p class="caps" data-r>A casa</p>
+      <h2 data-r>Sabor em cada <i>momento.</i></h2>
+      <p class="txt" data-r>A massa é aberta todo dia, na mão. A esfiha só vai pro forno quando o pedido entra, por isso chega macia por dentro e dourada por fora. Agora também com salão no Centro de Itaboraí, pra sentar com a família e comer quentinha.</p>
+      <div class="facts" data-r>
+        <div><b>26</b><small>sabores de pizza</small></div>
+        <div><b>26</b><small>sabores de esfiha</small></div>
+        <div><b>2</b><small>casas em Itaboraí</small></div>
+      </div>
+    </div>
+    <div class="frames" data-r>
+      <div class="fr"><img src="../massa.webp" alt="Massa sendo aberta à mão na bancada" loading="lazy"><span class="lb">Massa do dia</span></div>
+      <div class="fr b"><img src="balcao.webp" alt="Balcão vermelho com o logo da La Sperandio" loading="lazy"><span class="lb">Unidade Centro</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="giro" id="esfihas">
+  <div class="wrap">
+    <div class="head">
+      <p class="caps" data-r>Esfihas abertas</p>
+      <h2 data-r>Gire a <i>tábua.</i></h2>
+      <p class="lead" data-r>Salgadas e doces, saindo do forno do jeito que chegam na mesa. Arraste a tábua pra escolher.</p>
+    </div>
+    <div class="wheel" id="wheel" data-r aria-roledescription="carrossel" aria-label="Tábua de esfihas">
+      <div class="pin" aria-hidden="true"><span>ESCOLHA</span><i></i></div>
+      <div class="ring" aria-hidden="true"></div>
+      <img id="wimg" src="tabua-giro.webp" alt="Tábua com seis esfihas abertas, salgadas e doces" width="1100" height="1100">
+    </div>
+    <div class="info" aria-live="polite">
+      <span class="tag" id="wtag">DOCE</span>
+      <h3 id="wname">Morango com creme</h3>
+      <p id="wdesc">Creme branco e morango fresco por cima.</p>
+      <div class="ctrl"><button type="button" id="prev" aria-label="Esfiha anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><span id="wcount">1 / 5</span><button type="button" id="next" aria-label="Próxima esfiha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></div>
+    </div>
+    <p class="hint">Arraste pra girar</p>
+    <p class="center-note">No centro da tábua: <b>frango com bacon</b>. No cardápio, 26 sabores de esfiha.</p>
+  </div>
+</section>
+
+<section class="doce">
+  <div class="wrap grid">
+    <div class="duo" data-r>
+      <img src="macarico.webp" alt="Marshmallow sendo maçaricado em cima da esfiha" loading="lazy">
+      <img src="doces.webp" alt="Esfihas doces com chocolate e confeitos na tábua" loading="lazy">
+    </div>
+    <div>
+      <p class="caps" data-r>Pra fechar o pedido</p>
+      <h2 data-r>Doce, <i>maçaricado na hora.</i></h2>
+      <p class="txt" data-r>A esfiha também vira sobremesa. O marshmallow e o chocolate branco ganham fogo na frente de quem pediu.</p>
+      <div data-r>
+        <div class="item"><b>Banana Nevada</b><span>banana, canela e chocolate branco maçaricado</span></div>
+        <div class="item"><b>Nutella e marshmallow</b><span>marshmallow maçaricado na hora</span></div>
+        <div class="item"><b>Confeitos</b><span>chocolate cremoso e confeitos coloridos</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="check" aria-hidden="true"></div>
+
+<section class="pizzas" id="pizzas">
+  <div class="wrap">
+    <div class="head">
+      <div><p class="caps" data-r>Pizzas da casa</p><h2 data-r style="margin-top:16px">Pra dividir <i>na mesa.</i></h2></div>
+      <p data-r style="color:var(--muted);font-size:18px;max-width:44ch">Massa artesanal, borda recheada e tamanho gigante pra família toda. Alguns sabores que mais saem:</p>
+    </div>
+    <div class="body">
+      <div class="menu" data-r>
+        <div class="dish"><h3>Camarão Especial</h3><span class="tagp">Gigante · 40 cm</span><p>Molho de camarão, mussarela, parmesão, camarão XG e requeijão, com molho tarê por cima. A cebolinha entra depois do forno, pra não murchar.</p></div>
+        <div class="dish"><h3>Carne Seca</h3><span class="tagp">Da casa</span><p>Carne seca desfiada com rodelas de cebola roxa.</p></div>
+        <div class="dish"><h3>Costela com Creme de Aipim</h3><span class="tagp">Da casa</span><p>Costela com creme de aipim.</p></div>
+        <div class="dish"><h3>Frango com Bacon</h3><span class="tagp">Clássica</span><p>Frango com bacon.</p></div>
+        <div class="dish"><h3>Quatro Queijos</h3><span class="tagp">Clássica</span><p>Queijos gratinados com orégano.</p></div>
+        <div class="dish"><h3>Combo Pizza Família</h3><span class="tagp">Combo</span><p>Pizza grande, quatro esfihas doces e Flexa de 2 litros.</p></div>
+      </div>
+      <div class="feat" data-r>
+        <div class="ph"><img src="../camarao.webp" alt="Esfiha de camarão sendo aberta, com recheio cremoso" loading="lazy"><span>Recheio de verdade</span></div>
+        <div class="menu-cta"><small>Cardápio completo, com preços, no pedido online.</small><a class="btn wine" href="https://app.cardapioweb.com/la_sperandio_pizzaria__centro?s=site" target="_blank" rel="noopener">Cardápio Centro</a><a class="btn ghostd" href="https://app.cardapioweb.com/la_sperandio_pizzaria__itambi?s=site" target="_blank" rel="noopener">Cardápio Itambi</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="units" id="unidades">
+  <div class="wrap">
+    <p class="caps" data-r>Unidades</p>
+    <h2 data-r>Duas casas, <i>a mesma massa.</i></h2>
+    <div class="tabs" role="tablist" data-r>
+      <button role="tab" aria-selected="true" aria-controls="u-centro" id="t-centro">CENTRO</button>
+      <button role="tab" aria-selected="false" aria-controls="u-itambi" id="t-itambi">ITAMBI</button>
+    </div>
+    <div class="unit on" id="u-centro" role="tabpanel" aria-labelledby="t-centro">
+      <div class="ucard">
+        <h3>Centro</h3>
+        <p class="addr">Rua Pedro Azeredo, 143, Centro, Itaboraí</p>
+        <p class="ref">Na rua da Smart Fit, ao lado do Dubai Clube da Cerveja</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Terça a domingo, das 18h às 00h</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18M5 11V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M6 11v9M18 11v9"/></svg>Salão pra comer no local e delivery</li>
+        </ul>
+        <div class="row">
+          <a class="btn gold" href="https://app.cardapioweb.com/la_sperandio_pizzaria__centro?s=site" target="_blank" rel="noopener">Pedir pelo cardápio</a>
+          <a class="btn ghost" href="https://wa.me/5521988784956?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20pedido%21" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn ghost" href="https://maps.app.goo.gl/bx26K8tkkhH9to4k8" target="_blank" rel="noopener">Como chegar</a>
+        </div>
+      </div>
+      <div class="uimg"><img src="balcao.webp" alt="Balcão da unidade Centro" loading="lazy"></div>
+    </div>
+    <div class="unit" id="u-itambi" role="tabpanel" aria-labelledby="t-itambi">
+      <div class="ucard">
+        <h3>Itambi</h3>
+        <p class="addr">Itambi, Itaboraí</p>
+        <p class="ref">A primeira casa da La Sperandio</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Terça a domingo, das 18h às 00h</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14l-1.5-7h-11z"/><circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/></svg>Pedidos pelo cardápio online e WhatsApp</li>
+        </ul>
+        <div class="row">
+          <a class="btn gold" href="https://app.cardapioweb.com/la_sperandio_pizzaria__itambi?s=site" target="_blank" rel="noopener">Pedir pelo cardápio</a>
+          <a class="btn ghost" href="https://wa.me/5521959482278?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20pedido%21" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn ghost" href="https://share.google/cubCl9MUYULivfOMc" target="_blank" rel="noopener">Como chegar</a>
+        </div>
+      </div>
+      <div class="uimg"><img src="doces.webp" alt="Esfihas doces na tábua" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2 data-r>Bateu a <i>fome?</i></h2>
+    <p data-r>Escolha a casa mais perto e peça em poucos toques. Ou venha pro salão do Centro.</p>
+    <div class="ctas" data-r><a class="btn cream" href="#unidades">Peça agora</a><a class="btn ghost" href="https://www.instagram.com/lasperandiopizzaria/" target="_blank" rel="noopener">@lasperandiopizzaria</a></div>
+    <p class="slogan" data-r>Sabor em cada momento.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div><img src="../logo.webp" alt="La Sperandio" width="680" height="390"></div>
+      <div><b>Centro</b><br>Rua Pedro Azeredo, 143<br>Itaboraí, RJ</div>
+      <div><b>Itambi</b><br>Itaboraí, RJ</div>
+      <div><b>Horário</b><br>Terça a domingo<br>18h às 00h</div>
+    </div>
+    <p class="made">Amostra de site criada por Magalhães · <a href="https://magalhaescreator.com.br">magalhaescreator.com.br</a></p>
+  </div>
+</footer>
+<div class="sticky" id="sticky"><a class="btn gold" href="#unidades">Peça agora</a><a class="btn cream" href="#esfihas">Esfihas</a></div>
+
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* cabeçalho e botão fixo */
+  var hd=document.getElementById('hd'), st=document.getElementById('sticky'), un=document.getElementById('unidades');
+  function onS(){ var y=window.scrollY||0; hd.classList.toggle('solid',y>40); var r=un.getBoundingClientRect(); st.classList.toggle('show',y>500&&(r.top>innerHeight||r.bottom<0)); }
+  window.addEventListener('scroll',onS,{passive:true}); onS();
+
+  /* abas das unidades */
+  var tabs=[].slice.call(document.querySelectorAll('[role=tab]'));
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ tabs.forEach(function(o){ var on=o===t; o.setAttribute('aria-selected',on); document.getElementById(o.getAttribute('aria-controls')).classList.toggle('on',on); }); }); });
+
+  /* gire a tabua: angulos das esfihas na foto (0 = direita, sentido horario) */
+  var items=[
+    {a:-129.3,tag:'DOCE',name:'Morango com creme',desc:'Creme branco e morango fresco por cima.'},
+    {a:-60.6,tag:'DOCE',name:'Banana com doce de leite',desc:'Banana em rodelas, doce de leite e canela.'},
+    {a:-11.3,tag:'DOCE',name:'Morango com chocolate',desc:'Chocolate cremoso e morango fresco.'},
+    {a:82.3,tag:'SALGADA',name:'Calabresa com cebola',desc:'Calabresa fatiada, cebola e orégano.'},
+    {a:168.7,tag:'DOCE',name:'Romeu e Julieta',desc:'Queijo derretido com goiabada no centro.'}
+  ];
+  var wheel=document.getElementById('wheel'), img=document.getElementById('wimg');
+  var rot=-90-items[0].a, target=rot, cur=0, drag=false, lastA=0, vel=0, idle=0;
+  var el={tag:document.getElementById('wtag'),name:document.getElementById('wname'),desc:document.getElementById('wdesc'),count:document.getElementById('wcount')};
+  function norm(x){ x%=360; if(x>180)x-=360; if(x<-180)x+=360; return x; }
+  function nearest(r){ var best=0,bd=999; items.forEach(function(it,i){ var d=Math.abs(norm(it.a+r+90)); if(d<bd){bd=d;best=i;} }); return best; }
+  function show(i){ if(i===cur) return; cur=i; var it=items[i]; el.tag.textContent=it.tag; el.name.textContent=it.name; el.desc.textContent=it.desc; el.count.textContent=(i+1)+' / '+items.length; }
+  function snapTo(i){ var want=-90-items[i].a; var d=norm(want-target); target+=d; }
+  function angle(e){ var r=wheel.getBoundingClientRect(); return Math.atan2(e.clientY-(r.top+r.height/2), e.clientX-(r.left+r.width/2))*180/Math.PI; }
+  wheel.addEventListener('pointerdown',function(e){ drag=true; idle=Date.now(); wheel.classList.add('drag'); wheel.setPointerCapture(e.pointerId); lastA=angle(e); vel=0; });
+  wheel.addEventListener('pointermove',function(e){ if(!drag) return; var a=angle(e), d=norm(a-lastA); lastA=a; target+=d; rot=target; vel=d; });
+  function up(){ if(!drag) return; drag=false; wheel.classList.remove('drag'); target+=vel*6; snapTo(nearest(target)); idle=Date.now(); }
+  wheel.addEventListener('pointerup',up); wheel.addEventListener('pointercancel',up);
+  document.getElementById('next').addEventListener('click',function(){ idle=Date.now(); snapTo((nearest(target)+1)%items.length); });
+  document.getElementById('prev').addEventListener('click',function(){ idle=Date.now(); snapTo((nearest(target)-1+items.length)%items.length); });
+  wheel.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){ snapTo((nearest(target)+1)%items.length);} if(e.key==='ArrowLeft'){ snapTo((nearest(target)-1+items.length)%items.length);} });
+  wheel.tabIndex=0;
+  var visible=false; if('IntersectionObserver' in window){ new IntersectionObserver(function(en){ visible=en[0].isIntersecting; }).observe(wheel); } else visible=true;
+  var auto=Date.now();
+  function tick(){
+    if(!drag){ rot+= (target-rot)*0.12; }
+    img.style.transform='rotate('+rot+'deg)';
+    show(nearest(rot));
+    if(!reduce && visible && !drag && Date.now()-idle>7000 && Date.now()-auto>3800){ auto=Date.now(); snapTo((nearest(target)+1)%items.length); }
+    requestAnimationFrame(tick);
+  }
+  img.style.transform='rotate('+rot+'deg)'; requestAnimationFrame(tick);
+
+  /* entrada suave */
+  if(reduce||!('IntersectionObserver' in window)) return;
+  var vh=innerHeight;
+  document.querySelectorAll('[data-r]').forEach(function(e){ if(e.getBoundingClientRect().top>vh*.92) e.classList.add('pre'); });
+  var io=new IntersectionObserver(function(en){ en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.remove('pre'); io.unobserve(x.target);} }); },{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('[data-r]').forEach(function(e){ io.observe(e); });
+})();
+</script>
+</body>
+</html>

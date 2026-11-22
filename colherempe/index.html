@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Colher em Pé · Proposta de site</title>
+<meta name="description" content="Proposta de site criada por Magalhães para a Colher em Pé, açaiteria fictícia: uma tigela de açaí em 3D que gira com a página.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Colher em Pé · Proposta de site">
+<meta property="og:description" content="Açaí tão grosso que a colher fica em pé. Role a página e a tigela gira.">
+<meta property="og:image" content="https://magalhaescreator.com.br/colherempe/capa.jpg">
+<meta property="og:url" content="https://magalhaescreator.com.br/colherempe/">
+<meta name="theme-color" content="#2A0931">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap">
+<script src="three.min.js" defer></script>
+<style>
+:root{
+  /* Layout: a 3D tigela fixed in the middle of the screen; every band frames it with a left and a right column (phones stack the columns around a clear stage gap) */
+  --acai:#2A0931;      /* fundo: açaí batido */
+  --uva:#3B0F47;       /* faixa do cardápio */
+  --polpa:#8E4A9E;     /* roxo claro, detalhes */
+  --lilas:#E0C6F0;     /* texto secundário no roxo */
+  --banana:#FFD23F;    /* acento principal */
+  --morango:#FF5C8A;   /* a colher, foco */
+  --leite:#FFF8EE;     /* texto principal no roxo */
+  --papel:#FFFDF6;     /* comanda */
+
+  --f-display:"Bagel Fat One","Arial Black",Impact,system-ui,sans-serif;
+  --f-body:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --ink:var(--leite);
+  --muted:#D3B6E3;
+  --head:var(--leite);
+  --eyebrow:var(--banana);
+  --line:rgba(224,198,240,.24);
+  --band-bg:var(--acai);
+  --glass:rgba(42,9,49,.93);
+  --nav-h:68px;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+[hidden]{display:none!important}
+body{
+  margin:0;
+  background:var(--acai);color:var(--ink);
+  font-family:var(--f-body);font-size:1.0625rem;line-height:1.55;
+  overflow-x:clip;-webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--acai)}
+html.over-bowl{cursor:grab}
+html.grabbing,html.grabbing *{cursor:grabbing!important}
+:focus-visible{outline:3px solid var(--morango);outline-offset:3px}
+
+/* ---------- 3D stage ---------- */
+/* a tela 3D ocupa só a faixa central: menos pixels pra desenhar em monitor largo */
+#stage{position:fixed;top:0;left:50%;width:min(100%,125vh);height:100%;transform:translateX(-50%);z-index:1;pointer-events:none;display:block}
+
+/* ---------- faixa da proposta ---------- */
+.demo{position:relative;z-index:21;background:var(--banana);color:var(--acai);font-size:.84rem;font-weight:600;line-height:1.35;text-align:center;padding:9px max(16px,env(safe-area-inset-right,0px)) 9px max(16px,env(safe-area-inset-left,0px))}
+.demo a{color:inherit;font-weight:700}
+.stage-fallback{position:fixed;inset:0;z-index:1;display:grid;place-items:center;pointer-events:none}
+.stage-fallback svg{width:min(60vw,320px);height:auto}
+
+.wrap{
+  width:100%;max-width:1400px;margin-inline:auto;
+  padding-left:max(clamp(16px,4vw,56px),env(safe-area-inset-left,0px));
+  padding-right:max(clamp(16px,4vw,56px),env(safe-area-inset-right,0px));
+}
+
+/* ---------- spoon accent on the é ---------- */
+.acc{position:relative;display:inline-block;line-height:1}
+.acc-spoon{position:absolute;left:54%;bottom:.68em;width:.13em;height:.38em;transform:translateX(-50%) rotate(24deg);transform-origin:50% 100%;color:var(--morango);overflow:visible}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background:var(--acai);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:var(--nav-h)}
+.logo{font-family:var(--f-display);font-size:1.7rem;color:var(--banana);text-decoration:none;line-height:1;letter-spacing:-.01em;padding-top:.15em}
+.nav nav{display:flex;gap:clamp(14px,2.2vw,32px)}
+.nav nav a{color:var(--lilas);text-decoration:none;font-weight:600;font-size:.95rem}
+.nav nav a:hover{color:var(--banana)}
+@media (max-width:880px){.nav nav{display:none}}
+
+/* ---------- buttons ---------- */
+.btn{
+  font:700 1rem/1 var(--f-body);letter-spacing:.005em;
+  display:inline-flex;align-items:center;justify-content:center;gap:.55em;
+  padding:.95em 1.45em;border-radius:999px;border:2px solid transparent;
+  text-decoration:none;cursor:pointer;
+  transition:transform .18s ease,background-color .18s ease,color .18s ease;
+}
+.btn:hover{transform:translateY(-2px) rotate(-1.5deg)}
+.btn:disabled{opacity:.6;cursor:progress;transform:none}
+.btn--banana{background:var(--banana);color:var(--acai)}
+.btn--ghost{border-color:currentColor;color:var(--leite);background:transparent}
+.btn--acai{background:var(--acai);color:var(--banana)}
+.btn--sm{padding:.7em 1.1em;font-size:.92rem}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  min-height:min(calc(100svh - var(--nav-h)),940px);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-block:24px 34px;
+}
+.hero-word{
+  position:absolute;inset:0;z-index:0;margin:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding-bottom:7vh;
+  font-family:var(--f-display);font-weight:400;color:var(--banana);
+  font-size:clamp(5.2rem,21vw,20rem);line-height:.8;letter-spacing:-.035em;
+  text-align:center;pointer-events:none;user-select:none;
+}
+.hw-line{display:block}
+.hero-foot{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.hero-pitch{max-width:30rem;display:grid;gap:16px}
+.lead{margin:0;font-size:clamp(1.15rem,1.7vw,1.45rem);line-height:1.32;font-weight:600;color:var(--leite);text-wrap:balance}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.hint{
+  margin:0;display:flex;align-items:center;gap:12px;max-width:17rem;
+  font-family:var(--f-mono);font-size:.78rem;line-height:1.45;text-transform:uppercase;letter-spacing:.08em;color:var(--lilas);
+}
+.hint svg{flex:none;width:38px;height:38px;color:var(--banana)}
+@media (max-width:959px){
+  .hero{min-height:min(calc(100svh - var(--nav-h)),860px)}
+  .hero-word{justify-content:flex-start;padding:5vh 0 0}
+  .hint{display:none}
+}
+
+/* ---------- ticker ---------- */
+.ticker{
+  position:relative;z-index:3;width:104%;margin:-6px 0 -6px -2%;
+  background:var(--banana);color:var(--acai);
+  border-block:3px solid var(--acai);
+  transform:rotate(-2deg);overflow:hidden;
+}
+.ticker-track{display:flex;width:max-content;animation:tick 34s linear infinite}
+.tk{display:flex;align-items:center;gap:30px;padding:15px 30px 13px 0;font-family:var(--f-display);font-size:clamp(1.4rem,3vw,2.3rem);line-height:1;white-space:nowrap}
+.tk i{display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--acai);box-shadow:inset .09em .09em 0 rgba(255,255,255,.28)}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
+/* ---------- bands ---------- */
+.band{background:var(--band-bg);color:var(--ink)}
+.band--uva{--band-bg:var(--uva);--glass:rgba(59,15,71,.94)}
+.band--banana{
+  --band-bg:var(--banana);--ink:var(--acai);--muted:#5A2B55;--head:var(--acai);
+  --eyebrow:#8A1F63;--line:rgba(42,9,49,.24);--glass:rgba(255,210,63,.95);
+}
+.split{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(16px,3vw,48px);align-items:center;
+  min-height:100svh;padding-block:clamp(80px,12vh,128px);
+}
+.col{position:relative;z-index:2;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.col--end{align-self:center}
+.stage-gap{min-height:1px}
+@media (max-width:959px){
+  .split{grid-template-columns:minmax(0,1fr);min-height:0;gap:0;padding-block:48px}
+  .stage-gap{height:60svh}
+  .col{background:var(--glass);border-radius:22px;padding:24px 20px}
+}
+
+.eyebrow{margin:0;font-family:var(--f-mono);font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--eyebrow)}
+h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(2.5rem,4.3vw,4rem);line-height:.92;letter-spacing:-.02em;color:var(--head);text-wrap:balance}
+.label{margin:0;font-family:var(--f-mono);font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--eyebrow)}
+.col p{margin:0;max-width:44ch;color:var(--muted)}
+.col p.body{color:var(--ink);opacity:.92}
+.fine{font-size:.86rem}
+.status{min-height:1.5em;font-family:var(--f-mono);font-size:.85rem;color:var(--banana)!important}
+.band--banana .status{color:var(--acai)!important}
+
+/* ---------- teste da colher ---------- */
+.scale{position:relative;width:100%;max-width:440px;padding-top:70px}
+.scale-bar{position:relative;display:flex;align-items:flex-end;gap:4px;height:30px}
+.seg{display:block;border-radius:6px 6px 2px 2px}
+.seg--fino{flex:3;height:7px;background:#7F4F92}
+.seg--medio{flex:3;height:15px;background:#B04BC7}
+.seg--grosso{flex:4;height:30px;background:var(--banana)}
+.marker{position:absolute;left:80%;bottom:34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-mono);font-size:.76rem;color:var(--leite);white-space:nowrap;text-transform:uppercase;letter-spacing:.06em}
+.marker b{font-family:var(--f-display);font-weight:400;font-size:1.5rem;letter-spacing:0;line-height:1;color:var(--banana);text-transform:none}
+.marker svg{width:12px;height:34px;color:var(--morango);margin-top:4px}
+.scale-labels{display:flex;gap:4px;margin-top:10px;font-size:.84rem;line-height:1.25;color:var(--muted)}
+.scale-labels span{display:block}
+.scale-labels strong{display:block;color:var(--leite);font-weight:700}
+.facts{margin:6px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:440px;border-top:1px solid var(--line);padding-top:16px}
+.facts dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:4px 0 0;font-weight:700;line-height:1.25;color:var(--leite)}
+
+/* ---------- cardápio ---------- */
+.menu{list-style:none;margin:0;padding:0;display:grid;gap:14px;width:100%;max-width:440px}
+.menu li{display:flex;align-items:baseline;gap:10px;font-size:1.12rem;font-weight:600}
+.menu li small{display:block;font-weight:400;font-size:.82rem;color:var(--muted)}
+.menu li i{flex:1;min-width:20px;border-bottom:2px dotted var(--line);transform:translateY(-5px)}
+.price{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums;color:var(--banana);white-space:nowrap}
+.combos{display:grid;gap:10px;width:100%;max-width:440px}
+.combo{
+  all:unset;box-sizing:border-box;cursor:pointer;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;
+  padding:14px 16px;border:2px solid var(--line);border-radius:16px;
+  transition:background-color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.combo:hover{border-color:var(--banana);transform:translateX(4px)}
+.combo:focus-visible{outline:3px solid var(--morango);outline-offset:3px}
+.combo[aria-pressed="true"]{background:var(--banana);border-color:var(--banana);color:var(--acai)}
+.combo-name{font-family:var(--f-display);font-size:1.35rem;line-height:1.05}
+.combo-price{font-family:var(--f-mono);font-size:.95rem;align-self:center;font-variant-numeric:tabular-nums}
+.combo-desc{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:.92rem;color:var(--muted)}
+.combo[aria-pressed="true"] .combo-desc{color:#5A2B55}
+.dots{display:inline-flex;flex:none}
+.dots i{width:13px;height:13px;border-radius:50%;background:var(--c);border:2px solid var(--acai);margin-right:-4px}
+.dots:empty::before{content:"";width:13px;height:13px;border-radius:50%;background:#4B1257;border:2px solid var(--lilas)}
+
+/* ---------- monte o seu ---------- */
+.field{border:0;margin:0;padding:0;min-width:0;width:100%;display:grid;gap:10px}
+.field legend{padding:0;margin-bottom:10px;font-family:var(--f-mono);font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--eyebrow)}
+.field legend span{color:var(--muted);letter-spacing:.04em;text-transform:none}
+.pills,.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pill,.chip{
+  position:relative;display:inline-flex;align-items:center;gap:8px;
+  border:2px solid var(--acai);cursor:pointer;user-select:none;font-weight:700;font-size:.95rem;line-height:1.1;
+  transition:background-color .15s ease,color .15s ease;
+}
+.pill input,.chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.pill{flex-direction:column;align-items:flex-start;gap:2px;padding:9px 14px;border-radius:12px}
+.pill-p{font-family:var(--f-mono);font-weight:500;font-size:.78rem}
+.chip{padding:8px 14px 8px 9px;border-radius:999px}
+.chip .dot{width:17px;height:17px;border-radius:50%;background:var(--c);border:2px solid var(--acai);flex:none}
+.pill:has(input:checked),.chip:has(input:checked){background:var(--acai);color:var(--banana)}
+.chip:has(input:checked) .dot{border-color:var(--banana)}
+.pill:has(input:focus-visible),.chip:has(input:focus-visible){outline:3px solid var(--morango);outline-offset:2px}
+.pill:hover,.chip:hover{background:rgba(42,9,49,.1)}
+.pill:has(input:checked):hover,.chip:has(input:checked):hover{background:var(--acai)}
+
+.comanda{
+  position:relative;width:100%;max-width:400px;
+  background:var(--papel);color:var(--acai);font-family:var(--f-mono);font-size:.9rem;
+  padding:22px 22px 24px;margin-bottom:14px;transform:rotate(1.4deg);
+  box-shadow:0 34px 50px -26px rgba(42,9,49,.6);
+}
+.comanda::after{
+  content:"";position:absolute;left:0;right:0;bottom:-12px;height:12px;
+  background:
+    linear-gradient(135deg,var(--papel) 50%,transparent 50%) 0 0/16px 12px repeat-x,
+    linear-gradient(225deg,var(--papel) 50%,transparent 50%) 0 0/16px 12px repeat-x;
+}
+.comanda-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:2px dashed rgba(42,9,49,.35)}
+.comanda-brand{font-family:var(--f-display);font-size:1.5rem;line-height:1}
+.comanda-num{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.comanda-lines{list-style:none;margin:0;padding:14px 0;display:grid;gap:8px;border-bottom:2px dashed rgba(42,9,49,.35);font-variant-numeric:tabular-nums}
+.comanda-lines li{display:flex;gap:10px;align-items:baseline}
+.comanda-lines li span:first-child{flex:1;min-width:0}
+.comanda-lines .free{color:#8A1F63}
+.comanda-total{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 18px}
+.comanda-total span{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.comanda-total strong{font-family:var(--f-display);font-weight:400;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.comanda .btn{width:100%}
+.comanda .status{margin:12px 0 0;color:var(--acai)!important;font-size:.8rem}
+.copy-box{width:100%;margin-top:10px;font:inherit;font-size:.8rem;padding:10px;border:2px solid var(--acai);border-radius:8px;background:#fff;color:var(--acai);resize:none}
+
+/* ---------- onde ---------- */
+.hours{margin:0;display:grid;gap:12px;width:100%;max-width:440px}
+.hours div{display:flex;align-items:baseline;gap:10px}
+.hours dt{font-weight:600}
+.hours i{flex:1;min-width:16px;border-bottom:2px dotted var(--line);transform:translateY(-5px)}
+.hours dd{margin:0;font-family:var(--f-mono);color:var(--banana);white-space:nowrap}
+.handle{font-family:var(--f-display);font-size:1.9rem;line-height:1;color:var(--banana)!important}
+
+/* ---------- footer ---------- */
+.foot{position:relative;min-height:72svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:12vh 26px;overflow:hidden}
+.foot-word{
+  position:relative;z-index:0;margin:0;text-align:center;white-space:nowrap;
+  font-family:var(--f-display);color:var(--banana);
+  font-size:clamp(2.6rem,12.4vw,13rem);line-height:.9;letter-spacing:-.035em;
+  user-select:none;
+}
+.foot-meta{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;padding-top:28px;font-family:var(--f-mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--lilas)}
+.foot-meta a{color:var(--banana)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-colher" viewBox="0 0 24 72"><ellipse cx="12" cy="13" rx="9" ry="12.5" fill="currentColor"/><rect x="9.25" y="22" width="5.5" height="49" rx="2.75" fill="currentColor"/></symbol>
+</svg>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="stage-fallback" id="stage-fallback" hidden aria-hidden="true">
+  <svg viewBox="0 0 200 170"><rect x="104" y="6" width="12" height="80" rx="6" fill="#FF5C8A" transform="rotate(6 110 80)"/><path d="M14 78h172c0 46-38 82-86 82S14 124 14 78z" fill="#F5EEE6"/><ellipse cx="100" cy="78" rx="86" ry="20" fill="#4B1257"/><path d="M26 98h148" stroke="#4A1456" stroke-width="12"/></svg>
+</div>
+
+<div class="demo">Proposta de site criada por Magalhães. A Colher em Pé é uma marca fictícia. <a href="../">Conheça meu trabalho</a></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#topo" aria-label="Colher em Pé, voltar ao topo"><span aria-hidden="true">colher em p<span class="acc">e<svg class="acc-spoon"><use href="#i-colher"/></svg></span></span></a>
+    <nav aria-label="Seções">
+      <a href="#teste">Teste da colher</a>
+      <a href="#cardapio">Cardápio</a>
+      <a href="#monte">Monte o seu</a>
+      <a href="#onde">Onde estamos</a>
+    </nav>
+    <a class="btn btn--banana btn--sm" href="#monte">Pedir agora</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="topo">
+    <h1 class="hero-word" aria-label="Colher em Pé">
+      <span class="hw-line" aria-hidden="true">colher</span>
+      <span class="hw-line" aria-hidden="true">em p<span class="acc">e<svg class="acc-spoon"><use href="#i-colher"/></svg></span></span>
+    </h1>
+    <div class="wrap hero-foot">
+      <div class="hero-pitch">
+        <p class="eyebrow">Açaiteria · açaí tipo A</p>
+        <p class="lead">Açaí grosso de verdade. Se a colher deitar, a gente bate outro.</p>
+        <div class="ctas">
+          <a class="btn btn--banana" href="#monte">Monte o seu</a>
+          <a class="btn btn--ghost" href="#cardapio">Ver cardápio</a>
+        </div>
+      </div>
+      <p class="hint">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M33 20a13 13 0 1 1-4-9.4"/><path d="M30 4v7h-7"/></svg>
+        Role a página e a tigela gira. Arraste pra girar na mão.
+      </p>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="tk"><span>açaí tipo A</span><i></i><span>polpa de Igarapé-Miri</span><i></i><span>zero xarope</span><i></i><span>batido todo dia</span><i></i><span>a colher fica em pé</span><i></i></div>
+      <div class="tk"><span>açaí tipo A</span><i></i><span>polpa de Igarapé-Miri</span><i></i><span>zero xarope</span><i></i><span>batido todo dia</span><i></i><span>a colher fica em pé</span><i></i></div>
+    </div>
+  </div>
+
+  <section class="band" id="teste">
+    <div class="wrap split">
+      <div class="col">
+        <p class="eyebrow">Controle de qualidade</p>
+        <h2>O teste da colher</h2>
+        <p class="body">Toda tigela passa por ele antes de sair do balcão. A colher entra no meio do açaí e tem que ficar de pé sozinha. Ficou? Pode levar. Deitou? Volta pra batedeira.</p>
+        <button class="btn btn--banana" id="btn-teste" type="button">Fazer o teste</button>
+        <p class="status" id="teste-status" aria-live="polite"></p>
+      </div>
+      <div class="stage-gap" aria-hidden="true"></div>
+      <div class="col">
+        <h3 class="label">Grossura, em números</h3>
+        <div class="scale" role="img" aria-label="Escala de grossura do açaí: fino de 8 a 11% de sólidos totais, médio de 11 a 14%, grosso acima de 14%. O da Colher em Pé tem 16%.">
+          <div class="scale-bar">
+            <span class="seg seg--fino"></span>
+            <span class="seg seg--medio"></span>
+            <span class="seg seg--grosso"></span>
+            <span class="marker"><b>16%</b>o nosso<svg viewBox="0 0 24 72" aria-hidden="true"><use href="#i-colher"/></svg></span>
+          </div>
+          <div class="scale-labels">
+            <span style="flex:3"><strong>Fino</strong>8 a 11%</span>
+            <span style="flex:3"><strong>Médio</strong>11 a 14%</span>
+            <span style="flex:4"><strong>Grosso</strong>acima de 14%</span>
+          </div>
+        </div>
+        <p class="fine">Sólidos totais na polpa, pela classificação oficial do açaí. Só o grosso, o tipo A, segura a colher.</p>
+        <dl class="facts">
+          <div><dt>Origem</dt><dd>Igarapé-Miri, PA</dd></div>
+          <div><dt>Batido</dt><dd>Todo dia, às 10h</dd></div>
+          <div><dt>Xarope</dt><dd>Nenhum</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--uva" id="cardapio">
+    <div class="wrap split">
+      <div class="col">
+        <p class="eyebrow">Cardápio</p>
+        <h2>Copos e tigela</h2>
+        <ul class="menu" id="menu-sizes"></ul>
+        <p class="fine">Todos vêm com 2 acompanhamentos. Cada extra custa R$ 3,00.</p>
+      </div>
+      <div class="stage-gap" aria-hidden="true"></div>
+      <div class="col">
+        <p class="eyebrow">Da casa · 500 ml</p>
+        <h2>Combinações</h2>
+        <div class="combos" id="combos"></div>
+        <p class="fine">Toque numa combinação pra ver ela na tigela.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--banana" id="monte">
+    <div class="wrap split">
+      <div class="col">
+        <p class="eyebrow">Do seu jeito</p>
+        <h2>Monte o seu</h2>
+        <p class="body">Escolha o tamanho e o que vai por cima. A tigela no meio da tela mostra tudo na hora.</p>
+        <fieldset class="field">
+          <legend>Tamanho</legend>
+          <div class="pills" id="pills"></div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Acompanhamentos <span>· 2 inclusos</span></legend>
+          <div class="chips" id="chips"></div>
+        </fieldset>
+      </div>
+      <div class="stage-gap" aria-hidden="true"></div>
+      <div class="col">
+        <div class="comanda">
+          <div class="comanda-head"><span class="comanda-brand">colher em pé</span><span class="comanda-num">Comanda nº 0420</span></div>
+          <ul class="comanda-lines" id="comanda-lines" aria-live="polite"></ul>
+          <div class="comanda-total"><span>Total</span><strong id="total">R$ 0,00</strong></div>
+          <button class="btn btn--acai" id="btn-copiar" type="button">Copiar pedido</button>
+          <p class="status" id="copiar-status" aria-live="polite"></p>
+        </div>
+        <p class="fine">Cole o pedido no direct do @colherempe ou no app de entrega.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="onde">
+    <div class="wrap split">
+      <div class="col">
+        <p class="eyebrow">Onde estamos</p>
+        <h2>Rua das Açaizeiras, 214</h2>
+        <p class="body">Pinheiros, São Paulo. A porta roxa ao lado da banca de flores.</p>
+        <p class="fine">Delivery num raio de 4 km, em média 35 minutos.</p>
+      </div>
+      <div class="stage-gap" aria-hidden="true"></div>
+      <div class="col">
+        <h3 class="label">Horários</h3>
+        <dl class="hours">
+          <div><dt>Segunda a quinta</dt><i></i><dd>12h às 22h</dd></div>
+          <div><dt>Sexta e sábado</dt><i></i><dd>12h à meia-noite</dd></div>
+          <div><dt>Domingo</dt><i></i><dd>14h às 22h</dd></div>
+        </dl>
+        <p class="handle">@colherempe</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" id="rodape">
+  <p class="foot-word" aria-hidden="true">colher em p<span class="acc">e<svg class="acc-spoon"><use href="#i-colher"/></svg></span></p>
+  <div class="wrap foot-meta">
+    <span>Colher em Pé · marca fictícia</span>
+    <span>Proposta de site criada por Magalhães · <a href="https://magalhaescreator.com.br">magalhaescreator.com.br</a></span>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+'use strict';
+
+/* =========================================================
+   Dados
+   ========================================================= */
+const TOPPINGS = [
+  { id: 'banana',     name: 'Banana',           color: '#F6CF3E' },
+  { id: 'granola',    name: 'Granola',          color: '#C1843F' },
+  { id: 'morango',    name: 'Morango',          color: '#E8324F' },
+  { id: 'ninho',      name: 'Leite em pó',      color: '#FFF6E6' },
+  { id: 'kiwi',       name: 'Kiwi',             color: '#7DBF3B' },
+  { id: 'pacoca',     name: 'Paçoca',           color: '#D8AE76' },
+  { id: 'condensado', name: 'Leite condensado', color: '#FFEFC8' },
+];
+const TOP = Object.fromEntries(TOPPINGS.map(t => [t.id, t]));
+const SIZES = [
+  { id: '300',  name: 'Copo 300 ml',  short: '300 ml', price: 16 },
+  { id: '500',  name: 'Copo 500 ml',  short: '500 ml', price: 22 },
+  { id: '700',  name: 'Copo 700 ml',  short: '700 ml', price: 28 },
+  { id: '1000', name: 'Tigela 1 L',   short: 'Tigela 1 L', price: 42, note: 'pra dividir' },
+];
+const COMBOS = [
+  { id: 'tudo',     name: 'Tudo dentro', desc: 'Os sete acompanhamentos', toppings: TOPPINGS.map(t => t.id) },
+  { id: 'classico', name: 'O Clássico',  desc: 'Banana, granola e leite em pó', toppings: ['banana', 'granola', 'ninho'] },
+  { id: 'tropical', name: 'Tropical',    desc: 'Morango, kiwi e leite condensado', toppings: ['morango', 'kiwi', 'condensado'] },
+  { id: 'pacoquinha', name: 'Paçoquinha', desc: 'Paçoca, banana e leite condensado', toppings: ['pacoca', 'banana', 'condensado'] },
+  { id: 'raiz',     name: 'Raiz',        desc: 'Puro, do jeito de Belém. Farinha de tapioca à parte', toppings: [] },
+];
+const INCLUSOS = 2, EXTRA = 3;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const state = { size: '500', selected: new Set(COMBOS[0].toppings) };
+
+const $ = s => document.querySelector(s);
+const brl = n => 'R$ ' + n.toFixed(2).replace('.', ',');
+const priceOf = (sizeId, n) => SIZES.find(s => s.id === sizeId).price + Math.max(0, n - INCLUSOS) * EXTRA;
+
+/* =========================================================
+   Interface
+   ========================================================= */
+let stage = null;
+
+function buildUI() {
+  $('#menu-sizes').innerHTML = SIZES.map(s =>
+    `<li><span>${s.name}${s.note ? `<small>${s.note}</small>` : ''}</span><i></i><span class="price">${brl(s.price)}</span></li>`).join('');
+
+  $('#combos').innerHTML = COMBOS.map(c =>
+    `<button type="button" class="combo" data-combo="${c.id}" aria-pressed="false">
+      <span class="combo-name">${c.name}</span>
+      <span class="combo-price">${brl(priceOf('500', c.toppings.length))}</span>
+      <span class="combo-desc"><span class="dots" aria-hidden="true">${c.toppings.map(id => `<i style="--c:${TOP[id].color}"></i>`).join('')}</span>${c.desc}</span>
+    </button>`).join('');
+
+  $('#pills').innerHTML = SIZES.map(s =>
+    `<label class="pill" for="sz-${s.id}"><input type="radio" name="tamanho" id="sz-${s.id}" value="${s.id}"><span class="pill-l">${s.short}</span><span class="pill-p">${brl(s.price)}</span></label>`).join('');
+
+  $('#chips').innerHTML = TOPPINGS.map(t =>
+    `<label class="chip" for="tp-${t.id}"><input type="checkbox" id="tp-${t.id}" value="${t.id}"><span class="dot" style="--c:${t.color}"></span>${t.name}</label>`).join('');
+
+  $('#combos').addEventListener('click', e => {
+    const b = e.target.closest('.combo'); if (!b) return;
+    const c = COMBOS.find(x => x.id === b.dataset.combo);
+    state.selected = new Set(c.toppings); state.size = '500';
+    sync();
+  });
+  $('#pills').addEventListener('change', e => { state.size = e.target.value; sync(); });
+  $('#chips').addEventListener('change', e => {
+    const id = e.target.value;
+    if (e.target.checked) state.selected.add(id); else state.selected.delete(id);
+    sync();
+  });
+
+  $('#btn-teste').addEventListener('click', runTest);
+  $('#btn-copiar').addEventListener('click', copyOrder);
+}
+
+function orderedSelection() { return TOPPINGS.filter(t => state.selected.has(t.id)); }
+
+function sync() {
+  TOPPINGS.forEach(t => { $('#tp-' + t.id).checked = state.selected.has(t.id); });
+  SIZES.forEach(s => { $('#sz-' + s.id).checked = state.size === s.id; });
+  COMBOS.forEach(c => {
+    const on = state.size === '500' && c.toppings.length === state.selected.size && c.toppings.every(id => state.selected.has(id));
+    document.querySelector(`[data-combo="${c.id}"]`).setAttribute('aria-pressed', String(on));
+  });
+  renderOrder();
+  $('#copiar-status').textContent = '';
+  const box = $('.copy-box'); if (box) box.remove();
+  if (stage) stage.setToppings(state.selected);
+}
+
+function renderOrder() {
+  const size = SIZES.find(s => s.id === state.size);
+  const tops = orderedSelection();
+  let html = `<li><span>Açaí tipo A · ${size.short}</span><span>${brl(size.price).replace('R$ ', '')}</span></li>`;
+  if (!tops.length) html += `<li><span>Puro, sem acompanhamento</span><span>—</span></li>`;
+  tops.forEach((t, i) => {
+    html += i < INCLUSOS
+      ? `<li><span>+ ${t.name}</span><span class="free">incluso</span></li>`
+      : `<li><span>+ ${t.name}</span><span>${EXTRA.toFixed(2).replace('.', ',')}</span></li>`;
+  });
+  $('#comanda-lines').innerHTML = html;
+  $('#total').textContent = brl(priceOf(state.size, tops.length));
+}
+
+function orderText() {
+  const size = SIZES.find(s => s.id === state.size);
+  const names = orderedSelection().map(t => t.name.toLowerCase());
+  const list = names.length === 0 ? 'puro, sem acompanhamento'
+    : 'com ' + (names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' e ' + names[names.length - 1]);
+  const what = size.id === '1000' ? 'uma tigela de 1 L' : `um açaí de ${size.short}`;
+  return `Oi, Colher em Pé! Quero ${what} ${list}. Total: ${brl(priceOf(state.size, names.length))}.`;
+}
+
+function copyOrder() {
+  const text = orderText();
+  const status = $('#copiar-status');
+  const fallback = () => {
+    status.textContent = 'Não deu pra copiar sozinho. Selecione o texto abaixo e copie.';
+    let box = $('.copy-box');
+    if (!box) { box = document.createElement('textarea'); box.className = 'copy-box'; box.readOnly = true; box.rows = 3; box.id = 'pedido-texto'; status.after(box); }
+    box.value = text; box.focus(); box.select();
+  };
+  try {
+    navigator.clipboard.writeText(text)
+      .then(() => { status.textContent = 'Pedido copiado. Agora é só colar no direct.'; })
+      .catch(fallback);
+  } catch (e) { fallback(); }
+}
+
+let testRunning = false;
+function runTest() {
+  if (testRunning) return;
+  const btn = $('#btn-teste'), st = $('#teste-status');
+  const done = () => { st.textContent = 'Ficou em pé. Aprovado pra sair do balcão.'; btn.disabled = false; testRunning = false; };
+  testRunning = true; btn.disabled = true;
+  st.textContent = 'Colher entrando no açaí...';
+  if (stage) stage.spoonTest(done); else setTimeout(done, 600);
+}
+
+/* =========================================================
+   Palco 3D
+   ========================================================= */
+function initStage() {
+  if (!window.THREE) return null;
+  const canvas = $('#stage');
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (e) { return null; }
+  if (!renderer.getContext()) return null;
+
+  // resolução: celular até 2x, computador até 1,5x; cai sozinha se o aparelho engasgar
+  const isPhone = window.innerWidth < 960;
+  let dpr = Math.min(window.devicePixelRatio || 1, isPhone ? 2 : 1.5);
+  renderer.setPixelRatio(dpr);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  renderer.setClearColor(0x000000, 0);
+
+  const col = h => new THREE.Color(h).convertSRGBToLinear();
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  const UP = new THREE.Vector3(0, 1, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
+
+  /* ---------- luz e reflexo ---------- */
+  (function environment() {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const env = new THREE.Scene();
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(12, 12, 12), new THREE.MeshBasicMaterial({ color: col('#3a1446'), side: THREE.BackSide })));
+    const panel = (w, h, color, k, x, y, z) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: col(color).multiplyScalar(k), side: THREE.DoubleSide }));
+      m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m);
+    };
+    panel(7, 3, '#ffffff', 5, 0, 5, 2);
+    panel(3, 4, '#ffe3c0', 3, -5, 1.5, 2.5);
+    panel(2, 5, '#ff6fa6', 3, 5, 0.5, -2.5);
+    panel(5, 2, '#c09bff', 1.4, 0, -1.5, 5.5);
+    scene.environment = pmrem.fromScene(env, 0.035).texture;
+    pmrem.dispose();
+  })();
+
+  scene.add(new THREE.HemisphereLight(col('#ffeaf4'), col('#3a0c44'), 0.5));
+  const key = new THREE.DirectionalLight(col('#fff1de'), 1.5); key.position.set(-3.5, 6, 5); scene.add(key);
+  const rim = new THREE.DirectionalLight(col('#ff79b0'), 1.7); rim.position.set(5, 2.5, -4); scene.add(rim);
+  const fill = new THREE.DirectionalLight(col('#b98cff'), 0.45); fill.position.set(4, -1, 6); scene.add(fill);
+
+  /* ---------- utilidades ---------- */
+  function rng(seed) {
+    return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+  function hash(x, y) { let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967295; }
+  function vnoise(x, y) {
+    const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
+
+  function canvasTex(w, h, draw, srgb = true) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    draw(ctx, w, h);
+    const t = new THREE.CanvasTexture(c);
+    if (srgb) t.encoding = THREE.sRGBEncoding;
+    t.anisotropy = maxAniso;
+    t.redraw = () => { ctx.clearRect(0, 0, w, h); draw(ctx, w, h); t.needsUpdate = true; };
+    return t;
+  }
+
+  /* ---------- superfície do açaí ---------- */
+  const R_SURF = 1.47, BASE_Y = 0.97;
+  function surfH(x, z) {
+    const r = Math.min(Math.hypot(x, z) / R_SURF, 1);
+    const th = Math.atan2(z, x);
+    const dome = 0.30 * Math.pow(1 - r * r, 1.15);
+    const spiral = 0.02 * Math.sin(r * 27 - th) * Math.sin(Math.PI * r);
+    const n = (vnoise(x * 2.1 + 7.3, z * 2.1 - 3.1) - 0.5) * 0.07 + (vnoise(x * 5.3 - 1.7, z * 5.3 + 9.2) - 0.5) * 0.02;
+    return BASE_Y + dome + spiral + n * (0.35 + 0.65 * (1 - r));
+  }
+  function normalAt(x, z) {
+    const e = 0.02;
+    const hx = (surfH(x + e, z) - surfH(x - e, z)) / (2 * e);
+    const hz = (surfH(x, z + e) - surfH(x, z - e)) / (2 * e);
+    return new THREE.Vector3(-hx, 1, -hz).normalize();
+  }
+
+  /* ---------- hierarquia ---------- */
+  const PIVOT = 1.0;
+  const root = new THREE.Group(); scene.add(root);
+  const tilt = new THREE.Group(); root.add(tilt);
+  const spin = new THREE.Group(); tilt.add(spin);
+  const bowl = new THREE.Group(); bowl.position.y = -PIVOT; spin.add(bowl);
+  const berries = new THREE.Group(); root.add(berries);
+
+  /* ---------- tigela ---------- */
+  const printTex = canvasTex(2048, 192, (ctx, w, h) => {
+    ctx.fillStyle = '#F5EEE6'; ctx.fillRect(0, 0, w, h);
+    const bandTop = h * 0.12, bandH = h * 0.36;
+    ctx.fillStyle = '#FFD23F';
+    ctx.fillRect(0, bandTop - h * 0.065, w, h * 0.03);
+    ctx.fillRect(0, bandTop + bandH + h * 0.035, w, h * 0.03);
+    ctx.fillStyle = '#4A1456'; ctx.fillRect(0, bandTop, w, bandH);
+    const fs = bandH * 0.66;
+    ctx.font = `${fs}px "Bagel Fat One", "Arial Black", sans-serif`;
+    ctx.textBaseline = 'middle';
+    const parts = ['colher em pé', 'açaí tipo A'];
+    const gap = fs * 1.1;
+    const wA = ctx.measureText(parts[0]).width, wB = ctx.measureText(parts[1]).width;
+    const unit = wA + wB + gap * 2;
+    const reps = Math.max(1, Math.round(w / unit));
+    const sx = w / (unit * reps);
+    const cy = bandTop + bandH / 2 + fs * 0.06;
+    ctx.save(); ctx.scale(sx, 1);
+    let x = gap / 2;
+    const dot = cx => { ctx.fillStyle = '#FF5C8A'; ctx.beginPath(); ctx.arc(cx, cy - fs * 0.04, fs * 0.13, 0, Math.PI * 2); ctx.fill(); };
+    for (let i = 0; i < reps; i++) {
+      ctx.fillStyle = '#FFF8EE'; ctx.fillText(parts[0], x, cy); x += wA + gap / 2; dot(x); x += gap / 2;
+      ctx.fillStyle = '#FFD23F'; ctx.fillText(parts[1], x, cy); x += wB + gap / 2; dot(x); x += gap / 2;
+    }
+    ctx.restore();
+  });
+
+  const glaze = { color: col('#F5EEE6'), roughness: 0.26, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, side: THREE.DoubleSide };
+  const bowlMat = new THREE.MeshPhysicalMaterial(glaze);
+  const printMat = new THREE.MeshPhysicalMaterial({ ...glaze, color: col('#ffffff'), map: printTex });
+
+  (function buildBowl() {
+    const outer = [];
+    const N = 56;
+    for (let i = 0; i <= N; i++) {
+      const y = 0.14 + (1.02 - 0.14) * i / N;
+      outer.push(new THREE.Vector2(1.55 * Math.sqrt(Math.max(0, 1 - ((1.04 - y) / 1.0) ** 2)), y));
+    }
+    const lip = [
+      new THREE.Vector2(1.549, 1.02), new THREE.Vector2(1.552, 1.04), new THREE.Vector2(1.538, 1.062),
+      new THREE.Vector2(1.51, 1.07), new THREE.Vector2(1.482, 1.06), new THREE.Vector2(1.47, 1.04),
+    ];
+    for (let i = 1; i <= 40; i++) {
+      const y = 1.04 - (1.04 - 0.14) * i / 40;
+      lip.push(new THREE.Vector2(Math.max(0.001, 1.47 * Math.sqrt(Math.max(0, 1 - ((1.04 - y) / 0.9) ** 2))), y));
+    }
+    const foot = [
+      new THREE.Vector2(0.001, 0), new THREE.Vector2(0.56, 0), new THREE.Vector2(0.61, 0.012),
+      new THREE.Vector2(0.635, 0.05), new THREE.Vector2(0.642, 0.105), new THREE.Vector2(0.662, 0.135), new THREE.Vector2(0.676, 0.14),
+    ];
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(outer, 128), printMat));
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(lip, 128), bowlMat));
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(foot, 96), bowlMat));
+  })();
+
+  // sombra de contato
+  const shadowTex = canvasTex(256, 256, (ctx, w, h) => {
+    const g = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+    g.addColorStop(0, 'rgba(20,0,26,0.6)'); g.addColorStop(0.45, 'rgba(20,0,26,0.28)'); g.addColorStop(1, 'rgba(20,0,26,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  });
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 4.4), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, toneMapped: false }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = -0.01; shadow.renderOrder = -1;
+  bowl.add(shadow);
+
+  /* ---------- açaí ---------- */
+  const acaiMat = new THREE.MeshPhysicalMaterial({ color: col('#4E1259'), roughness: 0.4, metalness: 0, clearcoat: 0.45, clearcoatRoughness: 0.32 });
+  (function buildAcai() {
+    const R = 1.5, rings = 70, segs = 160;
+    const pos = [], idx = [];
+    pos.push(0, surfH(0, 0), 0);
+    for (let i = 1; i <= rings; i++) {
+      const r = R * Math.pow(i / rings, 0.9);
+      for (let j = 0; j < segs; j++) {
+        const a = j / segs * Math.PI * 2;
+        const x = Math.cos(a) * r, z = Math.sin(a) * r;
+        pos.push(x, surfH(x, z), z);
+      }
+    }
+    for (let j = 0; j < segs; j++) idx.push(0, 1 + (j + 1) % segs, 1 + j);
+    for (let i = 1; i < rings; i++) {
+      const o0 = 1 + (i - 1) * segs, o1 = 1 + i * segs;
+      for (let j = 0; j < segs; j++) {
+        const j1 = (j + 1) % segs;
+        idx.push(o0 + j, o0 + j1, o1 + j1, o0 + j, o1 + j1, o1 + j);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    bowl.add(new THREE.Mesh(g, acaiMat));
+  })();
+
+  /* ---------- texturas dos acompanhamentos ---------- */
+  const noiseTex = canvasTex(128, 128, (ctx, w, h) => {
+    const img = ctx.createImageData(w, h); const R = rng(7);
+    for (let i = 0; i < w * h; i++) { const v = 90 + R() * 165; img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v; img.data[i * 4 + 3] = 255; }
+    ctx.putImageData(img, 0, 0);
+  }, false);
+  noiseTex.wrapS = noiseTex.wrapT = THREE.RepeatWrapping;
+
+  const bananaCap = canvasTex(256, 256, (ctx, w, h) => {
+    const cx = w / 2, cy = h / 2, R = w / 2;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+    g.addColorStop(0, '#FFF7DC'); g.addColorStop(0.55, '#FBEBAE'); g.addColorStop(0.88, '#F2D677'); g.addColorStop(1, '#D9B653');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(205,165,80,0.2)'; ctx.lineWidth = 2;
+    for (let i = 0; i < 44; i++) { const a = i / 44 * Math.PI * 2; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * R * 0.3, cy + Math.sin(a) * R * 0.3); ctx.lineTo(cx + Math.cos(a) * R * 0.9, cy + Math.sin(a) * R * 0.9); ctx.stroke(); }
+    ctx.fillStyle = 'rgba(214,180,100,0.55)';
+    for (let k = 0; k < 3; k++) { const a = k / 3 * Math.PI * 2 + 0.3; ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * R * 0.1, cy + Math.sin(a) * R * 0.1, R * 0.17, R * 0.07, a, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = '#6B4A22';
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + 0.2; const rr = R * (0.17 + 0.05 * Math.sin(i * 2.1)); ctx.beginPath(); ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, R * 0.024, 0, Math.PI * 2); ctx.fill(); }
+  });
+
+  const kiwiCap = canvasTex(256, 256, (ctx, w, h) => {
+    const cx = w / 2, cy = h / 2, R = w / 2;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+    g.addColorStop(0, '#FBFBE6'); g.addColorStop(0.17, '#EDF3C2'); g.addColorStop(0.3, '#A8D65A'); g.addColorStop(0.72, '#7CC242'); g.addColorStop(0.92, '#5E9A2B'); g.addColorStop(0.96, '#6B5A2B'); g.addColorStop(1, '#4E3A1C');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(232,247,196,0.35)'; ctx.lineWidth = 2.5;
+    for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * R * 0.22, cy + Math.sin(a) * R * 0.22); ctx.lineTo(cx + Math.cos(a) * R * 0.84, cy + Math.sin(a) * R * 0.84); ctx.stroke(); }
+    ctx.fillStyle = '#1B140C';
+    for (let i = 0; i < 38; i++) { const a = i / 38 * Math.PI * 2; const rr = R * (0.29 + (i % 3) * 0.035); ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, R * 0.035, R * 0.017, a, 0, Math.PI * 2); ctx.fill(); }
+  });
+
+  function strawberryShape() {
+    const s = new THREE.Shape();
+    s.moveTo(0, -0.25);
+    s.bezierCurveTo(0.13, -0.21, 0.21, -0.06, 0.2, 0.07);
+    s.bezierCurveTo(0.19, 0.17, 0.09, 0.21, 0, 0.17);
+    s.bezierCurveTo(-0.09, 0.21, -0.19, 0.17, -0.2, 0.07);
+    s.bezierCurveTo(-0.21, -0.06, -0.13, -0.21, 0, -0.25);
+    return s;
+  }
+  const strawShape = strawberryShape();
+  const strawPts = strawShape.getPoints(48);
+  const strawBB = (() => {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    strawPts.forEach(p => { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); });
+    return { minX, maxX, minY, maxY, w: maxX - minX, h: maxY - minY };
+  })();
+  const strawTex = canvasTex(256, 256, (ctx, w, h) => {
+    const bb = strawBB;
+    const toC = (x, y) => [(x - bb.minX) / bb.w * w, (bb.maxY - y) / bb.h * h];
+    const cy0 = -0.03;
+    const path = s => { ctx.beginPath(); strawPts.forEach((p, i) => { const [X, Y] = toC(p.x * s, cy0 + (p.y - cy0) * s); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.closePath(); };
+    ctx.fillStyle = '#B80E2A'; ctx.fillRect(0, 0, w, h);
+    path(0.97); ctx.fillStyle = '#D9182F'; ctx.fill();
+    path(0.82);
+    const [gx, gy] = toC(0, cy0);
+    const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, w * 0.5);
+    g.addColorStop(0, '#FFE6E2'); g.addColorStop(0.42, '#FF9CA6'); g.addColorStop(1, '#EE3D58');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); path(0.82); ctx.clip();
+    ctx.strokeStyle = 'rgba(255,236,232,0.5)'; ctx.lineWidth = w * 0.012;
+    for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + Math.cos(a) * w * 0.5, gy + Math.sin(a) * h * 0.5); ctx.stroke(); }
+    const [ax, ay] = toC(0, 0.11), [bx, by] = toC(0, -0.16);
+    ctx.strokeStyle = 'rgba(255,248,244,0.9)'; ctx.lineWidth = w * 0.07; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(ax + w * 0.025, (ay + by) / 2, bx, by); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#FFE07A';
+    for (let i = 0; i < 24; i++) { const p = strawPts[Math.floor(i * strawPts.length / 24)]; const [X, Y] = toC(p.x * 0.9, cy0 + (p.y - cy0) * 0.9); ctx.beginPath(); ctx.ellipse(X, Y, w * 0.011, w * 0.018, 0, 0, Math.PI * 2); ctx.fill(); }
+  });
+
+  /* ---------- materiais dos acompanhamentos ---------- */
+  // só a tigela e o açaí usam o material mais caro (verniz); o resto usa o padrão, mais leve
+  const M = {
+    bananaSide: new THREE.MeshStandardMaterial({ color: col('#F0DA94'), roughness: 0.55 }),
+    bananaCap: new THREE.MeshStandardMaterial({ map: bananaCap, roughness: 0.42 }),
+    kiwiSide: new THREE.MeshStandardMaterial({ color: col('#7A5B33'), roughness: 0.9 }),
+    kiwiCap: new THREE.MeshStandardMaterial({ map: kiwiCap, roughness: 0.24 }),
+    straw: new THREE.MeshStandardMaterial({ map: strawTex, roughness: 0.22 }),
+    granola: new THREE.MeshStandardMaterial({ roughness: 0.8, flatShading: true }),
+    ninho: new THREE.MeshStandardMaterial({ color: col('#FFF8EC'), roughness: 1 }),
+    pacoca: new THREE.MeshStandardMaterial({ color: col('#D7AD73'), roughness: 0.95, bumpMap: noiseTex, bumpScale: 0.02 }),
+    crumbs: new THREE.MeshStandardMaterial({ roughness: 0.95, flatShading: true }),
+    drizzle: new THREE.MeshStandardMaterial({ color: col('#FFF3D8'), roughness: 0.1 }),
+  };
+
+  /* ---------- montagem dos acompanhamentos ---------- */
+  const SECTOR = Math.PI / 3;
+  const SECTOR_OF = { banana: 0, granola: 1, morango: 2, ninho: 3, kiwi: 4, pacoca: 5 };
+  const sectorRange = id => { const i = SECTOR_OF[id]; return [i * SECTOR, (i + 1) * SECTOR]; };
+  function sectorCenter(a0, a1, r) { const am = (a0 + a1) / 2, x = Math.cos(am) * r, z = Math.sin(am) * r; return new THREE.Vector3(x, surfH(x, z), z); }
+  function placeOn(obj, x, z, lift, c) {
+    obj.position.set(x - c.x, surfH(x, z) + lift - c.y, z - c.z);
+    obj.quaternion.setFromUnitVectors(UP, normalAt(x, z));
+  }
+
+  function buildSlices(a0, a1, R, geo, mats, spots, lift) {
+    const c = sectorCenter(a0, a1, 0.88);
+    const g = new THREE.Group(); g.position.copy(c);
+    spots.forEach(([r, f], i) => {
+      const a = a0 + (a1 - a0) * (0.1 + 0.8 * f) + (R() - 0.5) * 0.05;
+      const rr = r + (R() - 0.5) * 0.04;
+      const x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+      const m = new THREE.Mesh(geo, mats);
+      placeOn(m, x, z, lift + i * 0.006, c);
+      m.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler((R() - 0.5) * 0.45, R() * Math.PI * 2, (R() - 0.5) * 0.45)));
+      g.add(m);
+    });
+    return g;
+  }
+
+  const builders = {
+    banana(a0, a1, R) {
+      const geo = new THREE.CylinderGeometry(0.165, 0.165, 0.05, 40, 1);
+      return buildSlices(a0, a1, R, geo, [M.bananaSide, M.bananaCap, M.bananaCap],
+        [[0.62, 0.05], [0.64, 0.5], [0.62, 0.95], [1.05, 0.0], [1.1, 0.34], [1.1, 0.66], [1.05, 1.0], [0.86, 0.72], [0.86, 0.26]], 0.035);
+    },
+    kiwi(a0, a1, R) {
+      const geo = new THREE.CylinderGeometry(0.19, 0.19, 0.04, 40, 1);
+      return buildSlices(a0, a1, R, geo, [M.kiwiSide, M.kiwiCap, M.kiwiCap],
+        [[0.64, 0.2], [0.66, 0.8], [1.06, 0.1], [1.1, 0.5], [1.06, 0.9], [0.88, 0.5]], 0.03);
+    },
+    morango(a0, a1, R) {
+      const c = sectorCenter(a0, a1, 0.88);
+      const g = new THREE.Group(); g.position.copy(c);
+      const geo = new THREE.ExtrudeGeometry(strawShape, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.035, bevelSegments: 5, curveSegments: 24 });
+      const p = geo.attributes.position, uv = geo.attributes.uv;
+      for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) - strawBB.minX) / strawBB.w, (p.getY(i) - strawBB.minY) / strawBB.h);
+      geo.rotateX(-Math.PI / 2); geo.translate(0, 0.05, 0);
+      geo.computeVertexNormals();
+      [[0.64, 0.15], [0.66, 0.78], [1.06, 0.05], [1.1, 0.45], [1.06, 0.92], [0.9, 0.5]].forEach(([r, f]) => {
+        const a = a0 + (a1 - a0) * (0.1 + 0.8 * f) + (R() - 0.5) * 0.05;
+        const x = Math.cos(a) * r, z = Math.sin(a) * r;
+        const m = new THREE.Mesh(geo, M.straw);
+        const s = 0.85 + R() * 0.25; m.scale.setScalar(s);
+        placeOn(m, x, z, -0.01, c);
+        m.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler((R() - 0.5) * 0.3, Math.PI / 2 - a + (R() - 0.5) * 0.8, (R() - 0.5) * 0.3)));
+        g.add(m);
+      });
+      return g;
+    },
+    granola(a0, a1, R) {
+      const c = sectorCenter(a0, a1, 0.88);
+      const g = new THREE.Group(); g.position.copy(c);
+      const N = 210;
+      const mesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.042, 0), M.granola, N);
+      const pal = ['#C98D45', '#B07332', '#DDA85E', '#8E5726', '#E8C27E', '#A9692B'].map(col);
+      const oat = col('#EAD3A0');
+      const d = new THREE.Object3D();
+      for (let i = 0; i < N; i++) {
+        const f = R(), rr = 0.46 + R() * 0.86;
+        const a = a0 + (a1 - a0) * (0.05 + 0.9 * f);
+        const x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+        const heap = Math.max(0, (1 - Math.abs(f - 0.5) * 2) * (1 - Math.abs(rr - 0.89) / 0.45));
+        d.position.set(x - c.x, surfH(x, z) - c.y + 0.02 + heap * 0.1 * R() + R() * 0.02, z - c.z);
+        d.rotation.set(R() * 6.28, R() * 6.28, R() * 6.28);
+        const s = 0.7 + R() * 0.9, flat = R() < 0.3;
+        d.scale.set(s * (flat ? 1.5 : 1), s * (flat ? 0.35 : 0.75 + R() * 0.4), s * (flat ? 1.2 : 1));
+        d.updateMatrix(); mesh.setMatrixAt(i, d.matrix);
+        mesh.setColorAt(i, flat ? oat : pal[Math.floor(R() * pal.length)]);
+      }
+      mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      g.add(mesh);
+      return g;
+    },
+    ninho(a0, a1, R) {
+      const c = sectorCenter(a0, a1, 0.86);
+      const g = new THREE.Group(); g.position.copy(c);
+      const geo = new THREE.SphereGeometry(0.43, 72, 24, 0, Math.PI * 2, 0, Math.PI / 2);
+      const p = geo.attributes.position;
+      for (let i = 0; i < p.count; i++) {
+        let x = p.getX(i), y = p.getY(i), z = p.getZ(i) * 0.86;
+        const n = vnoise(x * 9 + 3, z * 9 - 2) * 0.6 + vnoise(x * 24, z * 24 + 7) * 0.3;
+        y = y * 0.42 * (0.8 + 0.35 * n);
+        x *= 1 + 0.08 * (n - 0.45); z *= 1 + 0.08 * (n - 0.45);
+        y += surfH(c.x + x, c.z + z) - c.y - 0.02;
+        p.setXYZ(i, x, y, z);
+      }
+      geo.computeVertexNormals();
+      g.add(new THREE.Mesh(geo, M.ninho));
+      const N = 150, specks = new THREE.InstancedMesh(new THREE.SphereGeometry(0.014, 6, 4), M.ninho, N);
+      const d = new THREE.Object3D();
+      for (let i = 0; i < N; i++) {
+        const a = a0 + (a1 - a0) * (0.04 + 0.92 * R()), rr = 0.42 + R() * 0.92;
+        const x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+        d.position.set(x - c.x, surfH(x, z) - c.y + 0.006, z - c.z);
+        d.scale.setScalar(0.6 + R() * 1.2); d.updateMatrix(); specks.setMatrixAt(i, d.matrix);
+      }
+      specks.instanceMatrix.needsUpdate = true;
+      g.add(specks);
+      return g;
+    },
+    pacoca(a0, a1, R) {
+      const c = sectorCenter(a0, a1, 0.86);
+      const g = new THREE.Group(); g.position.copy(c);
+      const whole = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.16, 0.17, 40, 1), M.pacoca);
+      const am = (a0 + a1) / 2;
+      placeOn(whole, Math.cos(am - 0.12) * 0.8, Math.sin(am - 0.12) * 0.8, 0.07, c);
+      whole.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0.25, 0, -0.18)));
+      g.add(whole);
+      const piece = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.13, 0.09, 7, 1), M.pacoca);
+      placeOn(piece, Math.cos(am + 0.3) * 1.08, Math.sin(am + 0.3) * 1.08, 0.05, c);
+      piece.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.5, 0.6, 0.3)));
+      g.add(piece);
+      const N = 110, crumbs = new THREE.InstancedMesh(new THREE.BoxGeometry(0.05, 0.05, 0.05), M.crumbs, N);
+      const pal = ['#D9B07A', '#C9985C', '#E7C996', '#BF8C52'].map(col);
+      const d = new THREE.Object3D();
+      for (let i = 0; i < N; i++) {
+        const a = a0 + (a1 - a0) * (0.05 + 0.9 * R()), rr = 0.45 + R() * 0.88;
+        const x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+        d.position.set(x - c.x, surfH(x, z) - c.y + 0.02 + R() * 0.03, z - c.z);
+        d.rotation.set(R() * 6.28, R() * 6.28, R() * 6.28);
+        const s = 0.5 + R() * 1.0; d.scale.set(s, s * (0.6 + R() * 0.6), s);
+        d.updateMatrix(); crumbs.setMatrixAt(i, d.matrix); crumbs.setColorAt(i, pal[Math.floor(R() * pal.length)]);
+      }
+      crumbs.instanceMatrix.needsUpdate = true;
+      if (crumbs.instanceColor) crumbs.instanceColor.needsUpdate = true;
+      g.add(crumbs);
+      return g;
+    },
+  };
+
+  const toppingObjs = {};
+  Object.keys(SECTOR_OF).forEach((id, i) => {
+    const [a0, a1] = sectorRange(id);
+    const g = builders[id](a0, a1, rng(101 + i * 17));
+    g.userData.base = g.position.clone();
+    bowl.add(g);
+    toppingObjs[id] = { g, v: 0, vel: 0, target: 0 };
+  });
+
+  /* ---------- leite condensado ---------- */
+  const HEIGHT = { banana: 0.085, kiwi: 0.07, morango: 0.1, granola: 0.12, pacoca: 0.1 };
+  const ninhoC = sectorCenter(...sectorRange('ninho'), 0.86);
+  let activeSet = new Set();
+  function clearance(x, z) {
+    const th = Math.atan2(z, x), r = Math.hypot(x, z);
+    const radial = smooth(0.3, 0.46, r) * (1 - smooth(1.28, 1.42, r));
+    let e = 0;
+    for (const id in SECTOR_OF) {
+      if (!activeSet.has(id)) continue;
+      const am = (SECTOR_OF[id] + 0.5) * SECTOR;
+      let d = Math.abs(Math.atan2(Math.sin(th - am), Math.cos(th - am)));
+      const w = 1 - smooth(SECTOR / 2 - 0.1, SECTOR / 2 + 0.06, d);
+      let h = HEIGHT[id];
+      if (id === 'ninho') { const dd = Math.hypot(x - ninhoC.x, z - ninhoC.z); h = 0.035 + 0.17 * Math.max(0, 1 - (dd / 0.46) ** 2); }
+      e = Math.max(e, w * radial * h);
+    }
+    return 0.032 + e;
+  }
+  function drizzleGeometry() {
+    const pts = [];
+    const dir = new THREE.Vector2(Math.cos(0.5), Math.sin(0.5)), perp = new THREE.Vector2(-dir.y, dir.x);
+    const passes = 6, Rmax = 1.3;
+    for (let k = 0; k < passes; k++) {
+      const dOff = -0.98 + k * (1.96 / (passes - 1));
+      const L = Math.sqrt(Math.max(0.01, Rmax * Rmax - dOff * dOff));
+      const steps = 30;
+      for (let s = 0; s <= steps; s++) {
+        let t = -L + 2 * L * s / steps; if (k % 2) t = -t;
+        const wob = 0.05 * Math.sin(t * 5 + k * 1.7);
+        const x = dir.x * t + perp.x * (dOff + wob), z = dir.y * t + perp.y * (dOff + wob);
+        pts.push(new THREE.Vector3(x, surfH(x, z) + clearance(x, z), z));
+      }
+    }
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 760, 0.022, 8, false);
+  }
+  const drizzle = new THREE.Mesh(drizzleGeometry(), M.drizzle);
+  bowl.add(drizzle);
+  const drz = { v: 0, target: 0 };
+  function applyDrizzle() {
+    const total = drizzle.geometry.index.count;
+    const v = Math.min(1, Math.max(0, drz.v));
+    drizzle.visible = v > 0.001;
+    drizzle.geometry.setDrawRange(0, Math.floor(v * total / 6) * 6);
+  }
+
+  /* ---------- colher ---------- */
+  const spoonTex = canvasTex(128, 1460, (ctx, w, h) => {
+    ctx.fillStyle = '#FF5C8A'; ctx.fillRect(0, 0, w, h);
+    ctx.save(); ctx.translate(w / 2, h * 0.36); ctx.rotate(-Math.PI / 2);
+    ctx.font = '64px "Bagel Fat One", "Arial Black", sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#FFF8EE';
+    ctx.fillText('colher em pé', 0, 4);
+    ctx.restore();
+  });
+  const spoonSide = new THREE.MeshStandardMaterial({ color: col('#FF5C8A'), roughness: 0.26 });
+  const spoonCap = new THREE.MeshStandardMaterial({ map: spoonTex, roughness: 0.26 });
+
+  const spoonPivot = new THREE.Group();
+  const spoonBase = new THREE.Vector3(0.04, surfH(0.04, -0.03) - 0.05, -0.03);
+  spoonPivot.position.copy(spoonBase);
+  bowl.add(spoonPivot);
+  const spoon = new THREE.Group(); spoonPivot.add(spoon);
+  (function buildSpoon() {
+    const s = new THREE.Shape();
+    s.moveTo(-0.042, 0);
+    s.lineTo(-0.072, 1.72);
+    s.quadraticCurveTo(-0.078, 1.93, 0, 1.94);
+    s.quadraticCurveTo(0.078, 1.93, 0.072, 1.72);
+    s.lineTo(0.042, 0);
+    s.lineTo(-0.042, 0);
+    const geo = new THREE.ExtrudeGeometry(s, { depth: 0.026, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3, curveSegments: 20 });
+    geo.translate(0, 0, -0.013);
+    const p = geo.attributes.position, uv = geo.attributes.uv;
+    for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) + 0.08) / 0.16, p.getY(i) / 1.94);
+    spoon.add(new THREE.Mesh(geo, [spoonCap, spoonSide]));
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.16, 16), spoonSide);
+    neck.position.y = -0.06; neck.scale.z = 0.6; spoon.add(neck);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), spoonSide);
+    head.scale.set(0.15, 0.25, 0.055); head.position.y = -0.36; spoon.add(head);
+  })();
+  const SPOON_TZ = 0.07, SPOON_TX = -0.05;
+
+  // respingos
+  const drops = [];
+  const dropGeo = new THREE.SphereGeometry(0.035, 10, 8);
+  for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(dropGeo, acaiMat); m.visible = false; bowl.add(m); drops.push({ m, v: new THREE.Vector3(), alive: false }); }
+  function splash() {
+    const R = Math.random;
+    drops.forEach(d => {
+      const a = R() * Math.PI * 2, sp = 0.6 + R() * 0.9;
+      d.m.position.set(spoonBase.x + Math.cos(a) * 0.08, spoonBase.y + 0.08, spoonBase.z + Math.sin(a) * 0.08);
+      d.v.set(Math.cos(a) * sp, 1.6 + R() * 1.4, Math.sin(a) * sp);
+      d.m.scale.setScalar(0.6 + R() * 0.9);
+      d.m.visible = true; d.alive = true;
+    });
+  }
+
+  /* ---------- caroços de açaí flutuando ---------- */
+  const berryMat = new THREE.MeshStandardMaterial({ color: col('#2B0832'), roughness: 0.18 });
+  const crownMat = new THREE.MeshStandardMaterial({ color: col('#6E4A5E'), roughness: 0.8 });
+  const berryGeo = new THREE.SphereGeometry(1, 28, 18);
+  const crownGeo = new THREE.CylinderGeometry(0.32, 0.22, 0.12, 12);
+  [[-2.7, 1.5, -0.5, 0.2], [2.6, 1.8, -1.0, 0.16], [-3.0, -0.4, 0.5, 0.22], [2.9, 0.1, 0.7, 0.18],
+   [-2.0, -1.3, 1.2, 0.15], [2.2, -1.2, 1.1, 0.2], [-0.9, 2.5, -1.7, 0.13], [1.2, 2.4, -1.5, 0.17], [3.4, 1.0, -1.9, 0.14]]
+    .forEach(([x, y, z, r], i) => {
+      const b = new THREE.Group();
+      const s = new THREE.Mesh(berryGeo, berryMat); s.scale.setScalar(r); b.add(s);
+      const cr = new THREE.Mesh(crownGeo, crownMat); cr.scale.setScalar(r); cr.position.y = r * 0.97; b.add(cr);
+      b.position.set(x, y, z); b.rotation.set(i, i * 2, i * 0.5);
+      b.userData = { y, ph: i * 1.3 };
+      berries.add(b);
+    });
+
+  /* ---------- áreas de clique ---------- */
+  const ghost = new THREE.MeshBasicMaterial({ visible: false });
+  const hitBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 0.9, 1.4, 20), ghost); hitBowl.position.y = 0.7; bowl.add(hitBowl);
+  const hitSpoon = new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.3, 0.45), ghost); hitSpoon.position.y = 1.0; spoon.add(hitSpoon);
+  const raycaster = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  let rect = canvas.getBoundingClientRect();
+  function hitTest(cx, cy) {
+    if (cx < rect.left || cx > rect.right) return null;
+    ndc.set((cx - rect.left) / rect.width * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
+    raycaster.setFromCamera(ndc, camera);
+    const hit = raycaster.intersectObjects([hitSpoon, hitBowl], false)[0];
+    return hit ? (hit.object === hitSpoon ? 'spoon' : 'bowl') : null;
+  }
+
+  /* ---------- coreografia de rolagem ---------- */
+  const STOPS = [
+    { id: 'topo',     d: { x: 0, y: -0.08, s: 1.05, tilt: 0.5,  b: 1 }, m: { x: 0, y: -0.2, s: 1.0, tilt: 0.5, b: 1 } },
+    { id: 'teste',    d: { x: 0, y: -0.12, s: 1.0,  tilt: 0.16, b: 0 }, m: { x: 0, y: -0.06, s: 1.0, tilt: 0.2, b: 0 } },
+    { id: 'cardapio', d: { x: 0, y: -0.04, s: 1.0,  tilt: 0.62, b: 0 }, m: { x: 0, y: 0, s: 1.0, tilt: 0.62, b: 0 } },
+    { id: 'monte',    d: { x: 0, y: -0.02, s: 1.08, tilt: 0.98, b: 0 }, m: { x: 0, y: 0, s: 1.05, tilt: 0.95, b: 0 } },
+    { id: 'onde',     d: { x: 0, y: -0.08, s: 0.94, tilt: 0.36, b: 0 }, m: { x: 0, y: 0, s: 0.95, tilt: 0.36, b: 0 } },
+    { id: 'rodape',   d: { x: 0, y: 0.06,  s: 0.86, tilt: 0.55, b: 1 }, m: { x: 0, y: 0.08, s: 0.9, tilt: 0.55, b: 1 } },
+  ];
+  let centers = STOPS.map(() => 0);
+  function measure() {
+    const vh = window.innerHeight;
+    const maxS = Math.max(0, document.documentElement.scrollHeight - vh);
+    centers = STOPS.map(s => {
+      const el = document.getElementById(s.id); if (!el) return 0;
+      const r = el.getBoundingClientRect();
+      return Math.min(maxS, Math.max(0, r.top + window.scrollY + r.height / 2 - vh / 2));
+    });
+    if (STOPS[0]) centers[0] = 0;
+  }
+  function poseAt(y, mobile) {
+    const k = mobile ? 'm' : 'd';
+    if (y <= centers[0]) return STOPS[0][k];
+    for (let i = 0; i < STOPS.length - 1; i++) {
+      const a = centers[i], b = centers[i + 1];
+      if (y <= b) {
+        if (b - a < 1) return STOPS[i + 1][k];
+        const t = smooth(0.12, 0.88, (y - a) / (b - a));
+        const A = STOPS[i][k], B = STOPS[i + 1][k];
+        return { x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, s: A.s + (B.s - A.s) * t, tilt: A.tilt + (B.tilt - A.tilt) * t, b: A.b + (B.b - A.b) * t };
+      }
+    }
+    return STOPS[STOPS.length - 1][k];
+  }
+
+  /* ---------- ponteiro: arrastar, tocar ---------- */
+  let dragRot = 0, dragVel = 0;
+  let wob = 0, wobV = 0, wob2 = 0, wob2V = 0;
+  let bounce = 0, bounceV = 0;
+  const isUI = el => el && el.closest && el.closest('a,button,input,label,select,textarea,.comanda,.combo,.nav');
+  // enquanto alguém mexe na página, desenha a 60 quadros; parado, cai pra 30
+  let activeUntil = 0;
+  const wake = (ms = 1400) => { activeUntil = Math.max(activeUntil, performance.now() + ms); };
+  window.addEventListener('scroll', () => wake(), { passive: true });
+  function tap(what) {
+    wake(2500);
+    if (what === 'spoon') { wobV += 4.2; wob2V += 2.2; }
+    else { bounceV -= 1.6; wobV += 1.4; }
+  }
+  let mouse = null;
+  const hover = { x: 0, y: 0, dirty: false };
+  document.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch' || e.button !== 0 || isUI(e.target)) return;
+    const h = hitTest(e.clientX, e.clientY); if (!h) return;
+    e.preventDefault();
+    mouse = { x: e.clientX, lastX: e.clientX, hit: h, moved: false };
+    document.documentElement.classList.add('grabbing');
+  });
+  window.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    hover.x = e.clientX; hover.y = e.clientY; hover.dirty = true;
+    if (!mouse) return;
+    wake();
+    const d = e.clientX - mouse.lastX; mouse.lastX = e.clientX;
+    if (Math.abs(e.clientX - mouse.x) > 3) mouse.moved = true;
+    dragRot += d * 0.01; dragVel = d * 0.6;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!mouse) return;
+    if (!mouse.moved) { tap(mouse.hit); dragVel = 0; }
+    mouse = null;
+    document.documentElement.classList.remove('grabbing');
+  });
+  let touch = null;
+  document.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1 || isUI(e.target)) { touch = null; return; }
+    const t = e.touches[0]; const h = hitTest(t.clientX, t.clientY);
+    touch = h ? { x: t.clientX, y: t.clientY, lastX: t.clientX, hit: h, drag: false } : null;
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!touch) return;
+    const t = e.touches[0]; const dx = t.clientX - touch.x, dy = t.clientY - touch.y;
+    if (!touch.drag) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) touch.drag = true;
+      else if (Math.abs(dy) > 8) { touch = null; return; }
+    }
+    if (touch.drag) {
+      e.preventDefault(); wake();
+      const d = t.clientX - touch.lastX; touch.lastX = t.clientX;
+      dragRot += d * 0.012; dragVel = d * 0.7;
+    }
+  }, { passive: false });
+  document.addEventListener('touchend', () => {
+    if (!touch) return;
+    if (!touch.drag) tap(touch.hit);
+    touch = null;
+  });
+
+  /* ---------- teste da colher ---------- */
+  let test = null, spoonY = 0, spoonYV = 0, spoonSpin = 0;
+  function spoonTest(done) { test = { t: 0, hit: false, done }; wake(3000); }
+  let autoTested = false;
+
+  /* ---------- acompanhamentos: alvo ---------- */
+  function setToppings(set) {
+    wake(2500);
+    activeSet = new Set(set);
+    for (const id in toppingObjs) toppingObjs[id].target = activeSet.has(id) ? 1 : 0;
+    drz.target = activeSet.has('condensado') ? 1 : 0;
+    const old = drizzle.geometry; drizzle.geometry = drizzleGeometry(); old.dispose(); applyDrizzle();
+  }
+
+  /* ---------- tamanho ---------- */
+  let cw = 1, ch = 1;
+  function resize() {
+    cw = canvas.clientWidth || window.innerWidth; ch = canvas.clientHeight || window.innerHeight;
+    renderer.setSize(cw, ch, false);
+    camera.aspect = cw / ch; camera.updateProjectionMatrix();
+    rect = canvas.getBoundingClientRect();
+    measure();
+    wake();
+  }
+  window.addEventListener('resize', resize);
+  if ('ResizeObserver' in window) new ResizeObserver(() => measure()).observe(document.body);
+  resize();
+
+  /* ---------- quadro a quadro ---------- */
+  const cur = { x: 0, y: -0.08, s: 0.85, tilt: 0.5, b: 1 };
+  let rot = 0, prevRot = 0, idle = 0, last = performance.now(), time = 0;
+  const ROT_PX = 0.0032;
+
+  let lastDraw = 0, settling = true, perfSum = 0, perfN = 0;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const busy = now < activeUntil || test || mouse || (touch && touch.drag) || settling;
+    if (!busy) {
+      if (reduceMotion) { last = now; return; }      // nada se mexe sozinho: não desenha
+      if (now - lastDraw < 31) return;               // parada, a tigela gira a 30 quadros
+    } else if (now - lastDraw < 60) {
+      // mede o ritmo real; se o aparelho não aguenta, baixa a resolução um degrau
+      perfSum += now - lastDraw; perfN++;
+      if (perfN >= 90) {
+        if (perfSum / perfN > 24 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(cw, ch, false); }
+        perfSum = 0; perfN = 0;
+      }
+    }
+    lastDraw = now;
+
+    const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000)); last = now; time += dt;
+    const vw = window.innerWidth, vh = ch, mobile = vw < 960;
+    const sy = window.scrollY;
+
+    const P = poseAt(sy, mobile);
+    const k = reduceMotion ? 12 : 4.5;
+    cur.x = damp(cur.x, P.x, k, dt); cur.y = damp(cur.y, P.y, k, dt);
+    cur.s = damp(cur.s, P.s, k, dt); cur.tilt = damp(cur.tilt, P.tilt, k, dt); cur.b = damp(cur.b, P.b, k, dt);
+
+    const visH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+    const visW = visH * camera.aspect;
+    const Dpx = mobile ? Math.min(vw * 0.8, vh * 0.4) : Math.min(vw * 0.28, vh * 0.5, 440);
+    const sc = (Dpx / vh * visH) / 3.1 * cur.s;
+    root.scale.setScalar(sc);
+    root.position.set(cur.x * visW / 2, cur.y * visH / 2, 0);
+    tilt.rotation.x = cur.tilt;
+
+    if (!mouse && !(touch && touch.drag)) { dragRot += dragVel * dt; dragVel *= Math.exp(-dt * 3.2); }
+    if (!reduceMotion) idle += dt * 0.12;
+    const rotTarget = sy * ROT_PX + dragRot + idle;
+    rot = damp(rot, rotTarget, 7, dt);
+    const omega = (rot - prevRot) / dt; prevRot = rot;
+    spin.rotation.y = rot;
+
+    // colher: balança com a velocidade do giro e com toques
+    const leanTarget = Math.max(-0.22, Math.min(0.22, -omega * 0.035));
+    wobV += (60 * (leanTarget - wob) - 3.2 * wobV) * dt; wob += wobV * dt;
+    wob2V += (-70 * wob2 - 3.6 * wob2V) * dt; wob2 += wob2V * dt;
+
+    // teste da colher
+    if (test) {
+      test.t += dt; const T = test.t;
+      if (T < 0.5) { const e = 1 - Math.pow(1 - T / 0.5, 3); spoonY = e * 1.7; spoonSpin = e * Math.PI * 2; }
+      else if (T < 0.78) { spoonY = 1.7 + Math.sin((T - 0.5) * 9) * 0.03; spoonSpin = Math.PI * 2; }
+      else if (T < 1.08) { const e = (T - 0.78) / 0.3; spoonY = 1.7 * (1 - e * e); }
+      else {
+        if (!test.hit) { test.hit = true; spoonY = -0.12; spoonYV = 0; splash(); wobV += 4.5; wob2V += 2.5; bounceV -= 2.2; }
+        spoonYV += (-160 * spoonY - 12 * spoonYV) * dt; spoonY += spoonYV * dt;
+        if (T > 2.0) { const d = test.done; test = null; spoonY = 0; spoonSpin = 0; if (d) d(); }
+      }
+    }
+    spoonPivot.position.y = spoonBase.y + spoonY;
+    spoon.rotation.set(SPOON_TX + wob2, spoonSpin, SPOON_TZ + wob);
+
+    // respingos
+    drops.forEach(d => {
+      if (!d.alive) return;
+      d.v.y -= 9 * dt; d.m.position.addScaledVector(d.v, dt);
+      if (d.v.y < 0 && d.m.position.y < surfH(d.m.position.x, d.m.position.z)) { d.alive = false; d.m.visible = false; }
+    });
+
+    // tigela quica
+    bounceV += (-220 * bounce - 11 * bounceV) * dt; bounce += bounceV * dt;
+    const b = Math.max(-0.12, Math.min(0.12, bounce));
+    bowl.scale.set(1 - b * 0.5, 1 + b, 1 - b * 0.5);
+
+    // acompanhamentos caem com mola
+    for (const id in toppingObjs) {
+      const o = toppingObjs[id];
+      o.vel += (170 * (o.target - o.v) - 15 * o.vel) * dt; o.v += o.vel * dt;
+      if (o.target === 0 && o.v < 0.002) { o.v = 0; o.vel = 0; }
+      const s = Math.max(0, o.v);
+      o.g.visible = s > 0.002;
+      o.g.scale.setScalar(Math.max(0.001, s));
+      o.g.position.y = o.g.userData.base.y + (1 - Math.min(1, s)) * 0.7;
+    }
+    const step = drz.target > drz.v ? dt * 0.8 : -dt * 2.4;
+    if (drz.v !== drz.target) { drz.v = drz.target > drz.v ? Math.min(drz.target, drz.v + step) : Math.max(drz.target, drz.v + step); applyDrizzle(); }
+
+    // caroços
+    berries.visible = cur.b > 0.01;
+    berries.scale.setScalar(Math.max(0.001, cur.b));
+    berries.rotation.y = rot * 0.35 + time * 0.04;
+    berries.children.forEach(bb => { bb.position.y = bb.userData.y + Math.sin(time * 0.9 + bb.userData.ph) * 0.12; bb.rotation.y += dt * 0.3; });
+
+    // teste automático ao chegar na seção
+    if (!autoTested && !reduceMotion && !testRunning && centers[1] > 0 && Math.abs(sy - centers[1]) < vh * 0.18) {
+      autoTested = true; hooks.onReachTest();
+    }
+
+    // cursor
+    if (hover.dirty && !mouse) {
+      hover.dirty = false;
+      document.documentElement.classList.toggle('over-bowl', !!hitTest(hover.x, hover.y));
+    }
+
+    renderer.render(scene, camera);
+
+    settling = Math.abs(dragVel) > 0.02 || Math.abs(rotTarget - rot) > 0.002 ||
+      Math.abs(cur.y - P.y) + Math.abs(cur.s - P.s) + Math.abs(cur.tilt - P.tilt) + Math.abs(cur.b - P.b) > 0.002 ||
+      Math.abs(wobV) > 0.01 || Math.abs(wob2V) > 0.01 || Math.abs(bounceV) > 0.01 ||
+      drz.v !== drz.target || drops.some(d => d.alive) ||
+      Object.values(toppingObjs).some(o => Math.abs(o.target - o.v) > 0.002 || Math.abs(o.vel) > 0.002);
+  }
+
+  const hooks = { onReachTest: () => {} };
+  // primeiros acompanhamentos já no lugar, sem animação de entrada
+  setToppings(state.selected);
+  for (const id in toppingObjs) { toppingObjs[id].v = toppingObjs[id].target; }
+  drz.v = drz.target; applyDrizzle();
+  requestAnimationFrame(frame);
+
+  if (document.fonts && document.fonts.load) {
+    Promise.all([document.fonts.load('64px "Bagel Fat One"'), document.fonts.ready])
+      .then(() => { printTex.redraw(); spoonTex.redraw(); measure(); })
+      .catch(() => {});
+  }
+
+  return { setToppings, spoonTest, hooks };
+}
+
+/* =========================================================
+   Início
+   ========================================================= */
+buildUI();
+sync();
+// o three.js chega com "defer": o texto da página aparece antes, a tigela entra logo depois
+function boot() {
+  try { stage = initStage(); } catch (e) { stage = null; }
+  if (!stage) { $('#stage-fallback').hidden = false; return; }
+  stage.hooks.onReachTest = runTest;
+}
+if (window.THREE) boot(); else document.addEventListener('DOMContentLoaded', boot, { once: true });
+})();
+</script>
+</body>
+</html>

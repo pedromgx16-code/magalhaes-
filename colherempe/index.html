@@ -45,7 +45,8 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%}
+/* arrastar na horizontal gira a tigela; na vertical, o navegador rola sozinho, sem esperar o JavaScript */
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;touch-action:pan-y pinch-zoom}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 [hidden]{display:none!important}
 body{
@@ -61,7 +62,8 @@ html.grabbing,html.grabbing *{cursor:grabbing!important}
 
 /* ---------- 3D stage ---------- */
 /* a tela 3D ocupa só a faixa central: menos pixels pra desenhar em monitor largo */
-#stage{position:fixed;top:0;left:50%;width:min(100%,125vh);height:100%;transform:translateX(-50%);z-index:1;pointer-events:none;display:block}
+/* altura fixa (lvh): a barra do navegador do celular aparece e some sem redimensionar o 3D */
+#stage{position:fixed;top:0;left:50%;width:min(100%,125vh);height:100vh;height:100lvh;transform:translateX(-50%);z-index:1;pointer-events:none;display:block}
 
 /* ---------- faixa da proposta ---------- */
 .demo{position:relative;z-index:21;background:var(--banana);color:var(--acai);font-size:.84rem;font-weight:600;line-height:1.35;text-align:center;padding:9px max(16px,env(safe-area-inset-right,0px)) 9px max(16px,env(safe-area-inset-left,0px))}
@@ -605,15 +607,17 @@ function runTest() {
 function initStage() {
   if (!window.THREE) return null;
   const canvas = $('#stage');
+  // resolução: até 1,5x (celular até 1,75x) e cai sozinha se o aparelho engasgar.
+  // Antisserrilhado só em tela de baixa densidade, onde ele faz diferença.
+  const isPhone = window.innerWidth < 960;
+  const deviceDpr = window.devicePixelRatio || 1;
+  let dpr = Math.min(deviceDpr, isPhone ? 1.75 : 1.5);
+  const minDpr = 1;
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: deviceDpr < 1.5, alpha: true, stencil: false });
   } catch (e) { return null; }
   if (!renderer.getContext()) return null;
-
-  // resolução: celular até 2x, computador até 1,5x; cai sozinha se o aparelho engasgar
-  const isPhone = window.innerWidth < 960;
-  let dpr = Math.min(window.devicePixelRatio || 1, isPhone ? 2 : 1.5);
   renderer.setPixelRatio(dpr);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -621,7 +625,7 @@ function initStage() {
   renderer.setClearColor(0x000000, 0);
 
   const col = h => new THREE.Color(h).convertSRGBToLinear();
-  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  const maxAniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
   const UP = new THREE.Vector3(0, 1, 0);
 
   const scene = new THREE.Scene();
@@ -645,10 +649,9 @@ function initStage() {
     pmrem.dispose();
   })();
 
-  scene.add(new THREE.HemisphereLight(col('#ffeaf4'), col('#3a0c44'), 0.5));
+  scene.add(new THREE.HemisphereLight(col('#ffeaf4'), col('#3a0c44'), 0.62));
   const key = new THREE.DirectionalLight(col('#fff1de'), 1.5); key.position.set(-3.5, 6, 5); scene.add(key);
   const rim = new THREE.DirectionalLight(col('#ff79b0'), 1.7); rim.position.set(5, 2.5, -4); scene.add(rim);
-  const fill = new THREE.DirectionalLight(col('#b98cff'), 0.45); fill.position.set(4, -1, 6); scene.add(fill);
 
   /* ---------- utilidades ---------- */
   function rng(seed) {
@@ -728,9 +731,9 @@ function initStage() {
     ctx.restore();
   });
 
-  const glaze = { color: col('#F5EEE6'), roughness: 0.26, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, side: THREE.DoubleSide };
-  const bowlMat = new THREE.MeshPhysicalMaterial(glaze);
-  const printMat = new THREE.MeshPhysicalMaterial({ ...glaze, color: col('#ffffff'), map: printTex });
+  const glaze = { color: col('#F5EEE6'), roughness: 0.17, metalness: 0, side: THREE.DoubleSide };
+  const bowlMat = new THREE.MeshStandardMaterial(glaze);
+  const printMat = new THREE.MeshStandardMaterial({ ...glaze, color: col('#ffffff'), map: printTex });
 
   (function buildBowl() {
     const outer = [];
@@ -751,9 +754,9 @@ function initStage() {
       new THREE.Vector2(0.001, 0), new THREE.Vector2(0.56, 0), new THREE.Vector2(0.61, 0.012),
       new THREE.Vector2(0.635, 0.05), new THREE.Vector2(0.642, 0.105), new THREE.Vector2(0.662, 0.135), new THREE.Vector2(0.676, 0.14),
     ];
-    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(outer, 128), printMat));
-    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(lip, 128), bowlMat));
-    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(foot, 96), bowlMat));
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(outer, 96), printMat));
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(lip, 96), bowlMat));
+    bowl.add(new THREE.Mesh(new THREE.LatheGeometry(foot, 64), bowlMat));
   })();
 
   // sombra de contato
@@ -767,9 +770,9 @@ function initStage() {
   bowl.add(shadow);
 
   /* ---------- açaí ---------- */
-  const acaiMat = new THREE.MeshPhysicalMaterial({ color: col('#4E1259'), roughness: 0.4, metalness: 0, clearcoat: 0.45, clearcoatRoughness: 0.32 });
+  const acaiMat = new THREE.MeshStandardMaterial({ color: col('#4E1259'), roughness: 0.33, metalness: 0 });
   (function buildAcai() {
-    const R = 1.5, rings = 70, segs = 160;
+    const R = 1.5, rings = 52, segs = 128;
     const pos = [], idx = [];
     pos.push(0, surfH(0, 0), 0);
     for (let i = 1; i <= rings; i++) {
@@ -939,7 +942,7 @@ function initStage() {
     granola(a0, a1, R) {
       const c = sectorCenter(a0, a1, 0.88);
       const g = new THREE.Group(); g.position.copy(c);
-      const N = 210;
+      const N = 180;
       const mesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.042, 0), M.granola, N);
       const pal = ['#C98D45', '#B07332', '#DDA85E', '#8E5726', '#E8C27E', '#A9692B'].map(col);
       const oat = col('#EAD3A0');
@@ -964,7 +967,7 @@ function initStage() {
     ninho(a0, a1, R) {
       const c = sectorCenter(a0, a1, 0.86);
       const g = new THREE.Group(); g.position.copy(c);
-      const geo = new THREE.SphereGeometry(0.43, 72, 24, 0, Math.PI * 2, 0, Math.PI / 2);
+      const geo = new THREE.SphereGeometry(0.43, 48, 18, 0, Math.PI * 2, 0, Math.PI / 2);
       const p = geo.attributes.position;
       for (let i = 0; i < p.count; i++) {
         let x = p.getX(i), y = p.getY(i), z = p.getZ(i) * 0.86;
@@ -1061,7 +1064,7 @@ function initStage() {
         pts.push(new THREE.Vector3(x, surfH(x, z) + clearance(x, z), z));
       }
     }
-    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 760, 0.022, 8, false);
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 560, 0.022, 6, false);
   }
   const drizzle = new THREE.Mesh(drizzleGeometry(), M.drizzle);
   bowl.add(drizzle);
@@ -1128,7 +1131,7 @@ function initStage() {
   /* ---------- caroços de açaí flutuando ---------- */
   const berryMat = new THREE.MeshStandardMaterial({ color: col('#2B0832'), roughness: 0.18 });
   const crownMat = new THREE.MeshStandardMaterial({ color: col('#6E4A5E'), roughness: 0.8 });
-  const berryGeo = new THREE.SphereGeometry(1, 28, 18);
+  const berryGeo = new THREE.SphereGeometry(1, 20, 14);
   const crownGeo = new THREE.CylinderGeometry(0.32, 0.22, 0.12, 12);
   [[-2.7, 1.5, -0.5, 0.2], [2.6, 1.8, -1.0, 0.16], [-3.0, -0.4, 0.5, 0.22], [2.9, 0.1, 0.7, 0.18],
    [-2.0, -1.3, 1.2, 0.15], [2.2, -1.2, 1.1, 0.2], [-0.9, 2.5, -1.7, 0.13], [1.2, 2.4, -1.5, 0.17], [3.4, 1.0, -1.9, 0.14]]
@@ -1205,54 +1208,38 @@ function initStage() {
     if (what === 'spoon') { wobV += 4.2; wob2V += 2.2; }
     else { bounceV -= 1.6; wobV += 1.4; }
   }
-  let mouse = null;
+  // mouse e dedo pelo mesmo caminho (pointer events), sem ouvinte que segure a rolagem
+  let drag = null;
   const hover = { x: 0, y: 0, dirty: false };
   document.addEventListener('pointerdown', e => {
-    if (e.pointerType === 'touch' || e.button !== 0 || isUI(e.target)) return;
+    if (drag || (e.pointerType === 'mouse' && e.button !== 0) || isUI(e.target)) return;
     const h = hitTest(e.clientX, e.clientY); if (!h) return;
-    e.preventDefault();
-    mouse = { x: e.clientX, lastX: e.clientX, hit: h, moved: false };
-    document.documentElement.classList.add('grabbing');
+    const isMouse = e.pointerType === 'mouse';
+    if (isMouse) e.preventDefault();
+    drag = { id: e.pointerId, touch: !isMouse, x: e.clientX, y: e.clientY, lastX: e.clientX, hit: h, moved: false, on: isMouse };
+    if (isMouse) document.documentElement.classList.add('grabbing');
+    wake();
   });
   window.addEventListener('pointermove', e => {
-    if (e.pointerType === 'touch') return;
-    hover.x = e.clientX; hover.y = e.clientY; hover.dirty = true;
-    if (!mouse) return;
+    if (e.pointerType === 'mouse') { hover.x = e.clientX; hover.y = e.clientY; hover.dirty = true; }
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) > 6) drag.moved = true;
+    if (!drag.on && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) drag.on = true;
+    if (!drag.on) return;
+    const k = drag.touch ? 0.012 : 0.01;
+    const d = e.clientX - drag.lastX; drag.lastX = e.clientX;
+    dragRot += d * k; dragVel = d * k * 60;
     wake();
-    const d = e.clientX - mouse.lastX; mouse.lastX = e.clientX;
-    if (Math.abs(e.clientX - mouse.x) > 3) mouse.moved = true;
-    dragRot += d * 0.01; dragVel = d * 0.6;
-  });
-  window.addEventListener('pointerup', () => {
-    if (!mouse) return;
-    if (!mouse.moved) { tap(mouse.hit); dragVel = 0; }
-    mouse = null;
-    document.documentElement.classList.remove('grabbing');
-  });
-  let touch = null;
-  document.addEventListener('touchstart', e => {
-    if (e.touches.length !== 1 || isUI(e.target)) { touch = null; return; }
-    const t = e.touches[0]; const h = hitTest(t.clientX, t.clientY);
-    touch = h ? { x: t.clientX, y: t.clientY, lastX: t.clientX, hit: h, drag: false } : null;
   }, { passive: true });
-  document.addEventListener('touchmove', e => {
-    if (!touch) return;
-    const t = e.touches[0]; const dx = t.clientX - touch.x, dy = t.clientY - touch.y;
-    if (!touch.drag) {
-      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) touch.drag = true;
-      else if (Math.abs(dy) > 8) { touch = null; return; }
-    }
-    if (touch.drag) {
-      e.preventDefault(); wake();
-      const d = t.clientX - touch.lastX; touch.lastX = t.clientX;
-      dragRot += d * 0.012; dragVel = d * 0.7;
-    }
-  }, { passive: false });
-  document.addEventListener('touchend', () => {
-    if (!touch) return;
-    if (!touch.drag) tap(touch.hit);
-    touch = null;
-  });
+  const endDrag = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (e.type === 'pointerup' && !drag.moved) { tap(drag.hit); dragVel = 0; }
+    drag = null;
+    document.documentElement.classList.remove('grabbing');
+  };
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
 
   /* ---------- teste da colher ---------- */
   let test = null, spoonY = 0, spoonYV = 0, spoonSpin = 0;
@@ -1271,9 +1258,12 @@ function initStage() {
   /* ---------- tamanho ---------- */
   let cw = 1, ch = 1;
   function resize() {
-    cw = canvas.clientWidth || window.innerWidth; ch = canvas.clientHeight || window.innerHeight;
-    renderer.setSize(cw, ch, false);
-    camera.aspect = cw / ch; camera.updateProjectionMatrix();
+    const w = canvas.clientWidth || window.innerWidth, h = canvas.clientHeight || window.innerHeight;
+    if (w !== cw || h !== ch) {       // só recria a área 3D se o tamanho mudou de verdade
+      cw = w; ch = h;
+      renderer.setSize(cw, ch, false);
+      camera.aspect = cw / ch; camera.updateProjectionMatrix();
+    }
     rect = canvas.getBoundingClientRect();
     measure();
     wake();
@@ -1287,18 +1277,22 @@ function initStage() {
   let rot = 0, prevRot = 0, idle = 0, last = performance.now(), time = 0;
   const ROT_PX = 0.0032;
 
-  let lastDraw = 0, settling = true, perfSum = 0, perfN = 0;
+  let lastDraw = 0, settling = true, perfSum = 0, perfN = 0, slowStrikes = 0, lowPower = false;
   function frame(now) {
     requestAnimationFrame(frame);
-    const busy = now < activeUntil || test || mouse || (touch && touch.drag) || settling;
-    if (!busy) {
-      if (reduceMotion) { last = now; return; }      // nada se mexe sozinho: não desenha
-      if (now - lastDraw < 31) return;               // parada, a tigela gira a 30 quadros
-    } else if (now - lastDraw < 60) {
-      // mede o ritmo real; se o aparelho não aguenta, baixa a resolução um degrau
-      perfSum += now - lastDraw; perfN++;
-      if (perfN >= 90) {
-        if (perfSum / perfN > 24 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(cw, ch, false); }
+    const spinning = !reduceMotion && !lowPower;        // o giro lento automático
+    const busy = spinning || now < activeUntil || test || drag || settling;
+    if (!busy) { last = now; return; }                 // nada mudou: não desenha nada
+    const gap = now - lastDraw;
+    if (gap < 50) {
+      // mede o ritmo: abaixo de ~55 quadros por segundo, baixa a resolução um degrau;
+      // se já está no mínimo e ainda pesa, desliga o giro automático
+      perfSum += gap; perfN++;
+      if (perfN >= 40) {
+        if (perfSum / perfN > 18.5) {
+          if (dpr > minDpr + 0.01) { dpr = Math.max(minDpr, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(cw, ch, false); }
+          else if (++slowStrikes >= 2) lowPower = true;
+        }
         perfSum = 0; perfN = 0;
       }
     }
@@ -1321,8 +1315,8 @@ function initStage() {
     root.position.set(cur.x * visW / 2, cur.y * visH / 2, 0);
     tilt.rotation.x = cur.tilt;
 
-    if (!mouse && !(touch && touch.drag)) { dragRot += dragVel * dt; dragVel *= Math.exp(-dt * 3.2); }
-    if (!reduceMotion) idle += dt * 0.12;
+    if (!(drag && drag.on)) { dragRot += dragVel * dt; dragVel *= Math.exp(-dt * 3.2); }
+    if (spinning) idle += dt * 0.12;
     const rotTarget = sy * ROT_PX + dragRot + idle;
     rot = damp(rot, rotTarget, 7, dt);
     const omega = (rot - prevRot) / dt; prevRot = rot;
@@ -1385,7 +1379,7 @@ function initStage() {
     }
 
     // cursor
-    if (hover.dirty && !mouse) {
+    if (hover.dirty && !drag) {
       hover.dirty = false;
       document.documentElement.classList.toggle('over-bowl', !!hitTest(hover.x, hover.y));
     }

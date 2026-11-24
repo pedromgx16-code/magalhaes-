@@ -9,6 +9,7 @@ Site de Pedro Magalhães, designer gráfico, com a página do Visual Creator.
 - `assets/css/style.css`: visual da página do Visual Creator
 - `assets/js/main.js`: promoção (data de fim em `PROMO_FIM`), menu, carrossel, tela cheia e vídeos, usado nas duas páginas
 - `assets/img/trabalhos/thumb/`: versões leves das artes, usadas nas miniaturas
+- `assets/video/`: vídeos da seção Motion (mp4 720x1280 ou 1280x720 com pôster `.webp` do mesmo nome); `terror-ep1` e `terror-ep2` são a série de terror autoral
 
 ## Cores
 

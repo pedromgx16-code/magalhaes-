@@ -428,6 +428,12 @@ html:not(.js) .intro, .no-intro .intro { display: none; }
 .motion-cta-circle small { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 .motion-cta-circle b { max-width: 8ch; font-size: clamp(1.1rem, 0.85rem + 0.6vw, 1.45rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; }
 .motion-cta-circle svg { width: 22px; height: 22px; margin-top: 0.2rem; }
+.motion-series-card { grid-column: span 2; display: flex; flex-direction: column; justify-content: flex-end; gap: 1rem; padding: clamp(1.4rem, 2.6vw, 2.4rem); border-radius: 22px; background: radial-gradient(110% 70% at 100% 0%, var(--azul-25) 0%, var(--tinta) 72%); outline: 1px solid rgba(var(--gelo-rgb), 0.1); outline-offset: -1px; }
+.motion-series-card .kicker { align-self: flex-start; }
+.motion-series-card h3 { margin: 0; font-size: var(--step-3); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+.motion-series-card > p:not(.kicker) { margin: 0; max-width: 38ch; color: var(--mute); font-size: var(--step-0); line-height: 1.55; }
+.motion-series-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.4rem 0 0; padding: 0; list-style: none; }
+.motion-series-tags li { padding: 0.36rem 0.8rem; border-radius: 999px; border: 1px solid rgba(var(--gelo-rgb), 0.16); background: rgba(var(--gelo-rgb), 0.04); font-size: 0.8rem; font-weight: 600; }
 .motion-cta:hover .motion-cta-circle { transform: scale(1.06) rotate(-5deg); }
 
 /* Serviços em blocos */
@@ -679,6 +685,7 @@ html:not(.js) .intro, .no-intro .intro { display: none; }
   }
   .motion-row::-webkit-scrollbar { display: none; }
   .motion-row > * { flex: 0 0 min(64vw, 300px); scroll-snap-align: start; }
+  .motion-row > .motion-series-card { flex-basis: min(82vw, 360px); justify-content: center; }
 }
 
 /* Celular */

@@ -4,6 +4,7 @@ Site de Pedro Magalhães, designer gráfico, com a página do Visual Creator.
 
 - `index.html`: início (projetos, sobre, motion, serviços, como funciona, Visual Creator, dúvidas, contato)
 - `visual-creator/index.html`: Visual Creator Texture e Visual Creator Library
+- `visualcreatormotion/index.html`: página de vendas do curso Visual Creator Motion (link do checkout na linha `const CHECKOUT` do script; vídeos de exemplo em `visualcreatormotion/midia/`)
 - `assets/css/home.css` e `assets/js/home.js`: visual e efeitos da página inicial
 - `assets/css/style.css`: visual da página do Visual Creator
 - `assets/js/main.js`: promoção (data de fim em `PROMO_FIM`), menu, carrossel, tela cheia e vídeos, usado nas duas páginas

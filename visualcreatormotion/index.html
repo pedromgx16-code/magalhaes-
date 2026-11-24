@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Creator Motion</title>
+<meta name="description" content="Curso de motion com IA, sem After Effects. Você dirige, a IA anima. Lote 1 por R$ 47,90.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://magalhaescreator.com.br/visualcreatormotion/">
+<meta property="og:title" content="Visual Creator Motion">
+<meta property="og:image" content="https://magalhaescreator.com.br/visualcreatormotion/capa.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:description" content="Crie e venda motions com IA, sem After Effects. Lote 1 por R$ 47,90.">
+<meta name="theme-color" content="#060B14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400&family=Roboto+Condensed:wght@700;800&family=Bitter:wght@800&family=Anton&family=Lora:ital,wght@0,700;1,400&family=Poppins:wght@500&family=Montserrat:wght@500&display=swap">
+<style>
+/* VOICE  lançamento de curso: direto, confiante, em português do dia a dia
+   IDEA   um editor de motion: quadros-chave, curva de ease, linha do tempo com cursor
+   PICTURE celular rodando um motion real feito pela skill, com inspetor (paleta, texto da cena, saída) e linha do tempo sincronizada
+   COLOUR Preto Tinta de fundo, Noite nas faixas, Azul Magalhães nos blocos, Lima só para ação, Gelo na faixa clara
+   TYPE   Roboto Condensed 800 + DM Sans (combinação Creator da Paleta Magalhães)
+   LAYOUT notebook: texto à esquerda, editor à direita; celular: título, editor, botões */
+:root{color-scheme:dark;--bg:#060B14;--surf:#0C1424;--surf2:#111C31;--line:#1C2842;--noite:#071739;--azul:#087CFF;--ceu:#57A6FF;--azul6:#0C65DE;--lima:#D4FF3A;--gelo:#F1F8FF;--gelo2:#E0EFFF;--ink:#F1F8FF;--mut:#A6B4CB;--dark:#111721;--dmut:#46536A;--cond:"Roboto Condensed","Arial Narrow",Impact,sans-serif;--sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,video,svg{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(64px,8vw,116px) max(5vw,16px)}
+h1,h2{font-family:var(--cond);font-weight:800;text-transform:uppercase;letter-spacing:-.005em;margin:0;text-wrap:balance}
+h1{font-size:clamp(50px,6.2vw,88px);line-height:.92}
+h2{font-size:clamp(38px,4.6vw,60px);line-height:.95}
+h3{font:700 20px/1.25 var(--sans);margin:0}
+.lead{font-size:clamp(18px,1.55vw,21px);line-height:1.5}
+.mut{color:var(--mut)}
+.kd{display:inline-block;width:10px;height:10px;background:var(--lima);transform:rotate(45deg);border-radius:2px;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 28px;border-radius:999px;background:var(--lima);color:#060B14;font:700 17px/1 var(--sans);text-decoration:none;border:0;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(212,255,58,.6)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px #2C3A5A}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1.5px var(--ceu)}
+.btn.dk{background:#060B14;color:var(--lima)}
+.btn.dk:hover{box-shadow:0 12px 28px -12px rgba(6,11,20,.7)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--ceu);outline-offset:3px;border-radius:12px}
+.btn:focus-visible{border-radius:999px}
+
+/* topo */
+.top{position:sticky;top:0;z-index:30;background:rgba(6,11,20,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{max-width:1320px;margin:0 auto;padding:0 max(5vw,16px);height:70px;display:flex;align-items:center;gap:28px}
+.logo{display:block;flex:none}
+.logo svg{height:40px;width:auto}
+.top nav{display:flex;gap:26px;margin-left:auto}
+.top nav a{text-decoration:none;color:var(--mut);font-weight:500;font-size:15px;padding:10px 0}
+.top nav a:hover{color:var(--ink)}
+.top .btn{min-height:44px;padding:0 20px;font-size:15px}
+
+/* hero */
+.hero{position:relative;padding-top:clamp(40px,5.5vw,80px);padding-bottom:clamp(56px,6vw,96px);background:radial-gradient(900px 620px at 78% 38%,#0B2452 0%,rgba(7,23,57,.55) 45%,transparent 75%),var(--bg)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(36px,5vw,72px);align-items:center}
+.status{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 14px;border-radius:999px;background:var(--surf);border:1px solid var(--line);font-size:14px;font-weight:500}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--lima);box-shadow:0 0 0 4px rgba(212,255,58,.16)}
+.hero h1{margin:24px 0 .62em}
+.anima{position:relative;display:inline-block}
+.curve{position:absolute;left:0;right:-.04em;top:100%;height:.36em;pointer-events:none}
+.curve svg{width:100%;height:100%;overflow:visible}
+.curve path{fill:none;stroke:var(--lima);stroke-width:.065em;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s .4s cubic-bezier(.65,0,.35,1) forwards}
+.curve .k{position:absolute;width:.17em;height:.17em;background:var(--lima);border:2px solid var(--bg);border-radius:3px;transform:translate(-50%,-50%) rotate(45deg) scale(0);animation:pop .35s ease-out forwards}
+.curve .k1{left:3%;top:86%;animation-delay:.3s}
+.curve .k2{left:97%;top:14%;animation-delay:1.4s}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{to{transform:translate(-50%,-50%) rotate(45deg) scale(1)}}
+.hero .lead{max-width:34em}
+.hero .sub{margin-top:14px;color:var(--mut);max-width:34em}
+.price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:30px 0 22px}
+.price b{font:800 clamp(44px,4.4vw,58px)/1 var(--cond);color:var(--lima);white-space:nowrap}
+.price span{color:var(--mut)}
+.price s{white-space:nowrap}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.micro{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:20px;color:var(--mut);font-size:14px}
+.micro span{display:inline-flex;align-items:center;gap:9px}
+.micro .kd{width:7px;height:7px}
+
+/* editor */
+.ed{background:linear-gradient(180deg,#0E182C,#09101D);border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:0 50px 90px -50px rgba(8,124,255,.55)}
+.ed-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:2px 6px 14px;font-size:13px;color:var(--mut)}
+.ed-top b{color:var(--ink);font-weight:600;display:inline-flex;align-items:center;gap:8px}
+.ed-top b i{width:8px;height:8px;border-radius:50%;background:var(--lima)}
+.ed-main{display:grid;grid-template-columns:minmax(0,47%) minmax(0,1fr);gap:14px;align-items:stretch}
+.phone{position:relative;align-self:start;border-radius:36px;padding:8px;background:#04070D;box-shadow:inset 0 0 0 1.5px #2A3654,0 30px 50px -24px #000}
+.phone video{width:100%;aspect-ratio:9/16;border-radius:29px;object-fit:cover;background:#F3EEE7}
+.pbtns{position:absolute;left:18px;right:18px;bottom:18px;display:flex;justify-content:space-between}
+.rb{width:44px;height:44px;border-radius:50%;border:0;background:rgba(6,11,20,.78);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.rb svg{width:20px;height:20px}
+.rb:hover{background:#060B14}
+.insp{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:14px}
+.card h4{margin:0 0 10px;font:600 13px/1.2 var(--sans);color:var(--mut)}
+.sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.sw i{aspect-ratio:1;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.card .meta{margin-top:10px;font-size:13px;color:var(--mut);line-height:1.4}
+.now{flex:1;display:flex;flex-direction:column}
+.now .ctx{font-size:13px;color:var(--mut);min-height:1.4em}
+.now .txt{font:800 clamp(19px,1.9vw,25px)/1.12 "Bitter",Georgia,serif;margin-top:4px;color:var(--ink)}
+.now .txt em{font-style:normal;color:#FF7A45}
+.now .meta{margin-top:auto;padding-top:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 8px}
+#hdur{white-space:nowrap}
+.out p{font-size:14px;line-height:1.45}
+.out p+p{margin-top:4px;color:var(--mut);font-size:13px}
+.tl{margin-top:14px;background:#060B15;border:1px solid var(--line);border-radius:16px;padding:10px 12px 12px;display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:10px}
+.tl .lbl{font-size:13px;color:var(--mut);display:flex;align-items:center}
+.lanes{position:relative;display:grid;grid-template-rows:22px 36px 30px;row-gap:6px}
+.tl .lbls{display:grid;grid-template-rows:22px 36px 30px;row-gap:6px}
+.ruler{position:relative;font-size:13px;color:var(--mut)}
+.ruler span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.ruler span:first-child{transform:none}
+.ruler span:last-child{transform:translateX(-100%)}
+.trk{position:relative}
+.clip{position:absolute;top:0;bottom:0;border-radius:8px;background:#15223B;border:1px solid #22355C;color:var(--ink);font:500 13px/34px var(--sans);padding:0 8px;overflow:hidden;white-space:nowrap;cursor:pointer;text-align:left;transition:background .2s,color .2s}
+.clip:hover{background:#1C2D4D}
+.clip.on{background:var(--azul);border-color:var(--azul);color:#060B14;font-weight:700}
+.clip.tight{color:transparent}
+.clip.tight.on{color:transparent}
+.wave{position:relative}
+.wave .w{position:absolute;inset:0;display:flex;align-items:center;gap:2px}
+.wave .w i{flex:1;background:#2B3D63;border-radius:2px;min-height:2px}
+.wave .w2 i{background:var(--lima)}
+.ph{position:absolute;top:0;bottom:-4px;width:2px;margin-left:-1px;background:var(--lima);left:0;pointer-events:none;z-index:2}
+.ph::before{content:"";position:absolute;left:50%;top:-1px;width:11px;height:11px;background:var(--lima);transform:translateX(-50%) rotate(45deg);border-radius:2px}
+
+/* faixa de números */
+.strip{background:var(--azul);color:#060B14;padding:30px max(5vw,16px)}
+.facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px 24px}
+.facts div{display:flex;flex-direction:column}
+.facts b{font:800 clamp(34px,3.4vw,46px)/1 var(--cond);text-transform:uppercase;white-space:nowrap}
+.facts span{font-size:15px;font-weight:500;margin-top:6px;line-height:1.35}
+
+/* problema */
+.prob .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(36px,6vw,96px);align-items:start}
+.prob .lead{margin-top:22px;color:var(--mut)}
+.pains{display:grid;gap:14px}
+.pain{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;padding:22px;background:var(--surf);border:1px solid var(--line);border-radius:18px}
+.pain .x{width:44px;height:44px;border-radius:12px;background:#1A1220;display:grid;place-items:center;color:#FF8A8A}
+.pain .x svg{width:20px;height:20px}
+.pain p{margin-top:6px;color:var(--mut)}
+.turn{grid-column:1/-1;display:flex;align-items:center;gap:18px;border-top:1px solid var(--line);padding-top:clamp(28px,4vw,44px);font:800 clamp(26px,3.2vw,40px)/1.05 var(--cond);text-transform:uppercase}
+.turn .kd{width:16px;height:16px}
+.turn em{font-style:normal;color:var(--lima)}
+
+/* método */
+.met{background:var(--noite)}
+.met .head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 64px;align-items:end}
+.met .head p{color:var(--mut)}
+.steps{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;margin-top:clamp(40px,5vw,64px);padding-top:44px}
+.steps::before{content:"";position:absolute;left:0;right:0;top:12px;height:2px;background:linear-gradient(90deg,#2B4B86 0%,#2B4B86 48%,var(--lima) 52%,var(--lima) 100%)}
+.step{position:relative}
+.step::before{content:"";position:absolute;left:2px;top:-42px;width:20px;height:20px;background:#2B4B86;border:3px solid var(--noite);border-radius:4px;transform:rotate(45deg)}
+.step.hot::before,.step.after::before{background:var(--lima)}
+.step.hot::before{width:28px;height:28px;top:-46px;left:-2px}
+.step small{display:block;font:800 22px/1 var(--cond);text-transform:uppercase;color:var(--ceu)}
+.step.hot small,.step.after small{color:var(--lima)}
+.step h3{margin-top:10px}
+.step p{margin-top:8px;color:var(--mut)}
+.quote{margin-top:clamp(40px,5vw,60px);padding:24px 28px;border-radius:18px;background:rgba(8,124,255,.12);border:1px solid #1B3C78;font-size:clamp(18px,1.6vw,21px);line-height:1.5}
+
+/* skill */
+.skill{background:var(--gelo);color:var(--dark)}
+.skill .wrap{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(36px,5vw,80px);align-items:center}
+.skill .lead{margin-top:20px;color:var(--dmut)}
+.does{display:grid;gap:18px;margin-top:32px}
+.do{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;align-items:start}
+.do .ic{width:48px;height:48px;border-radius:14px;background:var(--azul);color:#060B14;display:grid;place-items:center}
+.do .ic svg{width:22px;height:22px}
+.do p{margin-top:4px;color:var(--dmut)}
+.demo{background:#fff;border:1px solid #D3E3F7;border-radius:24px;padding:16px;box-shadow:0 40px 70px -50px rgba(16,79,179,.5)}
+.dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:4px 4px 12px;font-size:14px;color:var(--dmut)}
+.dhead b{color:var(--dark)}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tab{min-height:56px;border-radius:14px;border:1.5px solid #D3E3F7;background:var(--gelo);color:var(--dark);font:600 14px/1.2 var(--sans);cursor:pointer;padding:8px 10px;text-align:left}
+.tab small{display:block;font-weight:500;color:var(--dmut);font-size:13px;margin-top:2px}
+.tab[aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tab[aria-selected=true] small{color:#C5D4EA}
+.dbody{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:16px;margin-top:14px}
+.art{aspect-ratio:9/16;border-radius:16px;padding:20px 16px;display:flex;flex-direction:column;justify-content:center;gap:12px;transition:background .35s;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.art .c{font-size:13px;line-height:1.3;transition:color .35s}
+.art .t{font-size:26px;line-height:1.02;transition:color .35s}
+.art .t em{font-style:normal;transition:color .35s}
+.art .cd{border-radius:12px;padding:12px;display:grid;gap:7px;transition:background .35s}
+.art .cd i{display:block;height:7px;border-radius:4px;opacity:.55}
+.art .cd i:nth-child(2){width:70%}
+.art .cd i:nth-child(3){width:45%}
+.art .b{align-self:flex-start;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;transition:background .35s,color .35s}
+.rows{display:grid;gap:6px;align-content:start}
+.row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 8px 6px 6px;border-radius:12px;background:#F6FAFF}
+.row i{width:34px;height:34px;border-radius:9px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);transition:background .35s}
+.row b{display:block;font-size:14px;line-height:1.2}
+.row span{display:block;font-size:13px;color:var(--dmut);line-height:1.2}
+.row code{font:500 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dark);white-space:nowrap}
+.pbar{display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:14px;box-shadow:inset 0 0 0 1px rgba(17,23,33,.12)}
+.pbar span{transition:background .35s}
+.pcap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--dmut)}
+.dfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #E3EDF9}
+.dfoot p{font-size:14px;color:var(--dmut);max-width:28em}
+.copy{min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--dark);background:#fff;color:var(--dark);font:600 14px/1 var(--sans);cursor:pointer;white-space:nowrap}
+.copy:hover{background:var(--dark);color:#fff}
+
+/* estilos */
+.est .head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 64px;align-items:end}
+.est .head p{color:var(--mut)}
+.vids{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.62fr);gap:18px;margin-top:clamp(36px,4.5vw,56px);align-items:stretch}
+.col3{display:flex;flex-direction:column;gap:18px}
+.vid{background:var(--surf);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.vid video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#0A0F1A}
+.vid.wide video{aspect-ratio:16/9}
+.cap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 14px 14px 18px;margin-top:auto}
+.cap p{font-size:14px;color:var(--mut);line-height:1.35;margin-top:2px}
+.cap .rb{flex:none;background:var(--surf2);border:1px solid var(--line)}
+.scn{flex:1;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:20px}
+.scn p{margin-top:8px;color:var(--mut);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chips span{padding:6px 12px;border-radius:999px;background:var(--surf2);border:1px solid var(--line);font-size:14px;white-space:nowrap}
+.fmts{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:18px;font-size:13px;color:var(--mut)}
+.fmts i{display:block;border:1.5px solid var(--ceu);border-radius:4px;margin-bottom:5px}
+.fmts div{display:flex;flex-direction:column;align-items:center}
+
+/* aulas */
+.aulas{background:var(--noite)}
+.aulas .head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 64px;align-items:end}
+.aulas .head p{color:var(--mut)}
+.mods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:clamp(36px,4.5vw,56px)}
+.mod{background:#0A1C44;border:1px solid #17306A;border-radius:20px;padding:24px}
+.mtop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.mtop small{display:block;font-size:14px;color:var(--ceu);font-weight:600}
+.mtop h3{font:800 28px/1.05 var(--cond);text-transform:uppercase;margin-top:6px}
+.lib{flex:none;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;border:1.5px solid #2C4C8C;color:var(--ink)}
+.lib.now{border-color:var(--lima);color:var(--lima)}
+.mod .gets{margin-top:10px;color:var(--mut);font-size:15px}
+.mod ol{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.mod li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;padding-top:10px;border-top:1px solid #17306A}
+.mod li b{font:800 20px/1.2 var(--cond);color:var(--ceu)}
+.mod li strong{display:block;font-weight:700}
+.mod li span{display:block;color:var(--mut);font-size:15px;line-height:1.45}
+
+/* para quem */
+.quem{background:var(--gelo);color:var(--dark)}
+.qgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:clamp(32px,4vw,48px)}
+.qcol{border-radius:22px;padding:26px}
+.qcol.sim{background:#fff;border:1px solid #D3E3F7}
+.qcol.nao{background:var(--gelo2);border:1px solid #C9DDF6}
+.qcol h3{font:800 26px/1.05 var(--cond);text-transform:uppercase}
+.qcol ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:14px}
+.qcol li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px;align-items:start}
+.qcol li svg{width:22px;height:22px;margin-top:2px}
+.sim li svg{color:var(--azul6)}
+.nao li svg{color:#7A8699}
+
+/* professor */
+.prof .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(36px,6vw,96px);align-items:center}
+.foto{margin:0;position:relative;aspect-ratio:3/4;max-width:460px;width:100%;justify-self:center;border-radius:clamp(28px,4vw,40px);overflow:hidden;background:#0C1424;box-shadow:inset 0 0 0 1px var(--line)}
+.foto img{width:100%;height:100%;object-fit:cover}
+.selo{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:999px;background:rgba(6,11,20,.82);border:1px solid var(--line);font:600 14px/1 var(--sans);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.selo svg{width:30px;height:30px}
+.tile{aspect-ratio:1;border-radius:clamp(28px,4vw,48px);background:var(--azul);display:grid;place-items:center;position:relative;overflow:hidden}
+.tile svg{width:62%;height:auto;position:relative}
+.tile::after{content:"@magalhaes.creator";position:absolute;left:24px;bottom:20px;font:700 15px/1 var(--sans);color:#060B14}
+.prof p{margin-top:18px;color:var(--mut)}
+.prof p strong{color:var(--ink)}
+.prof .btn{margin-top:28px}
+
+/* oferta */
+.of{background:radial-gradient(800px 500px at 20% 0%,#0B2452,transparent 70%),var(--bg)}
+.of .head{text-align:center;max-width:760px;margin:0 auto}
+.of .head p{margin-top:16px;color:var(--mut);text-wrap:balance}
+.deal{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);margin-top:clamp(36px,4.5vw,56px);border-radius:28px;overflow:hidden;border:1px solid var(--line)}
+.pay{background:var(--azul);color:#060B14;padding:clamp(26px,3.5vw,44px);display:flex;flex-direction:column}
+.tag{align-self:flex-start;padding:7px 14px;border-radius:999px;background:#060B14;color:var(--lima);font-size:14px;font-weight:700}
+.pay h3{font:800 clamp(30px,3vw,40px)/1 var(--cond);text-transform:uppercase;margin-top:20px}
+.big{font:800 clamp(72px,8vw,112px)/.9 var(--cond);margin-top:18px;white-space:nowrap;letter-spacing:-.01em}
+.big small{font-size:.36em;vertical-align:.95em;margin-right:4px}
+.pay .then{margin-top:12px;font-size:16px;font-weight:500}
+.pay .then s{white-space:nowrap}
+.pay .btn{margin-top:28px;width:100%}
+.pay .safe{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start;margin-top:auto;padding-top:28px;font-size:15px;line-height:1.45}
+.pay .safe svg{width:40px;height:40px}
+.pay .ways{margin-top:12px;font-size:14px;font-weight:500;text-align:center}
+.inc{background:var(--surf);padding:clamp(26px,3.5vw,44px)}
+.inc ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:13px}
+.inc li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:12px;align-items:start}
+.inc li .kd{margin-top:8px}
+.inc li span{color:var(--mut)}
+.inc li strong{font-weight:700;color:var(--ink)}
+.pays{margin-top:26px;padding:20px;border-radius:16px;background:#0A1C44;border:1px solid #17306A}
+.pays b{display:block;font:800 22px/1.1 var(--cond);text-transform:uppercase;color:var(--lima)}
+.pays p{margin-top:6px;color:var(--ink);font-size:15px}
+
+/* dúvidas */
+.faq .wrap{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:clamp(32px,6vw,96px);align-items:start}
+.faq .side{position:sticky;top:110px}
+.faq .side p{margin-top:16px;color:var(--mut)}
+.faq .side a{color:var(--ceu)}
+details{border-bottom:1px solid var(--line)}
+details:first-child{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:16px 0;font-weight:700;font-size:18px}
+summary::-webkit-details-marker{display:none}
+summary i{flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid #2C3A5A;position:relative;transition:transform .2s,background .2s}
+summary i::before,summary i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:var(--ink);transform:translate(-50%,-50%)}
+summary i::after{transform:translate(-50%,-50%) rotate(90deg)}
+details[open] summary i{transform:rotate(45deg);background:var(--lima);border-color:var(--lima)}
+details[open] summary i::before,details[open] summary i::after{background:#060B14}
+details p{padding:0 48px 22px 0;color:var(--mut)}
+
+/* final */
+.fim{background:var(--azul);color:#060B14;text-align:center}
+.fim h2{font-size:clamp(42px,6vw,80px);line-height:.92}
+.fim p{margin:18px auto 0;max-width:34em;text-wrap:balance;font-size:clamp(18px,1.6vw,21px);font-weight:500}
+.fim .btn{margin-top:32px}
+.fim .ways{margin-top:14px;font-size:14px;font-weight:500}
+
+footer{border-top:1px solid var(--line);padding:40px max(5vw,16px)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+footer .logo svg{height:36px}
+footer p{color:var(--mut);font-size:14px;max-width:40em}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer nav a{color:var(--ink);font-size:15px;font-weight:500;text-decoration:none;padding:10px 0}
+footer nav a:hover{color:var(--lima)}
+
+/* barra fixa no celular e aviso */
+.sticky{position:fixed;left:12px;right:12px;bottom:12px;z-index:40;display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 18px;border-radius:999px;background:rgba(12,20,36,.94);border:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transform:translateY(140%);transition:transform .3s ease,visibility .3s}
+.sticky{visibility:hidden}
+.sticky.show{transform:none;visibility:visible}
+.sticky b{font:800 24px/1 var(--cond);color:var(--lima);white-space:nowrap}
+.sticky span{display:block;font-size:13px;color:var(--mut);line-height:1.2}
+.sticky .btn{min-height:46px;padding:0 20px;font-size:15px}
+.toast{position:fixed;left:50%;bottom:90px;z-index:50;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--gelo);color:var(--dark);padding:14px 20px;border-radius:14px;font-size:15px;font-weight:500;box-shadow:0 20px 40px -20px #000;transition:opacity .25s,transform .25s;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1080px){
+.facts{grid-template-columns:repeat(3,minmax(0,1fr))}
+.vids{grid-template-columns:repeat(2,minmax(0,1fr))}
+.col3{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+}
+@media (max-width:900px){
+.top nav{display:none}
+.top .btn{margin-left:auto}
+.hero .wrap,.prob .wrap,.skill .wrap,.prof .wrap,.faq .wrap,.deal{grid-template-columns:minmax(0,1fr)}
+.met .head,.est .head,.aulas .head{grid-template-columns:minmax(0,1fr)}
+.steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:48px}
+.steps::before{display:none}
+.step{padding-top:0}
+.step::before{top:-30px}
+.step.hot::before{top:-34px}
+.steps{padding-top:30px}
+.tile{max-width:380px}
+.foto{max-width:380px}
+.col3{grid-template-columns:minmax(0,1fr)}
+.sticky{display:flex}
+.faq .side{position:static}
+footer{padding-bottom:110px}
+}
+@media (max-width:720px){
+.mods,.qgrid{grid-template-columns:minmax(0,1fr)}
+.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.facts div:last-child{grid-column:1/-1}
+}
+@media (max-width:600px){
+body{font-size:16px}
+.bar{height:62px;gap:12px}
+.logo svg{height:32px}
+.top .btn{min-height:42px;padding:0 16px;font-size:14px}
+.ctas .btn{width:100%}
+.ed{padding:10px;border-radius:20px}
+.ed-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.phone{border-radius:28px;padding:6px}
+.phone video{border-radius:23px}
+.pbtns{left:12px;right:12px;bottom:12px}
+.out{display:none}
+.card{padding:11px;border-radius:14px}
+.sw{grid-template-columns:repeat(3,minmax(0,1fr))}
+.now .txt{font-size:18px}
+.tl{grid-template-columns:minmax(0,1fr);padding:10px}
+.tl .lbls{display:none}
+.ruler span.mid{display:none}
+.steps{grid-template-columns:minmax(0,1fr);row-gap:40px}
+.dbody{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.art{padding:14px 12px;gap:9px}
+.art .t{font-size:20px}
+.row{grid-template-columns:26px minmax(0,1fr);padding:5px}
+.row i{width:26px;height:26px;border-radius:7px}
+.row code{grid-column:2;font-size:13px}
+.row span{display:none}
+.tab{font-size:13px;padding:8px}
+.vids{gap:12px}
+.cap{padding:12px}
+.cap h3{font-size:17px}
+.pain{grid-template-columns:minmax(0,1fr);padding:20px}
+details p{padding-right:0}
+.big{font-size:clamp(64px,20vw,96px)}
+}
+@media (prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+.curve path{animation:none;stroke-dashoffset:0}
+.curve .k{animation:none;transform:translate(-50%,-50%) rotate(45deg)}
+.btn,.toast,.clip,.art,.art *,.row i,.pbar span,summary i{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <a class="logo" href="#inicio" aria-label="Visual Creator Motion, início"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486.44 129.09"><rect x="6.00" y="6.00" width="117.09" height="117.09" rx="28.10" fill="#087CFF"/><path d="M35.18 90.35H73.44M93.91 38.74H55.65" stroke="#FFFFFF" stroke-width="2.67" stroke-linecap="round" fill="none" opacity="0.6"/><circle cx="73.44" cy="90.35" r="4.89" fill="#FFFFFF"/><circle cx="55.65" cy="38.74" r="4.89" fill="#FFFFFF"/><path d="M35.18 90.35C73.44 90.35 55.65 38.74 93.91 38.74" stroke="#FFFFFF" stroke-width="12.46" stroke-linecap="round" fill="none"/><path d="M35.18 76.11L49.42 90.35L35.18 104.59L20.94 90.35Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.56"/><path d="M93.91 24.50L108.15 38.74L93.91 52.98L79.67 38.74Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.56"/><path d="M157.13 28.72 151.09 12.27H154.11L158.85 25.82L163.62 12.27H166.61L160.56 28.72Z M179.06 28.72V12.27H181.88V28.72Z M201.13 29Q199.34 29 197.95 28.38Q196.57 27.75 195.79 26.57Q195.01 25.4 194.98 23.77H197.96Q197.98 24.58 198.36 25.23Q198.74 25.88 199.43 26.26Q200.13 26.64 201.12 26.64Q201.97 26.64 202.59 26.36Q203.21 26.08 203.55 25.58Q203.89 25.08 203.89 24.4Q203.89 23.63 203.53 23.12Q203.16 22.61 202.53 22.26Q201.9 21.92 201.07 21.64Q200.25 21.36 199.34 21.06Q197.39 20.41 196.4 19.38Q195.41 18.35 195.41 16.65Q195.41 15.21 196.09 14.17Q196.78 13.13 198.01 12.56Q199.25 11.99 200.87 11.99Q202.51 11.99 203.74 12.57Q204.97 13.16 205.68 14.21Q206.4 15.27 206.42 16.71H203.41Q203.4 16.11 203.09 15.58Q202.79 15.05 202.21 14.71Q201.63 14.37 200.82 14.37Q200.12 14.35 199.56 14.59Q199 14.84 198.68 15.3Q198.36 15.76 198.36 16.44Q198.36 17.09 198.67 17.52Q198.97 17.95 199.53 18.26Q200.09 18.56 200.83 18.82Q201.58 19.07 202.47 19.37Q203.7 19.78 204.7 20.35Q205.69 20.93 206.28 21.84Q206.87 22.75 206.87 24.22Q206.87 25.48 206.21 26.57Q205.55 27.66 204.28 28.33Q203.01 29 201.13 29Z M226.24 29Q224.46 29 223.01 28.29Q221.56 27.58 220.71 26.14Q219.85 24.69 219.85 22.47V12.27H222.67V22.49Q222.67 23.82 223.11 24.7Q223.55 25.58 224.37 26.01Q225.19 26.43 226.3 26.43Q227.43 26.43 228.23 26.01Q229.03 25.58 229.47 24.7Q229.91 23.82 229.91 22.49V12.27H232.73V22.47Q232.73 24.69 231.86 26.14Q230.98 27.58 229.51 28.29Q228.03 29 226.24 29Z M245.2 28.72 251.22 12.27H254.38L260.39 28.72H257.4L252.78 15.56L248.15 28.72ZM247.89 24.84 248.64 22.62H256.75L257.49 24.84Z M273.02 28.72V12.27H275.84V26.52H283.19V28.72Z  M319.75 29Q317.31 29 315.54 27.94Q313.77 26.87 312.81 24.95Q311.86 23.04 311.86 20.52Q311.86 17.99 312.81 16.07Q313.77 14.15 315.54 13.07Q317.31 11.99 319.75 11.99Q322.69 11.99 324.55 13.43Q326.41 14.87 326.89 17.5H323.8Q323.47 16.12 322.45 15.32Q321.43 14.53 319.73 14.53Q318.18 14.53 317.06 15.25Q315.94 15.97 315.34 17.31Q314.74 18.65 314.74 20.52Q314.74 22.37 315.34 23.71Q315.94 25.04 317.06 25.76Q318.18 26.48 319.73 26.48Q321.43 26.48 322.45 25.73Q323.46 24.98 323.79 23.66H326.89Q326.41 26.16 324.55 27.58Q322.69 29 319.75 29Z M340.02 28.72V12.27H345.93Q347.89 12.27 349.17 12.94Q350.44 13.61 351.06 14.73Q351.69 15.85 351.69 17.25Q351.69 18.56 351.07 19.69Q350.46 20.82 349.17 21.5Q347.89 22.18 345.87 22.18H342.84V28.72ZM348.6 28.72 345.15 21.45H348.22L351.84 28.72ZM342.84 20.1H345.75Q347.31 20.1 348.05 19.33Q348.79 18.57 348.79 17.33Q348.79 16.09 348.07 15.36Q347.34 14.63 345.73 14.63H342.84Z M364.98 28.72V12.27H375.61V14.56H367.8V19.28H374.91V21.5H367.8V26.44H375.61V28.72Z M387.88 28.72 393.9 12.27H397.05L403.06 28.72H400.07L395.46 15.56L390.83 28.72ZM390.56 24.84 391.32 22.62H399.42L400.17 24.84Z M419.53 28.72V14.56H414.69V12.27H427.17V14.56H422.34V28.72Z M447.39 29Q445 29 443.18 27.93Q441.36 26.86 440.33 24.94Q439.3 23.03 439.3 20.5Q439.3 17.98 440.33 16.07Q441.36 14.15 443.18 13.07Q445 11.99 447.39 11.99Q449.81 11.99 451.64 13.07Q453.46 14.15 454.48 16.07Q455.49 17.98 455.49 20.5Q455.49 23.03 454.48 24.94Q453.46 26.86 451.64 27.93Q449.81 29 447.39 29ZM447.4 26.48Q448.98 26.48 450.15 25.75Q451.32 25.03 451.97 23.69Q452.61 22.35 452.61 20.5Q452.61 18.64 451.97 17.3Q451.32 15.96 450.15 15.25Q448.98 14.53 447.4 14.53Q445.83 14.53 444.65 15.25Q443.48 15.96 442.83 17.3Q442.18 18.64 442.18 20.5Q442.18 22.35 442.83 23.69Q443.48 25.03 444.65 25.75Q445.83 26.48 447.4 26.48Z M468.62 28.72V12.27H474.52Q476.49 12.27 477.76 12.94Q479.04 13.61 479.66 14.73Q480.28 15.85 480.28 17.25Q480.28 18.56 479.67 19.69Q479.05 20.82 477.77 21.5Q476.49 22.18 474.47 22.18H471.44V28.72ZM477.2 28.72 473.74 21.45H476.82L480.44 28.72ZM471.44 20.1H474.34Q475.91 20.1 476.65 19.33Q477.39 18.57 477.39 17.33Q477.39 16.09 476.67 15.36Q475.94 14.63 474.33 14.63H471.44Z" fill="#57A6FF"/><path d="M157.75 45.72H170.81L183.69 94.63L196.53 45.72H208.8L189.13 116.82H178.23ZM151.09 45.72H164.1L166.33 96.26V116.82H151.09ZM203.22 45.72H216.27V116.82H201.01V96.26Z M277.73 75.86V87.18Q277.73 94.77 275.87 100.49Q274.01 106.22 270.57 110.07Q267.13 113.91 262.37 115.85Q257.62 117.79 251.84 117.79Q246.03 117.79 241.25 115.85Q236.47 113.91 233.01 110.07Q229.55 106.22 227.68 100.49Q225.8 94.77 225.8 87.18V75.86Q225.8 68.17 227.66 62.34Q229.52 56.51 232.97 52.62Q236.43 48.73 241.19 46.74Q245.95 44.75 251.77 44.75Q257.54 44.75 262.32 46.74Q267.09 48.73 270.54 52.62Q273.99 56.51 275.86 62.34Q277.73 68.17 277.73 75.86ZM262.16 87.18V75.77Q262.16 70.83 261.5 67.35Q260.84 63.87 259.52 61.68Q258.21 59.48 256.27 58.46Q254.34 57.43 251.77 57.43Q249.12 57.43 247.17 58.46Q245.23 59.48 243.94 61.68Q242.65 63.87 242.03 67.35Q241.41 70.83 241.41 75.77V87.18Q241.41 91.97 242.04 95.38Q242.67 98.79 243.98 100.95Q245.29 103.11 247.25 104.14Q249.22 105.16 251.84 105.16Q254.37 105.16 256.32 104.14Q258.27 103.11 259.56 100.95Q260.85 98.79 261.51 95.38Q262.16 91.97 262.16 87.18Z M316.94 45.72V116.82H301.46V45.72ZM334.38 45.72V58.3H284.43V45.72Z M358.33 45.72V116.82H342.89V45.72Z M420.46 75.86V87.18Q420.46 94.77 418.59 100.49Q416.73 106.22 413.29 110.07Q409.85 113.91 405.1 115.85Q400.34 117.79 394.56 117.79Q388.75 117.79 383.97 115.85Q379.2 113.91 375.74 110.07Q372.28 106.22 370.4 100.49Q368.52 94.77 368.52 87.18V75.86Q368.52 68.17 370.38 62.34Q372.24 56.51 375.7 52.62Q379.15 48.73 383.91 46.74Q388.68 44.75 394.49 44.75Q400.27 44.75 405.04 46.74Q409.82 48.73 413.26 52.62Q416.71 56.51 418.58 62.34Q420.46 68.17 420.46 75.86ZM404.89 87.18V75.77Q404.89 70.83 404.23 67.35Q403.56 63.87 402.25 61.68Q400.93 59.48 399 58.46Q397.06 57.43 394.49 57.43Q391.84 57.43 389.9 58.46Q387.95 59.48 386.66 61.68Q385.37 63.87 384.75 67.35Q384.13 70.83 384.13 75.77V87.18Q384.13 91.97 384.76 95.38Q385.4 98.79 386.7 100.95Q388.01 103.11 389.98 104.14Q391.94 105.16 394.56 105.16Q397.1 105.16 399.04 104.14Q400.99 103.11 402.28 100.95Q403.57 98.79 404.23 95.38Q404.89 91.97 404.89 87.18Z M480.44 45.72V116.82H465.22L445.12 72.59V116.82H430V45.72H445.14L465.35 90.23V45.72Z" fill="#FFFFFF"/></svg></a>
+    <nav aria-label="Seções">
+      <a href="#metodo">Método</a>
+      <a href="#skill">A skill</a>
+      <a href="#aulas">Aulas</a>
+      <a href="#preco">Preço</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <a class="btn" data-buy href="#preco">Garantir o lote 1</a>
+  </div>
+</header>
+
+<main>
+<section class="band hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <span class="status"><i></i>Pré-venda aberta · Lote 1</span>
+      <h1>Você dirige.<br>A IA <span class="anima">anima.<span class="curve" aria-hidden="true"><svg viewBox="0 0 100 30"><path pathLength="1" d="M3 26 C 46 26, 54 4, 97 4"/></svg><i class="k k1"></i><i class="k k2"></i></span></span></h1>
+      <p class="lead">Aprenda a criar e vender motion com IA, sem abrir o After Effects. Reels, anúncios e vídeos de marca para qualquer tipo de cliente.</p>
+      <p class="sub">Na primeira semana você aprende a pensar como diretor. No dia 7 chega a skill que faz a paleta, a copy e o vídeo em MP4. Depois, é vender.</p>
+      <div class="price"><b>R$ 47,90</b><span>no lote 1. Depois, <s>R$ 197</s>.</span></div>
+      <div class="ctas">
+        <a class="btn" data-buy href="#preco">Quero entrar no lote 1 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn ghost" href="#skill">Ver o que a skill faz</a>
+      </div>
+      <div class="micro"><span><i class="kd"></i>Garantia de 7 dias</span><span><i class="kd"></i>Pix ou cartão</span><span><i class="kd"></i>Acesso na hora ao Módulo 1</span></div>
+    </div>
+
+    <div class="ed" aria-label="Motion de exemplo feito com a skill do curso">
+      <div class="ed-top"><b><i></i>fornalha.mp4</b><span>feito com a skill · marca fictícia</span></div>
+      <div class="ed-main">
+        <div class="phone">
+          <video id="hv" src="midia/minimalista.mp4" poster="midia/minimalista.jpg" muted playsinline loop preload="metadata" aria-label="Motion de exemplo da padaria fictícia Fornalha"></video>
+          <div class="pbtns">
+            <button class="rb" id="hplay" type="button" aria-label="Pausar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg></button>
+            <button class="rb" id="hsnd" type="button" aria-label="Ativar som"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button>
+          </div>
+        </div>
+        <div class="insp">
+          <div class="card">
+            <h4>Paleta escolhida</h4>
+            <div class="sw" id="hsw"></div>
+            <p class="meta">Forno de manhã · Bitter + DM Sans</p>
+          </div>
+          <div class="card now">
+            <h4>Texto da cena</h4>
+            <p class="ctx" id="hctx"></p>
+            <p class="txt" id="htxt"></p>
+            <p class="meta"><span id="hcena"></span><span id="hdur"></span></p>
+          </div>
+          <div class="card out">
+            <h4>Saída</h4>
+            <p>MP4 1080 × 1920, 30 s</p>
+            <p>com efeitos sonoros no ritmo das cenas</p>
+          </div>
+        </div>
+      </div>
+      <div class="tl">
+        <div class="lbls"><span class="lbl"></span><span class="lbl">Cenas</span><span class="lbl">Som</span></div>
+        <div class="lanes" id="lanes">
+          <div class="ruler" id="ruler"></div>
+          <div class="trk" id="trk"></div>
+          <div class="wave"><div class="w" id="w1"></div><div class="w w2" id="w2"></div></div>
+          <div class="ph" id="ph"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="strip" aria-label="O curso em números">
+  <div class="wrap facts">
+    <div><b>13 aulas</b><span>em 4 módulos curtos</span></div>
+    <div><b>1h45</b><span>de vídeo, direto ao ponto</span></div>
+    <div><b>Dia 7</b><span>a skill chega para você</span></div>
+    <div><b>3 motions</b><span>de portfólio feitos por você</span></div>
+    <div><b>7 dias</b><span>de garantia</span></div>
+  </div>
+</section>
+
+<section class="band prob">
+  <div class="wrap">
+    <div>
+      <h2>O cliente pede vídeo. Você entrega arte parada.</h2>
+      <p class="lead">E o trabalho vai para quem anima. Não por falta de talento: falta um jeito de transformar o seu olho de designer em movimento, rápido e com cara de profissional.</p>
+    </div>
+    <div class="pains">
+      <div class="pain"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><div><h3>O After Effects cobra meses</h3><p>Keyframe, expressão, pré-composição, render. Muita gente desiste antes do primeiro trabalho pago.</p></div></div>
+      <div class="pain"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><div><h3>Template deixa tudo com a mesma cara</h3><p>O cliente percebe. E o seu portfólio vira mais um no meio de mil iguais.</p></div></div>
+      <div class="pain"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><div><h3>IA sem direção gera vídeo aleatório</h3><p>Prompt solto dá resultado solto. Falta alguém decidir a cor, o texto e o ritmo.</p></div></div>
+    </div>
+    <p class="turn"><i class="kd"></i><span>O que falta não é ferramenta. <em>É direção.</em></span></p>
+  </div>
+</section>
+
+<section class="band met" id="metodo">
+  <div class="wrap">
+    <div class="head">
+      <h2>Primeiro o olhar. Depois a ferramenta.</h2>
+      <p class="lead">O curso libera em duas etapas, de propósito. Quem chega na ferramenta sabendo o que quer faz vídeo que vende. Quem chega sem saber, faz vídeo genérico.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><small>Dia 0</small><h3>Você entra</h3><p>O Módulo 1 libera na hora: o olhar do diretor, paleta e fonte para vídeo e copy que vira cena.</p></div>
+      <div class="step"><small>Dias 1 a 6</small><h3>Você prepara</h3><p>Preenche a ficha do primeiro motion: briefing, roteiro e paleta. Tudo decidido por você.</p></div>
+      <div class="step hot"><small>Dia 7</small><h3>A skill chega</h3><p>Você instala a skill, cola a sua ficha e o primeiro motion sai em MP4, na mesma aula.</p></div>
+      <div class="step after"><small>Depois</small><h3>Você vende</h3><p>Dois projetos guiados para o portfólio e o módulo de venda: preço, proposta e primeiro cliente.</p></div>
+    </div>
+    <p class="quote">Na primeira semana você prepara o seu primeiro motion. No dia 7 a skill chega, e ele vira vídeo.</p>
+  </div>
+</section>
+
+<section class="band skill" id="skill">
+  <div class="wrap">
+    <div>
+      <h2>Uma conversa. Paleta, copy e motion.</h2>
+      <p class="lead">A skill roda dentro do Claude. Você conta o projeto, ela pergunta o que falta e mostra 3 direções de paleta antes de criar qualquer coisa. Você escolhe, troca uma cor ou pede outra. É assim que você aprende a mudar.</p>
+      <div class="does">
+        <div class="do"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="2.2" fill="currentColor"/><circle cx="15" cy="7.5" r="2.2" fill="currentColor"/><circle cx="17" cy="14" r="2.2" fill="currentColor"/><path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.4 3.4A1.6 1.6 0 0 1 12 21z"/></svg></span><div><h3>Paleta</h3><p>3 direções com 6 cores cada: nome, código e função de cada cor, a proporção de uso e o par de fontes.</p></div></div>
+        <div class="do"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg></span><div><h3>Copy</h3><p>Texto de tela curto, pensado para leitura no celular, cena por cena. E a narração separada, se você quiser voz.</p></div></div>
+        <div class="do"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg></span><div><h3>Motion</h3><p>Você confere os quadros principais, ajusta o que quiser e recebe o MP4 com efeitos sonoros, em 9:16, 4:5, 1:1 ou 16:9.</p></div></div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="dhead"><span><b>Padaria Fornalha</b> · 3 direções de paleta</span><span>toque para trocar</span></div>
+      <div class="tabs" role="tablist" aria-label="Direções de paleta" id="tabs"></div>
+      <div class="dbody">
+        <div class="art" id="art">
+          <p class="c" id="artc"></p>
+          <p class="t" id="artt"></p>
+          <div class="cd" id="artcd"><i></i><i></i><i></i></div>
+          <span class="b" id="artb">Pedir no app</span>
+        </div>
+        <div>
+          <div class="rows" id="rows"></div>
+        </div>
+      </div>
+      <div class="pbar" id="pbar"><span style="flex:60"></span><span style="flex:25"></span><span style="flex:10"></span><span style="flex:5"></span></div>
+      <div class="pcap"><span>60% fundo</span><span>25% respiro</span><span>10% destaque</span><span>5% texto</span></div>
+      <div class="dfoot">
+        <p id="dnote">Mesmo briefing, três caminhos. É assim que a skill apresenta as opções antes de animar.</p>
+        <button class="copy" id="copy" type="button">Copiar códigos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band est">
+  <div class="wrap">
+    <div class="head">
+      <h2>Três estilos. O mesmo diretor.</h2>
+      <p class="lead">Os três vídeos abaixo saíram da skill do curso, com marcas fictícias. Muda a paleta, a fonte e o ritmo. O método continua o mesmo.</p>
+    </div>
+    <div class="vids">
+      <figure class="vid" style="margin:0">
+        <video data-auto src="midia/minimalista.mp4" poster="midia/minimalista.jpg" muted playsinline loop preload="none" aria-label="Exemplo minimalista: padaria Fornalha"></video>
+        <figcaption class="cap"><div><h3>Minimalista</h3><p>Fornalha, padaria · 9:16</p></div><button class="rb" type="button" data-snd aria-label="Ativar som do vídeo minimalista"></button></figcaption>
+      </figure>
+      <figure class="vid" style="margin:0">
+        <video data-auto src="midia/sofisticado.mp4" poster="midia/sofisticado.jpg" muted playsinline loop preload="none" aria-label="Exemplo sofisticado: sérum Aurora Skin"></video>
+        <figcaption class="cap"><div><h3>Sofisticado</h3><p>Aurora Skin, cosmético · 9:16</p></div><button class="rb" type="button" data-snd aria-label="Ativar som do vídeo sofisticado"></button></figcaption>
+      </figure>
+      <div class="col3">
+        <figure class="vid wide" style="margin:0">
+          <video data-auto src="midia/tecnologico.mp4" poster="midia/tecnologico.jpg" muted playsinline loop preload="none" aria-label="Exemplo tecnológico: app de gestão NEXO"></video>
+          <figcaption class="cap"><div><h3>Tecnológico</h3><p>NEXO, app de gestão · 16:9</p></div><button class="rb" type="button" data-snd aria-label="Ativar som do vídeo tecnológico"></button></figcaption>
+        </figure>
+        <div class="scn">
+          <h3>12 tipos de cena prontos</h3>
+          <p>Você escolhe a cena pelo que o texto precisa mostrar: um número, uma oferta, um celular recebendo notificação.</p>
+          <div class="chips"><span>Título</span><span>Impacto</span><span>Lista</span><span>Passos</span><span>Número</span><span>Gráfico</span><span>Celular</span><span>Comparação</span><span>Oferta</span><span>Imagem</span><span>CTA</span><span>Marca</span></div>
+          <div class="fmts" aria-label="Formatos de saída">
+            <div><i style="width:18px;height:32px"></i>9:16</div>
+            <div><i style="width:24px;height:30px"></i>4:5</div>
+            <div><i style="width:28px;height:28px"></i>1:1</div>
+            <div><i style="width:44px;height:25px"></i>16:9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band aulas" id="aulas">
+  <div class="wrap">
+    <div class="head">
+      <h2>13 aulas. Nenhuma de enfeite.</h2>
+      <p class="lead">Cerca de 1h45 no total, em aulas de 5 a 12 minutos, todas com legenda. Cada uma tem um conceito, a demonstração na tela e uma tarefa para você fazer antes da próxima.</p>
+    </div>
+    <div class="mods">
+      <article class="mod">
+        <div class="mtop"><div><small>Módulo 1</small><h3>O olhar do diretor</h3></div><span class="lib now">Libera na compra</span></div>
+        <p class="gets">Você sai com a ficha do primeiro motion: briefing, roteiro e paleta.</p>
+        <ol>
+          <li><b>1</b><div><strong>Boas-vindas</strong><span>O que você vai criar, como o curso funciona e por que a skill chega no dia 7.</span></div></li>
+          <li><b>2</b><div><strong>Por que um motion prende</strong><span>O gancho dos 2 segundos, uma ideia por cena, ritmo, hierarquia e área segura.</span></div></li>
+          <li><b>3</b><div><strong>Paleta e fonte para vídeo</strong><span>As 6 cores, contraste no celular, as 3 direções e fontes que aguentam movimento.</span></div></li>
+          <li><b>4</b><div><strong>Copy que vira cena</strong><span>Texto na tela, o que cortar e CTA. Termina com a ficha para preencher.</span></div></li>
+        </ol>
+      </article>
+      <article class="mod">
+        <div class="mtop"><div><small>Módulo 2</small><h3>Dirigindo a skill</h3></div><span class="lib">Libera no dia 7</span></div>
+        <p class="gets">Você sai com o primeiro motion em MP4 e o domínio dos ajustes.</p>
+        <ol>
+          <li><b>5</b><div><strong>Instalando a skill</strong><span>Ativar a execução de código e subir a skill no Claude, passo a passo.</span></div></li>
+          <li><b>6</b><div><strong>Seu primeiro motion</strong><span>A ficha da semana 1 vira MP4.</span></div></li>
+          <li><b>7</b><div><strong>Estilos e cenas</strong><span>Minimalista, sofisticado e tecnológico, e os 12 tipos de cena.</span></div></li>
+          <li><b>8</b><div><strong>Ajustes como diretor</strong><span>Conferir os quadros e trocar cor, texto, cena ou formato sem refazer tudo.</span></div></li>
+          <li><b>9</b><div><strong>Voz, música e finalização</strong><span>Narração no ElevenLabs, trilha e acabamento no CapCut.</span></div></li>
+        </ol>
+      </article>
+      <article class="mod">
+        <div class="mtop"><div><small>Módulo 3</small><h3>Projetos guiados</h3></div><span class="lib">Libera no dia 7</span></div>
+        <p class="gets">Você sai com mais 2 motions de portfólio, em formatos diferentes.</p>
+        <ol>
+          <li><b>10</b><div><strong>Reels de oferta, 9:16</strong><span>Fumaça Burger: combo da semana com preço, cupom e pedido pelo app.</span></div></li>
+          <li><b>11</b><div><strong>Vídeo de marca, 16:9</strong><span>Órbita: apresentação de um app de agenda para site e YouTube.</span></div></li>
+        </ol>
+      </article>
+      <article class="mod">
+        <div class="mtop"><div><small>Módulo 4</small><h3>Vender motion</h3></div><span class="lib">Libera no dia 7</span></div>
+        <p class="gets">Você sai com portfólio, preço e proposta para o primeiro cliente.</p>
+        <ol>
+          <li><b>12</b><div><strong>Portfólio e clientes</strong><span>Os 3 motions no perfil e onde estão os clientes: comércio, marcas, criadores, infoprodutores e agências.</span></div></li>
+          <li><b>13</b><div><strong>Preço, proposta e entrega</strong><span>Amostra, pacotes, proposta, revisões e como cobrar o extra.</span></div></li>
+        </ol>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="band quem">
+  <div class="wrap">
+    <h2>É para você?</h2>
+    <div class="qgrid">
+      <div class="qcol sim">
+        <h3>É para você se</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>faz arte para Instagram e quer vender Reels, story e anúncio animado;</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>é social media e quer entregar motion sem terceirizar;</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>é criador ou infoprodutor e quer motion no próprio perfil e nos lançamentos;</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>é freelancer e já perdeu cliente porque “não faz vídeo”.</span></li>
+        </ul>
+      </div>
+      <div class="qcol nao">
+        <h3>Não é para você se</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg><span>quer aprender After Effects ou animação quadro a quadro;</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg><span>quer motion de cinema, 3D ou personagem animado;</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg><span>quer a ferramenta no minuto da compra: a primeira semana é de preparo, e a skill chega no dia 7.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band prof">
+  <div class="wrap">
+    <figure class="foto"><picture><source srcset="midia/pedro.webp" type="image/webp"><img src="midia/pedro.jpg" alt="Pedro Magalhães, designer gráfico" width="896" height="1200" loading="lazy"></picture><figcaption class="selo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100.00 100.00"><rect x="0.00" y="0.00" width="100.00" height="100.00" rx="24.00" fill="#087CFF"/><path d="M24.92 72.04H57.60M75.08 27.96H42.40" stroke="#FFFFFF" stroke-width="2.28" stroke-linecap="round" fill="none" opacity="0.6"/><circle cx="57.60" cy="72.04" r="4.18" fill="#FFFFFF"/><circle cx="42.40" cy="27.96" r="4.18" fill="#FFFFFF"/><path d="M24.92 72.04C57.60 72.04 42.40 27.96 75.08 27.96" stroke="#FFFFFF" stroke-width="10.64" stroke-linecap="round" fill="none"/><path d="M24.92 59.88L37.08 72.04L24.92 84.20L12.76 72.04Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.04"/><path d="M75.08 15.80L87.24 27.96L75.08 40.12L62.92 27.96Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.04"/></svg><span>@magalhaes.creator</span></figcaption></figure>
+    <div>
+      <h2>Quem dirige as aulas</h2>
+      <p class="lead">Sou o <strong>Pedro Magalhães</strong>, designer gráfico, com mais de 30 projetos entregues.</p>
+      <p>Os motions que eu posto no <strong>@magalhaes.creator</strong> saem deste mesmo processo: eu decido a paleta, o texto e o ritmo, e a skill executa. No curso eu mostro cada decisão na tela, do briefing ao MP4, e também como eu cobro por ele.</p>
+      <a class="btn ghost" href="https://www.instagram.com/magalhaes.creator/" target="_blank" rel="noopener">Ver os motions no Instagram</a>
+    </div>
+  </div>
+</section>
+
+<section class="band of" id="preco">
+  <div class="wrap">
+    <div class="head">
+      <h2>Lote 1: o preço mais baixo que o curso vai ter.</h2>
+      <p class="lead">Quem entra agora paga um quarto do preço cheio e ainda leva as lives mensais, que ficam só para esta turma.</p>
+    </div>
+    <div class="deal">
+      <div class="pay">
+        <span class="tag">Lote 1 · pré-venda</span>
+        <h3>Visual Creator Motion</h3>
+        <p class="big"><small>R$</small>47,90</p>
+        <p class="then">Depois do lote 1, o curso passa para <s>R$ 197</s>.</p>
+        <a class="btn dk" data-buy data-main href="#preco">Quero entrar no lote 1 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <p class="ways">Pix ou cartão · acesso por e-mail</p>
+        <div class="safe"><svg viewBox="0 0 40 40" fill="none"><path d="M20 3l14 5v10c0 9.5-6 16-14 19C12 34 6 27.5 6 18V8z" fill="#060B14"/><path d="M14 20l4.5 4.5L27 15.5" stroke="#D4FF3A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><strong>Garantia de 7 dias.</strong> Se não for para você, peça o reembolso dentro de 7 dias da compra e recebe o valor de volta.</p></div>
+      </div>
+      <div class="inc">
+        <h3>Tudo que entra</h3>
+        <ul>
+          <li><i class="kd"></i><div><strong>13 aulas em 4 módulos</strong> <span>do olhar à venda, com legenda</span></div></li>
+          <li><i class="kd"></i><div><strong>A skill Visual Creator Motion</strong> <span>paleta, copy e motion em MP4, liberada no dia 7</span></div></li>
+          <li><i class="kd"></i><div><strong>Kit de 11 fontes</strong> <span>liberadas para uso comercial, já dentro da skill</span></div></li>
+          <li><i class="kd"></i><div><strong>Ficha do primeiro motion</strong> <span>e os briefings dos 2 projetos guiados</span></div></li>
+          <li><i class="kd"></i><div><strong>Kit de venda</strong> <span>modelo de proposta animada, tabela de preços e mensagens de abordagem</span></div></li>
+          <li><i class="kd"></i><div><strong>Checklist de entrega</strong> <span>e biblioteca de referências de motion</span></div></li>
+          <li><i class="kd"></i><div><strong>Atualizações da skill</strong> <span>cenas e estilos novos, só para alunos</span></div></li>
+          <li><i class="kd"></i><div><strong>3 lives mensais</strong> <span>só para quem entrar no lote 1</span></div></li>
+        </ul>
+        <div class="pays"><b>Um motion vendido paga o curso</b><p>O motion mais simples que eu vendo sai por R$ 67,90. No lote 1, o curso inteiro custa menos que isso.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band faq" id="duvidas">
+  <div class="wrap">
+    <div class="side">
+      <h2>Dúvidas</h2>
+      <p>Ficou alguma? Me chama no direct do <a href="https://www.instagram.com/magalhaes.creator/" target="_blank" rel="noopener">@magalhaes.creator</a>.</p>
+    </div>
+    <div>
+      <details><summary>Preciso saber After Effects ou animação?<i></i></summary><p>Não. Você não abre o After Effects em nenhuma aula. Você decide a paleta, o texto e o ritmo, e a skill monta e anima o vídeo.</p></details>
+      <details><summary>O que é a skill, na prática?<i></i></summary><p>É um pacote que você instala no Claude, a IA da Anthropic. Com ele, numa conversa, você recebe 3 opções de paleta, a copy das cenas e o motion pronto em MP4.</p></details>
+      <details><summary>Preciso de algum plano pago?<i></i></summary><p>A skill precisa da execução de código ligada no Claude. Na aula 5 eu mostro a configuração passo a passo e qual plano faz sentido para o volume de vídeos que você vai produzir.</p></details>
+      <details><summary>Por que a skill só chega no dia 7?<i></i></summary><p>Porque ferramenta na mão de quem ainda não sabe o que quer gera vídeo genérico. Na primeira semana você prepara a ficha do primeiro motion. No dia 7 ela vira MP4, na primeira aula do Módulo 2.</p></details>
+      <details><summary>Meu computador precisa ser bom?<i></i></summary><p>Não. O vídeo é gerado dentro do Claude, não na sua máquina. Para o acabamento com voz e trilha, o CapCut roda até no celular.</p></details>
+      <details><summary>Posso vender os vídeos que eu fizer?<i></i></summary><p>Pode. Os motions são seus, e as fontes do kit são liberadas para uso comercial.</p></details>
+      <details><summary>Serve para qual tipo de cliente?<i></i></summary><p>Comércio local, marcas, e-commerce, criadores, infoprodutores e agências. Os projetos guiados treinam um Reels de oferta em 9:16 e um vídeo de marca em 16:9, dois pedidos que aparecem toda semana.</p></details>
+      <details><summary>Como recebo o acesso?<i></i></summary><p>Por e-mail, logo depois da confirmação do pagamento. O Módulo 1 libera na hora; a skill e os Módulos 2 a 4, no dia 7.</p></details>
+      <details><summary>E se eu não gostar?<i></i></summary><p>Você tem 7 dias de garantia a partir da compra. Pediu o reembolso dentro do prazo, recebe o valor de volta.</p></details>
+      <details><summary>O que muda quando o lote 1 fechar?<i></i></summary><p>O preço passa para R$ 197, e as 3 lives mensais ficam só para quem entrou no lote 1.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band fim">
+  <div class="wrap">
+    <h2>Seu primeiro motion começa hoje.</h2>
+    <p>Na primeira semana você prepara. No dia 7 ele vira vídeo. Depois, vira cliente.</p>
+    <a class="btn dk" data-buy href="#preco">Quero entrar no lote 1 por R$ 47,90</a>
+    <p class="ways">Garantia de 7 dias · Pix ou cartão</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#inicio" aria-label="Voltar ao início"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486.44 129.09"><rect x="6.00" y="6.00" width="117.09" height="117.09" rx="28.10" fill="#087CFF"/><path d="M35.18 90.35H73.44M93.91 38.74H55.65" stroke="#FFFFFF" stroke-width="2.67" stroke-linecap="round" fill="none" opacity="0.6"/><circle cx="73.44" cy="90.35" r="4.89" fill="#FFFFFF"/><circle cx="55.65" cy="38.74" r="4.89" fill="#FFFFFF"/><path d="M35.18 90.35C73.44 90.35 55.65 38.74 93.91 38.74" stroke="#FFFFFF" stroke-width="12.46" stroke-linecap="round" fill="none"/><path d="M35.18 76.11L49.42 90.35L35.18 104.59L20.94 90.35Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.56"/><path d="M93.91 24.50L108.15 38.74L93.91 52.98L79.67 38.74Z" fill="#D4FF3A" stroke-linejoin="round" stroke="#060B14" stroke-width="3.56"/><path d="M157.13 28.72 151.09 12.27H154.11L158.85 25.82L163.62 12.27H166.61L160.56 28.72Z M179.06 28.72V12.27H181.88V28.72Z M201.13 29Q199.34 29 197.95 28.38Q196.57 27.75 195.79 26.57Q195.01 25.4 194.98 23.77H197.96Q197.98 24.58 198.36 25.23Q198.74 25.88 199.43 26.26Q200.13 26.64 201.12 26.64Q201.97 26.64 202.59 26.36Q203.21 26.08 203.55 25.58Q203.89 25.08 203.89 24.4Q203.89 23.63 203.53 23.12Q203.16 22.61 202.53 22.26Q201.9 21.92 201.07 21.64Q200.25 21.36 199.34 21.06Q197.39 20.41 196.4 19.38Q195.41 18.35 195.41 16.65Q195.41 15.21 196.09 14.17Q196.78 13.13 198.01 12.56Q199.25 11.99 200.87 11.99Q202.51 11.99 203.74 12.57Q204.97 13.16 205.68 14.21Q206.4 15.27 206.42 16.71H203.41Q203.4 16.11 203.09 15.58Q202.79 15.05 202.21 14.71Q201.63 14.37 200.82 14.37Q200.12 14.35 199.56 14.59Q199 14.84 198.68 15.3Q198.36 15.76 198.36 16.44Q198.36 17.09 198.67 17.52Q198.97 17.95 199.53 18.26Q200.09 18.56 200.83 18.82Q201.58 19.07 202.47 19.37Q203.7 19.78 204.7 20.35Q205.69 20.93 206.28 21.84Q206.87 22.75 206.87 24.22Q206.87 25.48 206.21 26.57Q205.55 27.66 204.28 28.33Q203.01 29 201.13 29Z M226.24 29Q224.46 29 223.01 28.29Q221.56 27.58 220.71 26.14Q219.85 24.69 219.85 22.47V12.27H222.67V22.49Q222.67 23.82 223.11 24.7Q223.55 25.58 224.37 26.01Q225.19 26.43 226.3 26.43Q227.43 26.43 228.23 26.01Q229.03 25.58 229.47 24.7Q229.91 23.82 229.91 22.49V12.27H232.73V22.47Q232.73 24.69 231.86 26.14Q230.98 27.58 229.51 28.29Q228.03 29 226.24 29Z M245.2 28.72 251.22 12.27H254.38L260.39 28.72H257.4L252.78 15.56L248.15 28.72ZM247.89 24.84 248.64 22.62H256.75L257.49 24.84Z M273.02 28.72V12.27H275.84V26.52H283.19V28.72Z  M319.75 29Q317.31 29 315.54 27.94Q313.77 26.87 312.81 24.95Q311.86 23.04 311.86 20.52Q311.86 17.99 312.81 16.07Q313.77 14.15 315.54 13.07Q317.31 11.99 319.75 11.99Q322.69 11.99 324.55 13.43Q326.41 14.87 326.89 17.5H323.8Q323.47 16.12 322.45 15.32Q321.43 14.53 319.73 14.53Q318.18 14.53 317.06 15.25Q315.94 15.97 315.34 17.31Q314.74 18.65 314.74 20.52Q314.74 22.37 315.34 23.71Q315.94 25.04 317.06 25.76Q318.18 26.48 319.73 26.48Q321.43 26.48 322.45 25.73Q323.46 24.98 323.79 23.66H326.89Q326.41 26.16 324.55 27.58Q322.69 29 319.75 29Z M340.02 28.72V12.27H345.93Q347.89 12.27 349.17 12.94Q350.44 13.61 351.06 14.73Q351.69 15.85 351.69 17.25Q351.69 18.56 351.07 19.69Q350.46 20.82 349.17 21.5Q347.89 22.18 345.87 22.18H342.84V28.72ZM348.6 28.72 345.15 21.45H348.22L351.84 28.72ZM342.84 20.1H345.75Q347.31 20.1 348.05 19.33Q348.79 18.57 348.79 17.33Q348.79 16.09 348.07 15.36Q347.34 14.63 345.73 14.63H342.84Z M364.98 28.72V12.27H375.61V14.56H367.8V19.28H374.91V21.5H367.8V26.44H375.61V28.72Z M387.88 28.72 393.9 12.27H397.05L403.06 28.72H400.07L395.46 15.56L390.83 28.72ZM390.56 24.84 391.32 22.62H399.42L400.17 24.84Z M419.53 28.72V14.56H414.69V12.27H427.17V14.56H422.34V28.72Z M447.39 29Q445 29 443.18 27.93Q441.36 26.86 440.33 24.94Q439.3 23.03 439.3 20.5Q439.3 17.98 440.33 16.07Q441.36 14.15 443.18 13.07Q445 11.99 447.39 11.99Q449.81 11.99 451.64 13.07Q453.46 14.15 454.48 16.07Q455.49 17.98 455.49 20.5Q455.49 23.03 454.48 24.94Q453.46 26.86 451.64 27.93Q449.81 29 447.39 29ZM447.4 26.48Q448.98 26.48 450.15 25.75Q451.32 25.03 451.97 23.69Q452.61 22.35 452.61 20.5Q452.61 18.64 451.97 17.3Q451.32 15.96 450.15 15.25Q448.98 14.53 447.4 14.53Q445.83 14.53 444.65 15.25Q443.48 15.96 442.83 17.3Q442.18 18.64 442.18 20.5Q442.18 22.35 442.83 23.69Q443.48 25.03 444.65 25.75Q445.83 26.48 447.4 26.48Z M468.62 28.72V12.27H474.52Q476.49 12.27 477.76 12.94Q479.04 13.61 479.66 14.73Q480.28 15.85 480.28 17.25Q480.28 18.56 479.67 19.69Q479.05 20.82 477.77 21.5Q476.49 22.18 474.47 22.18H471.44V28.72ZM477.2 28.72 473.74 21.45H476.82L480.44 28.72ZM471.44 20.1H474.34Q475.91 20.1 476.65 19.33Q477.39 18.57 477.39 17.33Q477.39 16.09 476.67 15.36Q475.94 14.63 474.33 14.63H471.44Z" fill="#57A6FF"/><path d="M157.75 45.72H170.81L183.69 94.63L196.53 45.72H208.8L189.13 116.82H178.23ZM151.09 45.72H164.1L166.33 96.26V116.82H151.09ZM203.22 45.72H216.27V116.82H201.01V96.26Z M277.73 75.86V87.18Q277.73 94.77 275.87 100.49Q274.01 106.22 270.57 110.07Q267.13 113.91 262.37 115.85Q257.62 117.79 251.84 117.79Q246.03 117.79 241.25 115.85Q236.47 113.91 233.01 110.07Q229.55 106.22 227.68 100.49Q225.8 94.77 225.8 87.18V75.86Q225.8 68.17 227.66 62.34Q229.52 56.51 232.97 52.62Q236.43 48.73 241.19 46.74Q245.95 44.75 251.77 44.75Q257.54 44.75 262.32 46.74Q267.09 48.73 270.54 52.62Q273.99 56.51 275.86 62.34Q277.73 68.17 277.73 75.86ZM262.16 87.18V75.77Q262.16 70.83 261.5 67.35Q260.84 63.87 259.52 61.68Q258.21 59.48 256.27 58.46Q254.34 57.43 251.77 57.43Q249.12 57.43 247.17 58.46Q245.23 59.48 243.94 61.68Q242.65 63.87 242.03 67.35Q241.41 70.83 241.41 75.77V87.18Q241.41 91.97 242.04 95.38Q242.67 98.79 243.98 100.95Q245.29 103.11 247.25 104.14Q249.22 105.16 251.84 105.16Q254.37 105.16 256.32 104.14Q258.27 103.11 259.56 100.95Q260.85 98.79 261.51 95.38Q262.16 91.97 262.16 87.18Z M316.94 45.72V116.82H301.46V45.72ZM334.38 45.72V58.3H284.43V45.72Z M358.33 45.72V116.82H342.89V45.72Z M420.46 75.86V87.18Q420.46 94.77 418.59 100.49Q416.73 106.22 413.29 110.07Q409.85 113.91 405.1 115.85Q400.34 117.79 394.56 117.79Q388.75 117.79 383.97 115.85Q379.2 113.91 375.74 110.07Q372.28 106.22 370.4 100.49Q368.52 94.77 368.52 87.18V75.86Q368.52 68.17 370.38 62.34Q372.24 56.51 375.7 52.62Q379.15 48.73 383.91 46.74Q388.68 44.75 394.49 44.75Q400.27 44.75 405.04 46.74Q409.82 48.73 413.26 52.62Q416.71 56.51 418.58 62.34Q420.46 68.17 420.46 75.86ZM404.89 87.18V75.77Q404.89 70.83 404.23 67.35Q403.56 63.87 402.25 61.68Q400.93 59.48 399 58.46Q397.06 57.43 394.49 57.43Q391.84 57.43 389.9 58.46Q387.95 59.48 386.66 61.68Q385.37 63.87 384.75 67.35Q384.13 70.83 384.13 75.77V87.18Q384.13 91.97 384.76 95.38Q385.4 98.79 386.7 100.95Q388.01 103.11 389.98 104.14Q391.94 105.16 394.56 105.16Q397.1 105.16 399.04 104.14Q400.99 103.11 402.28 100.95Q403.57 98.79 404.23 95.38Q404.89 91.97 404.89 87.18Z M480.44 45.72V116.82H465.22L445.12 72.59V116.82H430V45.72H445.14L465.35 90.23V45.72Z" fill="#FFFFFF"/></svg></a>
+    <p>Visual Creator Motion é um curso do Magalhães | Design &amp; Motion. Os vídeos de exemplo usam marcas fictícias e foram feitos com a skill do curso. © 2026</p>
+    <nav aria-label="Rodapé"><a href="https://magalhaescreator.com.br/">Site</a><a href="https://www.instagram.com/magalhaes.creator/" target="_blank" rel="noopener">Instagram</a><a href="#preco">Preço</a><a href="#duvidas">Dúvidas</a></nav>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky" aria-hidden="true"><div><b>R$ 47,90</b><span>lote 1 · depois R$ 197</span></div><a class="btn" data-buy href="#preco" tabindex="-1">Quero entrar</a></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+/* Cole aqui o link do checkout (Cakto ou Kiwify). Enquanto estiver vazio, os botões levam para a seção de preço. */
+const CHECKOUT = '';
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const toast = $('#toast');
+let tt;
+const say = m => { toast.textContent = m; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2600); };
+
+/* botões de compra */
+for (const a of $$('[data-buy]')) {
+  if (CHECKOUT) { a.href = CHECKOUT; a.target = '_blank'; a.rel = 'noopener'; }
+  else if (a.hasAttribute('data-main')) a.addEventListener('click', e => { e.preventDefault(); say('O link de pagamento entra aqui assim que o checkout estiver pronto.'); });
+}
+
+/* ícones de som */
+const ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l4 6M21 9l-4 6"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+const allVids = $$('video');
+const solo = v => { for (const o of allVids) if (o !== v) { o.muted = true; syncSnd(o); } };
+const sndBtn = new Map();
+function syncSnd(v) { const b = sndBtn.get(v); if (!b) return; b.innerHTML = v.muted ? ICON_OFF : ICON_ON; b.setAttribute('aria-label', v.muted ? 'Ativar som' : 'Tirar o som'); }
+
+/* curva de ease sob o título */
+const cv = $('.curve'), cs = cv.querySelector('svg'), cp = cs.querySelector('path');
+const shape = () => { const W = cv.clientWidth, H = cv.clientHeight; if (!W || !H) return; cs.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const x1 = W * .03, y1 = H * .86, x2 = W * .97, y2 = H * .14, m = (x2 - x1) * .45;
+  cp.setAttribute('d', `M${x1} ${y1} C ${x1 + m} ${y1}, ${x2 - m} ${y2}, ${x2} ${y2}`); };
+const cro = new ResizeObserver(shape); cro.observe(cv);
+
+/* editor do topo */
+const SC = [
+  ['Título', 0, 3.8, 'Saiu do forno às 6h', 'Pão quente <em>antes</em> do café'],
+  ['Lista', 3.8, 4.43, 'Toda manhã', 'Fermentação de 24h, farinha sem aditivo, forno a lenha'],
+  ['Impacto', 8.23, 1.3, '', 'Crocante.'],
+  ['Celular', 9.52, 6.26, 'Pediu, chegou', 'Em <em>20 min</em> na sua porta'],
+  ['Número', 15.78, 3.51, 'Já entregamos', '<em>12.480</em> pães só este mês'],
+  ['Oferta', 19.29, 4.07, 'Primeiro pedido', 'Cesta Café da Manhã por <em>R$ 34,90</em>'],
+  ['CTA', 23.36, 4.14, 'Entrega das 6h às 10h', 'Peça o seu <em>agora</em>'],
+  ['Marca', 27.5, 2.5, 'Assinatura', 'Fornalha']
+];
+const TOTAL = 30;
+const WAVE = [23,30,50,51,54,62,71,75,72,69,68,65,55,46,52,71,75,61,62,69,73,62,53,77,56,64,68,68,62,57,60,64,100,94,68,52,51,50,66,77,58,54,60,66,42,44,48,69,44,37,36,67,48,47,44,41,43,48,53,56,53,46,49,67,54,48,45,54,58,81,64,53,51,49,47,46,47,70,60,72,65,64,79,50,49,99,69,72,69,66,65,67,67,67,58,77,62,58,58,62,66,76,60,50,40,41,47,49,49,47,59,93,81,41,31,29,29,25,19,13];
+const HPAL = ['#F3EEE7','#D9CFC2','#E2531F','#FFFFFF','#FBF8F4','#1E1A17'];
+$('#hsw').innerHTML = HPAL.map(c => `<i style="background:${c}" title="${c}"></i>`).join('');
+$('#ruler').innerHTML = [0,5,10,15,20,25,30].map(s => `<span class="${s % 10 ? 'mid' : ''}" style="left:${s / TOTAL * 100}%">${s}s</span>`).join('');
+const trk = $('#trk');
+trk.innerHTML = SC.map((s, i) => `<button type="button" class="clip" data-i="${i}" style="left:${s[1] / TOTAL * 100}%;width:calc(${s[2] / TOTAL * 100}% - 3px)" title="${s[0]}">${s[0]}</button>`).join('');
+const bars = WAVE.map(h => `<i style="height:${Math.max(6, h)}%"></i>`).join('');
+$('#w1').innerHTML = bars; $('#w2').innerHTML = bars;
+const clips = $$('.clip');
+const fit = () => { for (const c of clips) { c.classList.remove('tight'); if (c.scrollWidth > c.clientWidth + 1) c.classList.add('tight'); } };
+const ro = new ResizeObserver(fit); ro.observe(trk);
+
+const hv = $('#hv'), ph = $('#ph'), w2 = $('#w2');
+let cur = -1;
+function paint() {
+  const t = hv.currentTime || 0, d = hv.duration || TOTAL, p = Math.min(1, t / d);
+  ph.style.left = (p * 100) + '%';
+  w2.style.clipPath = `inset(0 ${(1 - p) * 100}% 0 0)`;
+  let i = SC.length - 1;
+  while (i > 0 && t < SC[i][1]) i--;
+  if (i !== cur) {
+    cur = i; const s = SC[i];
+    $('#hctx').textContent = s[3];
+    $('#htxt').innerHTML = s[4];
+    $('#hcena').textContent = `Cena ${i + 1} de ${SC.length} · ${s[0]}`;
+    $('#hdur').textContent = s[2].toFixed(1).replace('.', ',') + ' s';
+    clips.forEach((c, k) => c.classList.toggle('on', k === i));
+  }
+}
+let raf = 0;
+const loop = () => { paint(); if (!hv.paused) raf = requestAnimationFrame(loop); };
+const hplay = $('#hplay');
+const syncPlay = () => { hplay.innerHTML = hv.paused ? ICON_PLAY : ICON_PAUSE; hplay.setAttribute('aria-label', hv.paused ? 'Reproduzir' : 'Pausar'); };
+hv.addEventListener('play', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); syncPlay(); });
+hv.addEventListener('pause', () => { paint(); syncPlay(); });
+hv.addEventListener('seeked', paint);
+hv.addEventListener('loadedmetadata', paint);
+hplay.addEventListener('click', () => { if (hv.paused) hv.play().catch(() => {}); else hv.pause(); });
+const hsnd = $('#hsnd'); sndBtn.set(hv, hsnd);
+hsnd.addEventListener('click', () => { hv.muted = !hv.muted; if (!hv.muted) { solo(hv); if (hv.paused) hv.play().catch(() => {}); } syncSnd(hv); });
+trk.addEventListener('click', e => { const c = e.target.closest('.clip'); if (!c) return; hv.currentTime = SC[+c.dataset.i][1] + 0.05; hv.play().catch(() => {}); });
+paint(); syncPlay(); syncSnd(hv);
+
+/* vídeos tocam quando aparecem na tela */
+const autos = $$('video[data-auto]');
+for (const v of autos) { const b = v.closest('figure').querySelector('[data-snd]'); sndBtn.set(v, b); syncSnd(v);
+  b.addEventListener('click', () => { v.muted = !v.muted; if (!v.muted) { solo(v); v.play().catch(() => {}); } syncSnd(v); }); }
+const io = new IntersectionObserver(es => { for (const e of es) { const v = e.target;
+  if (e.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; if (!reduce) v.play().catch(() => {}); }
+  else v.pause(); } }, { threshold: 0.35 });
+for (const v of autos) io.observe(v);
+if (!reduce) io.observe(hv);
+for (const v of autos) v.addEventListener('click', () => { if (v.paused) v.play().catch(() => {}); else v.pause(); });
+
+/* paletas */
+const PAL = [
+  { nome: 'Forno de manhã', tipo: 'Fiel ao nicho', tf: '"Bitter",Georgia,serif', tw: 800, af: '"DM Sans",sans-serif', par: 'Bitter + DM Sans',
+    c: [['Creme de trigo', '#F3EEE7', 'fundo'], ['Casca tostada', '#D9CFC2', 'sombra'], ['Brasa', '#D9481A', 'destaque'], ['Farinha', '#FFFDFA', 'cards'], ['Miolo', '#FBF8F4', 'respiro'], ['Café preto', '#1E1A17', 'texto']] },
+  { nome: 'Brasa acesa', tipo: 'Contraste', tf: '"Anton",Impact,sans-serif', tw: 400, af: '"Poppins",sans-serif', par: 'Anton + Poppins', up: true,
+    c: [['Brasa', '#C8401A', 'fundo'], ['Carvão quente', '#7A2410', 'sombra'], ['Manteiga', '#FFD166', 'destaque'], ['Creme', '#FFF1E0', 'cards'], ['Leite', '#FFF8EF', 'respiro'], ['Grafite', '#1C1411', 'texto']] },
+  { nome: 'Padaria noturna', tipo: 'Inesperada', tf: '"Lora",Georgia,serif', tw: 700, af: '"Montserrat",sans-serif', par: 'Lora + Montserrat',
+    c: [['Azul madrugada', '#13233A', 'fundo'], ['Noite funda', '#0A1422', 'sombra'], ['Luz do forno', '#F5A65B', 'destaque'], ['Azul neblina', '#22354F', 'cards'], ['Névoa', '#EEF1F5', 'respiro'], ['Tinta', '#0E1726', 'texto']] }
+];
+const lum = h => { const n = parseInt(h.slice(1), 16); const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(n >> 16) + 0.7152 * f(n >> 8 & 255) + 0.0722 * f(n & 255); };
+const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+const best = (bg, a, b) => ratio(bg, a) >= ratio(bg, b) ? a : b;
+const tabs = $('#tabs');
+tabs.innerHTML = PAL.map((p, i) => `<button class="tab" role="tab" type="button" id="tab${i}" aria-selected="false" data-i="${i}">${p.nome}<small>${p.tipo}</small></button>`).join('');
+let sel = 0;
+function pick(i) {
+  sel = i; const p = PAL[i], g = k => p.c.find(x => x[2] === k)[1];
+  const bg = g('fundo'), ink = best(bg, g('texto'), g('respiro')), acc = g('destaque'), card = g('cards');
+  $$('.tab').forEach((t, k) => { t.setAttribute('aria-selected', k === i); t.tabIndex = k === i ? 0 : -1; });
+  const art = $('#art'); art.style.background = bg;
+  const c = $('#artc'); c.textContent = 'Saiu do forno às 6h'; c.style.color = ink; c.style.fontFamily = p.af;
+  const t = $('#artt'); t.innerHTML = 'Pão quente <em>antes</em> do café'; t.style.color = ink; t.style.fontFamily = p.tf; t.style.fontWeight = p.tw; t.style.textTransform = p.up ? 'uppercase' : 'none';
+  t.querySelector('em').style.color = ratio(bg, acc) >= 2 ? acc : ink;
+  const cd = $('#artcd'); cd.style.background = card; for (const x of cd.children) x.style.background = best(card, g('texto'), g('respiro'));
+  const b = $('#artb'); b.style.background = acc; b.style.color = best(acc, g('texto'), g('respiro')); b.style.fontFamily = p.af;
+  $('#rows').innerHTML = p.c.map(x => `<div class="row"><i style="background:${x[1]}"></i><div><b>${x[0]}</b><span>${x[2]}</span></div><code>${x[1]}</code></div>`).join('');
+  const sp = $('#pbar').children; [g('fundo'), g('respiro'), acc, g('texto')].forEach((col, k) => sp[k].style.background = col);
+  $('#dnote').textContent = `${p.tipo}: ${p.par}. Mesmo briefing, três caminhos. É assim que a skill apresenta as opções antes de animar.`;
+}
+tabs.addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) pick(+b.dataset.i); });
+tabs.addEventListener('keydown', e => { if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return; e.preventDefault(); const n = (sel + (e.key === 'ArrowRight' ? 1 : PAL.length - 1)) % PAL.length; pick(n); $('#tab' + n).focus(); });
+pick(0);
+$('#copy').addEventListener('click', async () => {
+  const p = PAL[sel]; const txt = `${p.nome} (${p.tipo})\n` + p.c.map(x => `${x[2]}: ${x[0]} ${x[1]}`).join('\n') + `\nfontes: ${p.par}`;
+  try { await navigator.clipboard.writeText(txt); say('Códigos da paleta copiados.'); } catch (err) { say('Não deu para copiar aqui. Os códigos estão na lista ao lado.'); }
+});
+
+/* barra fixa no celular */
+const sticky = $('#sticky');
+const heroCta = $('.hero .ctas'), offer = $('#preco'), fim = $('.fim');
+const vis = new Set();
+const so = new IntersectionObserver(es => { for (const e of es) e.isIntersecting ? vis.add(e.target) : vis.delete(e.target);
+  const below = heroCta.getBoundingClientRect().bottom < 0;
+  sticky.classList.toggle('show', below && !vis.has(offer) && !vis.has(fim)); }, { threshold: 0 });
+[heroCta, offer, fim].forEach(x => so.observe(x));
+}
+</script>
+</body>
+</html>

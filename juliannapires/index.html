@@ -41,9 +41,9 @@ p{margin:0}
 .desk .cd{position:absolute;right:2%;bottom:8%;width:min(330px,68%);transform:rotate(6deg)}
 
 /* pieces */
-.piece{position:relative;container-type:inline-size;filter:drop-shadow(0 18px 22px rgba(58,40,29,.22)) drop-shadow(0 2px 3px rgba(58,40,29,.18))}
+.piece{position:relative;container-type:inline-size}
 .card{aspect-ratio:90/50}.flyer{aspect-ratio:1/2}
-.face{position:absolute;inset:0;overflow:hidden;border-radius:calc(var(--u)*4);backface-visibility:hidden;-webkit-backface-visibility:hidden;font-family:var(--sans);color:#3A281D}
+.face{position:absolute;inset:0;overflow:hidden;border-radius:calc(var(--u)*4);backface-visibility:hidden;-webkit-backface-visibility:hidden;font-family:var(--sans);color:#3A281D;box-shadow:0 0 0 1px rgba(58,40,29,.10),0 2px 4px rgba(58,40,29,.18),0 22px 40px -8px rgba(58,40,29,.38)}
 .card .face{--u:calc(100cqw/340)}.flyer .face{--u:calc(100cqw/378)}
 .stage{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 .flip{perspective:1600px;cursor:pointer}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposta Julianna Pires</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F6EFE4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calmo, cuidadoso, de consultório; pouca cor, muito ar
+   IDEA: as peças impressas pousadas na mesa da recepção
+   PICTURE: cartão e flyer reais, em 3D, que viram ao toque
+   COLOUR and TYPE: bege e chocolate da marca dela; assinatura em Pinyon, títulos em Cormorant, texto em Montserrat
+   LAYOUT: abertura com as duas peças, depois cartão, flyer, paleta e próximos passos */
+:root{color-scheme:light dark;
+  --bg:light-dark(#F6EFE4,#1C1511);--bg2:light-dark(#EDE2D2,#261D18);
+  --ink:light-dark(#3A281D,#F3E8DA);--muted:light-dark(#6E5140,#C9B49F);
+  --line:light-dark(#D9C6AE,#4A3A2F);--accent:light-dark(#8C6246,#D2A988);
+  --script:"Pinyon Script",cursive;--serif:"Cormorant Garamond",Georgia,serif;--sans:"Montserrat",Arial,sans-serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);overflow-x:clip}
+.band{padding:clamp(40px,6vw,88px) max(5vw,18px)}
+.wrap{max-width:1140px;margin:0 auto}
+h1,h2{font-family:var(--serif);font-weight:600;line-height:1.05;margin:0;text-wrap:balance}
+h2{font-size:clamp(32px,4.4vw,48px)}
+p{margin:0}
+.kicker{font-size:14px;color:var(--accent);font-weight:500;margin-bottom:10px}
+.lead{font-size:17px;color:var(--muted);max-width:52ch;margin-top:16px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,5vw,72px);align-items:center}
+.hero h1{font-family:var(--script);font-weight:400;font-size:clamp(56px,8vw,96px);line-height:1}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.tags span{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;white-space:nowrap}
+.desk{position:relative;height:clamp(380px,44vw,520px)}
+.desk .fl{position:absolute;left:8%;top:0;width:min(230px,44%);transform:rotate(-7deg)}
+.desk .cd{position:absolute;right:2%;bottom:8%;width:min(330px,68%);transform:rotate(6deg)}
+
+/* pieces */
+.piece{position:relative;container-type:inline-size;filter:drop-shadow(0 18px 22px rgba(58,40,29,.22)) drop-shadow(0 2px 3px rgba(58,40,29,.18))}
+.card{aspect-ratio:90/50}.flyer{aspect-ratio:1/2}
+.face{position:absolute;inset:0;overflow:hidden;border-radius:calc(var(--u)*4);backface-visibility:hidden;-webkit-backface-visibility:hidden;font-family:var(--sans);color:#3A281D}
+.card .face{--u:calc(100cqw/340)}.flyer .face{--u:calc(100cqw/378)}
+.stage{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.flip{perspective:1600px;cursor:pointer}
+.flip.v .stage{transform:rotateY(180deg)}
+.back{transform:rotateY(180deg)}
+
+/* showcase */
+.show{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center}
+.show.alt{background:var(--bg2)}
+.view{display:flex;flex-direction:column;align-items:center;gap:22px}
+.view .card{width:min(460px,100%)}.view .flyer{width:min(300px,78%)}
+.btns{display:flex;gap:8px}
+.btns button{font:500 15px var(--sans);min-height:44px;padding:0 22px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btns button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btns button:focus-visible,.flip:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.side{display:grid;gap:18px;margin-top:26px}
+.side div{border-top:1px solid var(--line);padding-top:14px}
+.side b{display:block;font-family:var(--serif);font-size:22px;font-weight:600}
+.side p{color:var(--muted)}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,3vw,40px);margin-top:36px}
+.why b{font-family:var(--serif);font-size:24px;font-weight:600;display:block;margin-bottom:6px}
+.why p{color:var(--muted)}
+
+/* palette */
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:32px}
+.sw div{border-radius:14px;height:150px;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;font-size:14px;border:1px solid rgba(58,40,29,.12)}
+.sw small{opacity:.8}
+.fonts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.fonts div{border:1px solid var(--line);border-radius:14px;padding:18px}
+.fonts span{display:block;font-size:34px;line-height:1.2;margin-bottom:6px}
+.fonts p{font-size:14px;color:var(--muted)}
+
+.next{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:32px}
+.next div{background:var(--bg2);border-radius:14px;padding:20px}
+.next b{display:block;font-family:var(--serif);font-size:22px;font-weight:600;margin-bottom:4px}
+.next p{font-size:15px;color:var(--muted)}
+footer{padding:36px max(5vw,18px);border-top:1px solid var(--line);font-size:14px;color:var(--muted);text-align:center}
+
+@media(max-width:860px){.hero,.show{grid-template-columns:minmax(0,1fr)}.show .view{order:-1}.why,.next{grid-template-columns:minmax(0,1fr)}.sw{grid-template-columns:repeat(3,minmax(0,1fr))}.fonts{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.desk{height:400px}.desk .fl{width:46%}.desk .cd{width:74%}}
+@media(prefers-reduced-motion:reduce){.stage{transition:none}}
+</style>
+</head>
+<body>
+
+<template id="t-card-f">
+<div style="position:absolute;inset:0;background:radial-gradient(120% 140% at 18% 20%,#4A3426 0%,#2E2019 60%,#24190F 100%);color:#F3EADC">
+<svg viewBox="0 0 70 430" aria-hidden="true" style="position:absolute;right:calc(var(--u)*30);top:calc(var(--u)*-8);height:calc(var(--u)*205)"><g fill="#B48764"><rect x="22" y="0" width="26" height="18" rx="7"/><rect x="24" y="24" width="27" height="20" rx="7"/><rect x="27" y="50" width="28" height="22" rx="8"/><rect x="29" y="78" width="29" height="24" rx="8"/><rect x="29" y="108" width="30" height="25" rx="8"/><rect x="27" y="139" width="31" height="26" rx="9"/><rect x="24" y="171" width="32" height="27" rx="9"/><rect x="20" y="204" width="33" height="28" rx="9"/><rect x="17" y="238" width="34" height="29" rx="10"/><rect x="16" y="273" width="35" height="30" rx="10"/><rect x="17" y="309" width="36" height="31" rx="10"/><rect x="20" y="346" width="36" height="30" rx="10"/><path d="M24 384 Q38 430 50 384 Z"/></g></svg>
+<div style="position:absolute;inset:calc(var(--u)*9);border:1px solid rgba(210,169,136,.45);border-radius:calc(var(--u)*2)"></div>
+<div style="position:absolute;left:calc(var(--u)*28);top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u)*8)">
+<p style="font-size:calc(var(--u)*10.5);letter-spacing:.32em;color:#D2A988">DRA.</p>
+<p style="font-family:var(--script);font-size:calc(var(--u)*44);line-height:.95;margin-top:calc(var(--u)*-4)">Julianna<br><span style="padding-left:calc(var(--u)*34)">Pires</span></p>
+<div style="display:flex;align-items:center;gap:calc(var(--u)*8);margin-top:calc(var(--u)*4)"><i style="display:block;width:calc(var(--u)*22);height:1px;background:#D2A988"></i><p style="font-size:calc(var(--u)*10.5);letter-spacing:.24em;font-weight:500;color:#D2A988">FISIOTERAPIA E PILATES</p></div>
+</div></div>
+</template>
+
+<template id="t-card-v">
+<div style="position:absolute;inset:0;background:#F6EFE4;padding:calc(var(--u)*20) calc(var(--u)*22);display:flex;flex-direction:column;justify-content:space-between">
+<div><p style="font-family:var(--script);font-size:calc(var(--u)*28);line-height:1.1">Dra. Julianna Pires</p>
+<p style="font-size:calc(var(--u)*11.5);color:#6E5140;margin-top:calc(var(--u)*2)">Fisioterapeuta · CREFITO 377530-F</p></div>
+<div style="border-top:1px solid #C9A98A;padding-top:calc(var(--u)*10);font-size:calc(var(--u)*11.5);line-height:1.45">
+<p style="font-weight:600;font-size:calc(var(--u)*13)">(21) 98917-4342</p>
+<p>@dra_juliannapiresfisioterapia</p>
+<p style="color:#6E5140">Itaboraí · RJ</p></div>
+</div>
+</template>
+
+<template id="t-fly-f">
+<div style="position:absolute;inset:0;background:#F6EFE4;padding:calc(var(--u)*34) calc(var(--u)*32) calc(var(--u)*32);display:flex;flex-direction:column;align-items:center;text-align:center">
+<p style="font-size:calc(var(--u)*12);letter-spacing:.22em;font-weight:500;color:#8C6246">FISIOTERAPIA E PILATES</p>
+<p style="font-family:var(--script);font-size:calc(var(--u)*46);line-height:1.1;margin-top:calc(var(--u)*6)">Dra. Julianna Pires</p>
+<p style="font-size:calc(var(--u)*12);color:#6E5140;margin-top:calc(var(--u)*4)">CREFITO 377530-F</p>
+<div style="margin-top:calc(var(--u)*20);width:calc(var(--u)*290);height:calc(var(--u)*250);border-radius:calc(var(--u)*145) calc(var(--u)*145) calc(var(--u)*16) calc(var(--u)*16);overflow:hidden;background:#D8C2A6"><img src="foto.jpg" alt="Julianna atendendo uma paciente" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%"></div>
+<p style="font-family:var(--serif);font-weight:600;font-size:calc(var(--u)*36);line-height:1.05;margin-top:calc(var(--u)*22)">Seu movimento merece cuidado</p>
+<p style="font-size:calc(var(--u)*13);color:#6E5140;margin-top:calc(var(--u)*10)">Cuidar, reabilitar e transformar.</p>
+<div style="margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*8)">
+<p style="background:#4A3426;color:#F6EFE4;font-size:calc(var(--u)*14);font-weight:600;padding:calc(var(--u)*12) calc(var(--u)*24);border-radius:999px">Agende sua avaliação</p>
+<p style="font-size:calc(var(--u)*16);font-weight:600">(21) 98917-4342</p></div>
+</div>
+</template>
+
+<template id="t-fly-v">
+<div style="position:absolute;inset:0;background:#F6EFE4;padding:calc(var(--u)*34) calc(var(--u)*32) calc(var(--u)*32);display:flex;flex-direction:column">
+<svg viewBox="0 0 70 430" aria-hidden="true" style="position:absolute;right:calc(var(--u)*22);top:calc(var(--u)*120);width:calc(var(--u)*70);opacity:.55"><g fill="#C9A98A"><rect x="22" y="0" width="26" height="18" rx="7"/><rect x="24" y="24" width="27" height="20" rx="7"/><rect x="27" y="50" width="28" height="22" rx="8"/><rect x="29" y="78" width="29" height="24" rx="8"/><rect x="29" y="108" width="30" height="25" rx="8"/><rect x="27" y="139" width="31" height="26" rx="9"/><rect x="24" y="171" width="32" height="27" rx="9"/><rect x="20" y="204" width="33" height="28" rx="9"/><rect x="17" y="238" width="34" height="29" rx="10"/><rect x="16" y="273" width="35" height="30" rx="10"/><rect x="17" y="309" width="36" height="31" rx="10"/><rect x="20" y="346" width="36" height="30" rx="10"/><path d="M24 384 Q38 430 50 384 Z"/></g></svg>
+<p style="font-family:var(--script);font-size:calc(var(--u)*30);line-height:1.1">Dra. Julianna Pires</p>
+<p style="font-family:var(--serif);font-weight:600;font-size:calc(var(--u)*36);line-height:1.1;margin-top:calc(var(--u)*4)">Tratamentos</p>
+<p style="font-size:calc(var(--u)*12);letter-spacing:.2em;font-weight:600;color:#8C6246;margin-top:calc(var(--u)*22)">FISIOTERAPIA</p>
+<ul style="margin:calc(var(--u)*8) 0 0;padding-left:calc(var(--u)*18);font-size:calc(var(--u)*15);line-height:1.75"><li>Terapia manual</li><li>Quiropraxia</li><li>Agulhamento a seco</li><li>Liberação miofascial</li><li>Ventosaterapia</li><li>Recovery</li></ul>
+<p style="font-size:calc(var(--u)*12);letter-spacing:.2em;font-weight:600;color:#8C6246;margin-top:calc(var(--u)*18)">BEM-ESTAR E ESTÉTICA</p>
+<ul style="margin:calc(var(--u)*8) 0 0;padding-left:calc(var(--u)*18);font-size:calc(var(--u)*15);line-height:1.75"><li>Pilates</li><li>Drenagem linfática</li><li>Massagem modeladora</li><li>Massagem relaxante</li><li>Estética</li></ul>
+<div style="margin-top:auto;border-top:1px solid #C9A98A;padding-top:calc(var(--u)*18);display:flex;gap:calc(var(--u)*16);align-items:center">
+<div style="flex:1;font-size:calc(var(--u)*12.5);line-height:1.5"><p style="font-weight:600;font-size:calc(var(--u)*15)">(21) 98917-4342</p><p>@dra_juliannapiresfisioterapia</p><p style="color:#6E5140">Itaboraí · RJ</p></div>
+<div style="width:calc(var(--u)*72);height:calc(var(--u)*72);border:1px solid #8C6246;border-radius:calc(var(--u)*8);display:grid;place-items:center;font-size:calc(var(--u)*11.5);color:#6E5140;text-align:center;line-height:1.3">QR<br>WhatsApp</div>
+</div></div>
+</template>
+
+<header class="band">
+<div class="wrap hero">
+<div>
+<p class="kicker">Proposta visual para</p>
+<h1>Dra. Julianna Pires</h1>
+<p class="lead">Cartão de visita e flyer pensados pra conversar com o Instagram dela e levar o consultório até a mão do paciente.</p>
+<div class="tags"><span>Cartão 9 x 5 cm</span><span>Flyer 10 x 20 cm</span><span>Frente e verso</span></div>
+</div>
+<div class="desk" aria-label="Flyer e cartão de visita sobre a mesa">
+<div class="piece flyer fl"><div class="face" data-t="t-fly-f"></div></div>
+<div class="piece card cd"><div class="face" data-t="t-card-f"></div></div>
+</div>
+</div>
+</header>
+
+<section class="band" style="padding-top:0">
+<div class="wrap">
+<h2>O que muda</h2>
+<div class="why">
+<div><b>A identidade fica</b><p>O marrom, o bege e a assinatura que ela já usa no perfil continuam. Só ganham acabamento e padrão.</p></div>
+<div><b>O cartão respira</b><p>Nome, CREFITO e contato. Quem recebe entende em dois segundos e guarda na carteira.</p></div>
+<div><b>O flyer explica</b><p>Os 11 tratamentos saem do cartão e ganham espaço no flyer, organizados em dois grupos fáceis de ler.</p></div>
+</div>
+</div>
+</section>
+
+<section class="band show alt" id="cartao">
+<div class="wrap" style="display:contents">
+<div class="view">
+<div class="piece card flip" tabindex="0" role="button" aria-label="Virar o cartão" data-g="c"><div class="stage"><div class="face" data-t="t-card-f"></div><div class="face back" data-t="t-card-v"></div></div></div>
+<div class="btns" data-g="c"><button aria-pressed="true" data-s="f">Frente</button><button aria-pressed="false" data-s="v">Verso</button></div>
+</div>
+<div>
+<p class="kicker">Cartão de visita · 9 x 5 cm</p>
+<h2>Elegante de um lado, prático do outro</h2>
+<div class="side">
+<div><b>Frente</b><p>Fundo chocolate com a faixa bege e a assinatura dela no centro. É a peça que marca.</p></div>
+<div><b>Verso</b><p>Nome, CREFITO, WhatsApp, Instagram e cidade. Tudo que o paciente precisa pra marcar.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="band show" id="flyer">
+<div class="wrap" style="display:contents">
+<div>
+<p class="kicker">Flyer · 10 x 20 cm</p>
+<h2>Chama atenção na frente, explica no verso</h2>
+<div class="side">
+<div><b>Frente</b><p>A frase do perfil dela como título, espaço pra uma foto real atendendo e o convite pra agendar a avaliação.</p></div>
+<div><b>Verso</b><p>Os tratamentos divididos entre fisioterapia e bem-estar, a coluna como detalhe e o contato com QR Code pro WhatsApp.</p></div>
+</div>
+</div>
+<div class="view">
+<div class="piece flyer flip" tabindex="0" role="button" aria-label="Virar o flyer" data-g="f"><div class="stage"><div class="face" data-t="t-fly-f"></div><div class="face back" data-t="t-fly-v"></div></div></div>
+<div class="btns" data-g="f"><button aria-pressed="true" data-s="f">Frente</button><button aria-pressed="false" data-s="v">Verso</button></div>
+</div>
+</div>
+</section>
+
+<section class="band alt" style="background:var(--bg2)">
+<div class="wrap">
+<h2>Cores e letras</h2>
+<div class="sw">
+<div style="background:#2E2019;color:#F3EADC">Chocolate<small>#2E2019</small></div>
+<div style="background:#4A3426;color:#F3EADC">Café<small>#4A3426</small></div>
+<div style="background:#8C6246;color:#FFF">Caramelo<small>#8C6246</small></div>
+<div style="background:#D8C2A6;color:#3A281D">Areia<small>#D8C2A6</small></div>
+<div style="background:#F6EFE4;color:#3A281D">Linho<small>#F6EFE4</small></div>
+</div>
+<div class="fonts">
+<div><span style="font-family:var(--script)">Julianna Pires</span><p>Pinyon Script, a assinatura</p></div>
+<div><span style="font-family:var(--serif);font-weight:600">Tratamentos</span><p>Cormorant Garamond, os títulos</p></div>
+<div><span style="font-family:var(--sans);font-size:26px;font-weight:500">Agende já</span><p>Montserrat, os textos e contatos</p></div>
+</div>
+</div>
+</section>
+
+<section class="band">
+<div class="wrap">
+<h2>Pra fechar a arte final</h2>
+<p class="lead">As peças acima são a base. Com estes quatro itens, sai a versão pronta pra gráfica.</p>
+<div class="next">
+<div><b>Foto</b><p>A do flyer veio do Instagram, só pra visualizar. Na arte final, uma foto original em alta, com boa luz.</p></div>
+<div><b>Endereço</b><p>O endereço completo do consultório, pro verso das duas peças.</p></div>
+<div><b>CREFITO</b><p>Confirmar o número que aparece no cartão e no flyer.</p></div>
+<div><b>Gráfica</b><p>Qual gráfica vai imprimir, pra entregar o arquivo no formato dela.</p></div>
+</div>
+</div>
+</section>
+
+<footer>Proposta feita por Magalhães · @magalhaes.creator</footer>
+
+<script>
+{
+  document.querySelectorAll('.face[data-t]').forEach(f => {
+    const t = document.getElementById(f.dataset.t);
+    if (t) f.appendChild(t.content.cloneNode(true));
+  });
+  const set = (g, v) => {
+    const piece = document.querySelector('.flip[data-g="' + g + '"]');
+    piece.classList.toggle('v', v);
+    document.querySelectorAll('.btns[data-g="' + g + '"] button').forEach(b => {
+      b.setAttribute('aria-pressed', String((b.dataset.s === 'v') === v));
+    });
+  };
+  document.querySelectorAll('.flip').forEach(p => {
+    const g = p.dataset.g;
+    p.addEventListener('click', () => set(g, !p.classList.contains('v')));
+    p.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); set(g, !p.classList.contains('v')); }
+    });
+  });
+  document.querySelectorAll('.btns button').forEach(b => {
+    b.addEventListener('click', () => set(b.parentElement.dataset.g, b.dataset.s === 'v'));
+  });
+}
+</script>
+</body>
+</html>
